@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+class GLWidget;
+
 namespace Ui {
     class MainWindow;
 }
