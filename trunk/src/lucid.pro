@@ -12,10 +12,20 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    glwidget.cpp
+    glwidget.cpp \
+    feature.cpp \
+    contractor.cpp \
+    axiom.cpp \
+    grammar.cpp \
+    rule.cpp
 
 HEADERS  += mainwindow.h \
     glwidget.h \
-    common.h
+    common.h \
+    feature.h \
+    contractor.h \
+    axiom.h \
+    grammar.h \
+    rule.h
 
 FORMS    += mainwindow.ui
