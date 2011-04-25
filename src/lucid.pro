@@ -15,7 +15,6 @@ SOURCES += main.cpp\
     glwidget.cpp \
     feature.cpp \
     contractor.cpp \
-    axiom.cpp \
     grammar.cpp \
     rule.cpp \
 	parser.cpp 
@@ -25,9 +24,13 @@ HEADERS  += mainwindow.h \
     common.h \
     feature.h \
     contractor.h \
-    axiom.h \
     grammar.h \
     rule.h \
 	parser.h 
 
 FORMS    += mainwindow.ui
+
+OTHER_FILES += \
+    first.sym \
+    first.rul \
+    first.gmr
