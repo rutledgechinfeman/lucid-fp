@@ -17,7 +17,8 @@ SOURCES += main.cpp\
     contractor.cpp \
     grammar.cpp \
     rule.cpp \
-	parser.cpp 
+	parser.cpp \ 
+    factory.cpp
 
 HEADERS  += mainwindow.h \
     glwidget.h \
@@ -26,7 +27,8 @@ HEADERS  += mainwindow.h \
     contractor.h \
     grammar.h \
     rule.h \
-	parser.h 
+	parser.h \ 
+    factory.h
 
 FORMS    += mainwindow.ui
 

@@ -5,8 +5,12 @@
 #include <vector>
 #include <string>
 
+using namespace std;
+
 class Rule;
 class Factory;
+
+
 class Parser
 {
 public:
