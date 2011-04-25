@@ -7,9 +7,8 @@
 
 using namespace std;
 
-class Rule;
 class Factory;
-
+class Grammar;
 
 class Parser
 {
@@ -23,7 +22,7 @@ public:
      * It returns a pointer to a factory instance that will generate
      * feature objects for the building.
      */
-    Factory* parseFile(string filename, std::map<string, std::vector<Rule> > &ruleMap);
+    bool parseFile(string filename, Grammar &grammar, Factory &fac);
 
 };
 

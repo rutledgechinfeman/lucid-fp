@@ -5,7 +5,7 @@ Parser::Parser()
 {
 }
 
-Factory* Parser::parseFile(string filename, std::map<string, std::vector<Rule> > &ruleMap)
+bool Parser::parseFile(string filename, Grammar &grammar, Factory &fac)
 {
     return NULL;
 }
