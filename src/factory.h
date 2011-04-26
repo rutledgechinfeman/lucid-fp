@@ -10,15 +10,7 @@ using std::map;
 
 struct FeatureProperties
 {
-    FeatureProperties()
-    {
-        id = "";
-        terminal = false;
-        geomType = "";
-        dataPath = "";
-    }
-
-    FeatureProperties(string identity, bool isTerminal, string geometryType, string pathToDataFile)
+    FeatureProperties(string identity = "", bool isTerminal = false, string geometryType = "", string pathToDataFile = "")
     {
         id = identity;
         terminal = isTerminal;
