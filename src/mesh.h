@@ -41,7 +41,6 @@ protected:
     MeshTriangle *m_triangles;
     double *m_texcoords;
     int m_numvertices, m_numtriangles;
-    bool loadMesh(string filePath);
 };
 
 #endif // MESH_H

@@ -12,40 +12,12 @@ using namespace std;
 
 
 Mesh::Mesh(string filename){
-    loadMesh(filename);
-
-
-    /*
-    string line;
-    ifstream myfile(filename.c_str());
-
-    if (!myfile.is_open() || !myfile.good()) {
-        cout << "grammar file fail" << endl;
-        return false;
-    }
-
-    string dir = filename.substr(0, filename.find_last_of("/") + 1);
-
-    getline(myfile, line);
-    parseSymbolFile(dir + line, fac);
-    getline(myfile, line);
-    parseRuleFile(dir + line, grammar);
-
-
-    myfile.close();
-
-    return true;*/
-}
-
-bool Mesh::loadMesh(string filename){
     ifstream myfile(filename.c_str());
     if(!myfile.is_open() || !myfile.good()){
-        cout << "obj file fail" << endl;
-        cout << "hi" << endl;
-        return false;
+        //cout << "obj file fail" << endl;
     }
     vector<MeshVertex*> vertices;
-    int* triangles;
+    vector<int> triangles;
 
     string line;
     vector<string> tokens;
@@ -55,27 +27,26 @@ bool Mesh::loadMesh(string filename){
     while(myfile.good()){
         tokens.clear();
         getline(myfile, line);
-
         if (line.size() == 0) continue;
 
         StringUtil::split(line, " ", tokens);
-        string func = tokens[0];
         //comment
         if(tokens.at(0) == "#"){
             continue;
         }
+
         else if(tokens.at(0) == "v"){
-            //vertex, v
-            if(func.size() == 1){
-                MeshVertex* vert;
-                vert->idx = currVertex;
-                if(tokens.size() < 4){
-                    cout << "not enough coordinates in vertex number " << currVertex << endl;
-                }
-                vert->p = double3(atoi(tokens[1].c_str()), atoi(tokens[2].c_str()), atoi(tokens[3].c_str()));
-                vertices.push_back(vert);
-                currVertex++;
+
+            MeshVertex* vert = new MeshVertex();
+
+            vert->idx = currVertex;
+
+            if(tokens.size() < 4){
+                cout << "not enough coordinates in vertex number " << currVertex << endl;
             }
+            vert->p = double3(atoi(tokens[1].c_str()), atoi(tokens[2].c_str()), atoi(tokens[3].c_str()));
+            vertices.push_back(vert);
+            currVertex++;
         }
         //vertex normal, vn
         else if(tokens.at(0) == "n"){
@@ -95,15 +66,39 @@ bool Mesh::loadMesh(string filename){
             vector<string> face;
             for(int i=1; i<tokens.size(); i++){
                 face.clear();
-                StringUtil::split(tokens[i], "/", face);
-                triangles[currFace*3 + (i-1)] = atoi(face.at(0).c_str());
+                StringUtil::split(tokens.at(i), "/", face);
+                triangles.push_back(atoi(face.at(0).c_str()));
             }
             currFace++;
         }
     }
 
+    myfile.close();
+    m_vertices = new MeshVertex[vertices.size()];
+
+    for(int i=0; i<vertices.size(); i++){
+        m_vertices[i].idx = vertices.at(i)->idx;
+        m_vertices[i].p = vertices.at(i)->p;
+    }
+
+    m_triangles = new MeshTriangle[triangles.size()/3];
+
+    for(int i=0; i<triangles.size(); i++) {
+        m_triangles[i].v0 = &m_vertices[triangles[i*3]];
+        m_triangles[i].v1 = &m_vertices[triangles[i*3+1]];
+        m_triangles[i].v2 = &m_vertices[triangles[i*3+2]];
+    }
+
+    m_numtriangles = currFace;
+    m_numvertices = vertices.size();
+
+    for(int i=0; i<m_numvertices; i++){
+        cout << i << endl;
+        cout << m_vertices[i].idx << ", " << m_vertices[i].p << endl;
+    }
 
 }
+
 
 Mesh::Mesh(MeshVertex *vertexlist, int numvertices, int *trilist, int numtriangles) {
     m_vertices = new MeshVertex[numvertices];
@@ -122,6 +117,7 @@ Mesh::Mesh(MeshVertex *vertexlist, int numvertices, int *trilist, int numtriangl
 
 
 Mesh::~Mesh() {
+
     delete[] m_triangles;
     delete[] m_vertices;
 }
