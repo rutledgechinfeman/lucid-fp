@@ -8,8 +8,7 @@ using std::string;
 class GrammarNode
 {
 public:
-    GrammarNode();
-    GrammarNode(string line);
+    GrammarNode(string line = "");
     virtual ~GrammarNode();
 };
 
