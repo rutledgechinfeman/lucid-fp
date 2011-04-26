@@ -1,5 +1,6 @@
 #include "parser.h"
 #include "factory.h"
+#include "grammar.h"
 
 Parser::Parser()
 {
