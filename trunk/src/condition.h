@@ -5,6 +5,7 @@ class Condition
 {
 public:
     Condition();
+    virtual ~Condition();
 };
 
 #endif // CONDITION_H

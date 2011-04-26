@@ -14,6 +14,7 @@ class Parser
 {
 public:
     Parser();
+    virtual ~Parser();
 
     /*
      * This is the only important method of this class, it takes a
@@ -24,6 +25,11 @@ public:
      */
     bool parseFile(string filename, Grammar &grammar, Factory &fac);
 
+private:
+    bool parseSymbolFile(string filename, Factory &fac);
+    bool parseRuleFile(string filename, Grammar &gram);
+
+    void split(string toSplit, char* on, vector<string> &result);
 };
 
 #endif // PARSER_H

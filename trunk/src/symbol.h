@@ -7,6 +7,7 @@ class Symbol : public GrammarNode
 {
 public:
     Symbol();
+    virtual ~Symbol();
 };
 
 #endif // SYMBOL_H

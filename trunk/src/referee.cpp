@@ -22,5 +22,7 @@ Referee::Referee(string file)
 bool Referee::blowWhistle(){
     m_parser->parseFile(m_file, *m_grammar, *m_fac);
     m_contractor->build(*m_grammar, *m_fac);
+
+    return true;
 }
 

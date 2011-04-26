@@ -5,6 +5,7 @@ class GrammarNode
 {
 public:
     GrammarNode();
+    virtual ~GrammarNode();
 };
 
 #endif // GRAMMARNODE_H

@@ -3,3 +3,7 @@
 Condition::Condition()
 {
 }
+
+Condition::~Condition()
+{
+}
