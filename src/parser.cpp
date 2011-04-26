@@ -1,13 +1,12 @@
 #include "parser.h"
 #include "factory.h"
 #include "grammar.h"
-#include "probabilitysuccessor.h"
 
 #include <string>
 #include <fstream>
 #include <iostream>
 #include <vector>
-
+#include "probabilitynode.h"
 
 
 Parser::Parser(){ }
@@ -115,7 +114,7 @@ bool Parser::parseRuleFile(string filename, Grammar &gram) {
         // Remove fluff to get to the rule
         line = line.substr(line.find("~")+1);
 
-        Rule(pred, ProbabilitySuccessor(trim(line)), Condition(trim(cond))); // TODO
+        Rule(pred, ProbabilityNode(trim(line)), Condition(trim(cond))); // TODO
     }
 
     ruleFile.close();

@@ -1,5 +1,5 @@
-#ifndef PROBABILITYSUCCESSOR_H
-#define PROBABILITYSUCCESSOR_H
+#ifndef PROBABILITYNODE_H
+#define PROBABILITYNODE_H
 
 #include "grammarnode.h"
 
@@ -7,10 +7,11 @@ class ProbabilityNode : public GrammarNode
 {
 public:
     ProbabilityNode();
+    ProbabilityNode(string line);
     virtual ~ProbabilityNode();
 
 private:
     double m_probability;
 };
 
-#endif // PROBABILITYSUCCESSOR_H
+#endif // PROBABILITYNODE_H
