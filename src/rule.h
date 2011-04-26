@@ -1,11 +1,17 @@
 #ifndef RULE_H
 #define RULE_H
 
+#include <string>
+#include "condition.h"
+#include "grammarnode.h"
+#include "feature.h"
+
+using std::string;
+
 class Rule
 {
 public:
     Rule();
-    Rule(string id, Condition c, GrammarNode gn)
 
     virtual ~Rule();
 

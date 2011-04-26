@@ -19,7 +19,11 @@ SOURCES += main.cpp\
     rule.cpp \
 	parser.cpp \  
     factory.cpp \
-    referee.cpp
+    referee.cpp \
+    condition.cpp \
+    grammarnode.cpp \
+    symbol.cpp \
+    operation.cpp
 
 HEADERS  += mainwindow.h \
     glwidget.h \
@@ -30,7 +34,11 @@ HEADERS  += mainwindow.h \
     rule.h \
 	parser.h \  
     factory.h \
-    referee.h
+    referee.h \
+    condition.h \
+    grammarnode.h \
+    symbol.h \
+    operation.h
 
 FORMS    += mainwindow.ui
 
