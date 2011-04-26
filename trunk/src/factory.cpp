@@ -4,9 +4,14 @@
 
 using namespace std;
 
-Factory::Factory() { }
+Factory::Factory() {
+    m_texMap = map<string, QImage*>();
+    m_meshMap = map<string, Mesh*>();
+}
 
-Factory::~Factory() { }
+Factory::~Factory() {
+//TODO: delete stuff
+}
 
 bool Factory::addFeatureType(string id, bool isTerminal, string geom, string dataPath)
 {
