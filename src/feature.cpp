@@ -3,3 +3,13 @@
 Feature::Feature()
 {
 }
+
+Feature::~Feature()
+{
+
+}
+
+void Feature::draw()
+{
+
+}
