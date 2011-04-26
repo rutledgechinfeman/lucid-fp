@@ -1,7 +1,6 @@
 #include "parser.h"
 #include "factory.h"
 #include "grammar.h"
-#include <boost/algorithm/string.hpp>
 
 #include <string>
 #include <fstream>
@@ -10,14 +9,14 @@
 
 
 
-Parser::Parser()
-{
-}
+Parser::Parser(){ }
 
 Parser::~Parser(){ }
 
 bool Parser::parseFile(string filename, Grammar &grammar, Factory &fac)
 {
+
+    cout << filename << endl;
 
     string line;
     ifstream myfile(filename.c_str());
@@ -83,10 +82,7 @@ bool Parser::parseSymbolFile(string filename, Factory &fac) {
                 cout << "terminal line in symbol file has the wrong number of things. Ignoring." << endl;
             }
         }
-
     }
-
-
 
     symFile.close();
     return true;
@@ -100,12 +96,25 @@ bool Parser::parseRuleFile(string filename, Grammar &gram) {
         return false;
     }
 
-    // TODO start here
-
     string line;
     while(ruleFile.good()) {
         getline(ruleFile, line);
+        if (line.size() == 0) continue;
 
+        // Peel out predecessor id
+        string pred = line.substr(0, line.find(" "));
+
+        // Remove ":" delimiter and subsequent spaces
+        line = line.substr(line.find(":") + 1);
+        line = trim(line);
+
+        // Peel out condition string
+        string cond = line.substr(0, line.find("~"));
+
+        // Remove fluff to get to the rule
+        line = line.substr(line.find("~")+1);
+
+        Rule(pred, GrammarNode(trim(line)), Condition(trim(cond))); // TODO
     }
 
     ruleFile.close();
@@ -119,8 +128,23 @@ void Parser::split(string toSplit, char* on, vector<string> &result)
     {
         result.push_back(toSplit.substr(0, index));
 
-        toSplit = toSplit.substr(index+1, toSplit.size());
+        toSplit = toSplit.substr(index+1);
     }
 
     result.push_back(toSplit);
+}
+
+string Parser::trim(string in)
+{
+    while(in.find(" ") == 0)
+    {
+        in = in.substr(1);
+    }
+
+    while(in.find_last_of(" ") == in.size()-1 && in.size() != 0)
+    {
+        in = in.substr(0,in.size()-1);
+    }
+
+    return in;
 }

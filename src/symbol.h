@@ -2,6 +2,7 @@
 #define SYMBOL_H
 
 #include "grammarnode.h"
+#include <vector>
 
 class Symbol : public GrammarNode
 {

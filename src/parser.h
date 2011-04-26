@@ -30,6 +30,7 @@ private:
     bool parseRuleFile(string filename, Grammar &gram);
 
     void split(string toSplit, char* on, vector<string> &result);
+    string trim(string in);
 };
 
 #endif // PARSER_H

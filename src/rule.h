@@ -11,7 +11,7 @@ using std::string;
 class Rule
 {
 public:
-    Rule();
+    Rule(string pred, GrammarNode suc, Condition con = Condition());
 
     virtual ~Rule();
 
@@ -21,7 +21,7 @@ public:
 private:
     string m_id;
     Condition m_condition;
-    GrammarNode m_gnode;
+    GrammarNode m_successor;
 };
 
 #endif // RULE_H
