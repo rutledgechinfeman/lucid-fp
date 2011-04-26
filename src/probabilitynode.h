@@ -3,11 +3,11 @@
 
 #include "grammarnode.h"
 
-class ProbabilitySuccessor : public GrammarNode
+class ProbabilityNode : public GrammarNode
 {
 public:
-    ProbabilitySuccessor();
-    virtual ~ProbabilitySuccessor();
+    ProbabilityNode();
+    virtual ~ProbabilityNode();
 
 private:
     double m_probability;
