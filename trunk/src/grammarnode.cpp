@@ -4,4 +4,9 @@ GrammarNode::GrammarNode()
 {
 }
 
+GrammarNode::GrammarNode(string line)
+{
+
+}
+
 GrammarNode::~GrammarNode() { }

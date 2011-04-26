@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     condition.cpp \
     grammarnode.cpp \
     symbol.cpp \
-    operation.cpp
+    operation.cpp \
+    probabilitysuccessor.cpp
 
 HEADERS  += mainwindow.h \
     glwidget.h \
@@ -38,7 +39,8 @@ HEADERS  += mainwindow.h \
     condition.h \
     grammarnode.h \
     symbol.h \
-    operation.h
+    operation.h \
+    probabilitysuccessor.h
 
 FORMS    += mainwindow.ui
 
