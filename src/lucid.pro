@@ -11,13 +11,13 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp \
+    mainwindow.cpp \
     glwidget.cpp \
     feature.cpp \
     contractor.cpp \
     grammar.cpp \
     rule.cpp \
-	parser.cpp \  
+    parser.cpp \
     factory.cpp \
     referee.cpp \
     condition.cpp \
@@ -35,7 +35,7 @@ HEADERS  += mainwindow.h \
     contractor.h \
     grammar.h \
     rule.h \
-	parser.h \  
+    parser.h \
     factory.h \
     referee.h \
     condition.h \
@@ -48,8 +48,3 @@ HEADERS  += mainwindow.h \
 
 FORMS    += mainwindow.ui
 
-OTHER_FILES += \
-    first.sym \
-    first.rul \
-    mesh.o \
-    mesh.o
