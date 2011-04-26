@@ -3,3 +3,5 @@
 Contractor::Contractor()
 {
 }
+
+bool Contractor::build(Grammar &grammar, Factory &fac){}
