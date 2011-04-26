@@ -1,6 +1,7 @@
 #include "parser.h"
 #include "factory.h"
 #include "grammar.h"
+#include "probabilitysuccessor.h"
 
 #include <string>
 #include <fstream>
@@ -114,7 +115,7 @@ bool Parser::parseRuleFile(string filename, Grammar &gram) {
         // Remove fluff to get to the rule
         line = line.substr(line.find("~")+1);
 
-        Rule(pred, GrammarNode(trim(line)), Condition(trim(cond))); // TODO
+        Rule(pred, ProbabilitySuccessor(trim(line)), Condition(trim(cond))); // TODO
     }
 
     ruleFile.close();

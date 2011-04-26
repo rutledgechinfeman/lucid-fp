@@ -24,7 +24,8 @@ SOURCES += main.cpp\
     grammarnode.cpp \
     symbol.cpp \
     operation.cpp \
-    probabilitysuccessor.cpp
+    probabilitysuccessor.cpp \
+    probabilitynode.cpp
 
 HEADERS  += mainwindow.h \
     glwidget.h \
@@ -40,7 +41,8 @@ HEADERS  += mainwindow.h \
     grammarnode.h \
     symbol.h \
     operation.h \
-    probabilitysuccessor.h
+    probabilitysuccessor.h \
+    probabilitynode.h
 
 FORMS    += mainwindow.ui
 
