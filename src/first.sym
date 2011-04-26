@@ -5,4 +5,4 @@ tile n
 floor n
 wall t plane
 door t door.obj
-window t
+window t window.obj

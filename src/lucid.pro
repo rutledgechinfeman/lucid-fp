@@ -17,7 +17,7 @@ SOURCES += main.cpp\
     contractor.cpp \
     grammar.cpp \
     rule.cpp \
-	parser.cpp \ 
+	parser.cpp \  
     factory.cpp \
     referee.cpp
 
@@ -28,7 +28,7 @@ HEADERS  += mainwindow.h \
     contractor.h \
     grammar.h \
     rule.h \
-	parser.h \ 
+	parser.h \  
     factory.h \
     referee.h
 
