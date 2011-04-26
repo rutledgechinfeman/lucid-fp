@@ -64,7 +64,7 @@ Mesh::Mesh(string filename){
                 cout << "This may be a quad mesh" << endl;
             }
             vector<string> face;
-            for(int i=1; i<tokens.size(); i++){
+            for(unsigned int i=1; i<tokens.size(); i++){
                 face.clear();
                 StringUtil::split(tokens.at(i), "/", face);
                 triangles.push_back(atoi(face.at(0).c_str()));
@@ -76,14 +76,14 @@ Mesh::Mesh(string filename){
     myfile.close();
     m_vertices = new MeshVertex[vertices.size()];
 
-    for(int i=0; i<vertices.size(); i++){
+    for(unsigned int i=0; i<vertices.size(); i++){
         m_vertices[i].idx = vertices.at(i)->idx;
         m_vertices[i].p = vertices.at(i)->p;
     }
 
     m_triangles = new MeshTriangle[triangles.size()/3];
 
-    for(int i=0; i<triangles.size(); i++) {
+    for(unsigned int i=0; i<triangles.size(); i++) {
         m_triangles[i].v0 = &m_vertices[triangles[i*3]];
         m_triangles[i].v1 = &m_vertices[triangles[i*3+1]];
         m_triangles[i].v2 = &m_vertices[triangles[i*3+2]];

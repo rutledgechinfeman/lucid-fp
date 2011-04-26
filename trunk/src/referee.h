@@ -14,8 +14,7 @@ using namespace std;
 class Referee
 {
 public:
-    Referee();
-    Referee(string file);
+    Referee(string file = "");
     virtual ~Referee();
     bool blowWhistle();
 private:

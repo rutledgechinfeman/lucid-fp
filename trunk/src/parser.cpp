@@ -7,6 +7,7 @@
 #include <iostream>
 #include <vector>
 #include "probabilitynode.h"
+#include "stringutil.h"
 
 
 Parser::Parser(){ }
@@ -58,7 +59,7 @@ bool Parser::parseSymbolFile(string filename, Factory &fac) {
 
         if (line.size() == 0) continue;
 
-        split(line, " ", tokens);
+        StringUtil::split(line, " ", tokens);
 
         if (tokens.size() < 2) {
             cout << line << endl;
@@ -106,7 +107,7 @@ bool Parser::parseRuleFile(string filename, Grammar &gram) {
 
         // Remove ":" delimiter and subsequent spaces
         line = line.substr(line.find(":") + 1);
-        line = trim(line);
+        line = StringUtil::trim(line);
 
         // Peel out condition string
         string cond = line.substr(0, line.find("~"));
@@ -114,37 +115,11 @@ bool Parser::parseRuleFile(string filename, Grammar &gram) {
         // Remove fluff to get to the rule
         line = line.substr(line.find("~")+1);
 
-        Rule(pred, ProbabilityNode(trim(line)), Condition(trim(cond))); // TODO
+        Rule(pred, ProbabilityNode(StringUtil::trim(line)), Condition(StringUtil::trim(cond))); // TODO
+        (void) gram; // TODO, add the above rule to the grammar...
     }
 
     ruleFile.close();
     return true;
 }
 
-void Parser::split(string toSplit, char* on, vector<string> &result)
-{
-    int index;
-    while ((index = toSplit.find(on)) != -1)
-    {
-        result.push_back(toSplit.substr(0, index));
-
-        toSplit = toSplit.substr(index+1);
-    }
-
-    result.push_back(toSplit);
-}
-
-string Parser::trim(string in)
-{
-    while(in.find(" ") == 0)
-    {
-        in = in.substr(1);
-    }
-
-    while(in.find_last_of(" ") == in.size()-1 && in.size() != 0)
-    {
-        in = in.substr(0,in.size()-1);
-    }
-
-    return in;
-}

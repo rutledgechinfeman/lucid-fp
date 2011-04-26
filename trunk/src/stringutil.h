@@ -9,8 +9,8 @@ class StringUtil
 {
 public:
     StringUtil();
-    static void split(string toSplit, char* on, vector<string> &result);
-
+    static void split(string toSplit, const char* on, vector<string> &result);
+    static string trim(string in);
 };
 
 #endif // STRINGUTIL_H

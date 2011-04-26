@@ -9,12 +9,14 @@ Rule::Rule(string pred, GrammarNode suc, Condition con)
 
 Rule::~Rule(){}
 
-bool Rule::evaluateCondition()
+bool Rule::evaluateCondition(Feature &f)
 {
-    return m_condition.evaluate();
+    return m_condition.evaluate(f);
 }
 
 bool Rule::apply(Feature target)
 {
+    (void) target; // TODO
+
     return false;
 }

@@ -15,7 +15,7 @@ public:
 
     virtual ~Rule();
 
-    virtual bool evaluateCondition();
+    virtual bool evaluateCondition(Feature &f);
     virtual bool apply(Feature target);
 
 private:
