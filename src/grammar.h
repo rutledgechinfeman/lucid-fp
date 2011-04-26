@@ -5,6 +5,7 @@ class Grammar
 {
 public:
     Grammar();
+    virtual ~Grammar();
 };
 
 #endif // GRAMMAR_H

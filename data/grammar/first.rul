@@ -1,0 +1,4 @@
+A : NULL ~ S(8,6,18) facades : 1.0
+facades : NULL ~ Comp("sidefaces"){facade}
+facade : NULL ~ Subdiv("Y",3,3){floor|floor}
+floor : NULL ~ Repeat("X", 2) {window}

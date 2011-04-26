@@ -44,5 +44,4 @@ FORMS    += mainwindow.ui
 
 OTHER_FILES += \
     first.sym \
-    first.rul \
-    first.gmr
+    first.rul

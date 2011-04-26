@@ -6,6 +6,7 @@
 #include "grammar.h"
 #include "factory.h"
 #include "contractor.h"
+#include <string>
 
 using namespace std;
 
@@ -15,7 +16,7 @@ class Referee
 public:
     Referee();
     Referee(string file);
-    ~Referee();
+    virtual ~Referee();
     bool blowWhistle();
 private:
     string m_file;

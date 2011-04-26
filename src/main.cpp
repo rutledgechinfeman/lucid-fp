@@ -8,8 +8,8 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
 
-    Referee* ref = new Referee();
-    ref->blowWhistle();
+    Referee ref("../data/grammar/first.gmr");
+    ref.blowWhistle();
 
     return a.exec();
 }

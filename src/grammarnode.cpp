@@ -3,3 +3,5 @@
 GrammarNode::GrammarNode()
 {
 }
+
+GrammarNode::~GrammarNode() { }

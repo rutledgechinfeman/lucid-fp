@@ -3,3 +3,8 @@
 Operation::Operation()
 {
 }
+
+Operation::~Operation()
+{
+
+}

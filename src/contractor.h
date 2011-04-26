@@ -8,6 +8,8 @@ class Contractor
 {
 public:
     Contractor();
+    virtual ~Contractor();
+
     bool build(Grammar &grammar, Factory &fac);
 };
 

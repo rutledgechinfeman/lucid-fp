@@ -3,3 +3,5 @@
 Symbol::Symbol()
 {
 }
+
+Symbol::~Symbol() { }
