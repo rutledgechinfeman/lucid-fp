@@ -24,7 +24,8 @@ SOURCES += main.cpp\
     grammarnode.cpp \
     symbol.cpp \
     operation.cpp \
-    probabilitysuccessor.cpp \
+    mesh.cpp \
+    stringutil.cpp \
     probabilitynode.cpp
 
 HEADERS  += mainwindow.h \
@@ -41,11 +42,14 @@ HEADERS  += mainwindow.h \
     grammarnode.h \
     symbol.h \
     operation.h \
-    probabilitysuccessor.h \
+    mesh.h \
+    stringutil.h \
     probabilitynode.h
 
 FORMS    += mainwindow.ui
 
 OTHER_FILES += \
     first.sym \
-    first.rul
+    first.rul \
+    mesh.o \
+    mesh.o

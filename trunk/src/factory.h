@@ -3,7 +3,8 @@
 
 #include <string>
 #include <map>
-
+#include <QImage>
+#include "mesh.h"
 using std::string;
 using std::map;
 
@@ -41,6 +42,8 @@ public:
 
 private:
     map<string, FeatureProperties> m_featureListing;
+    map<string, QImage*> m_texMap;
+    map<string, Mesh*> m_meshMap;
 };
 
 #endif // FACTORY_H

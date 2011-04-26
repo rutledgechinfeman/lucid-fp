@@ -1,9 +1,13 @@
-#include "probabilitysuccessor.h"
+#include "probabilitynode.h"
 
-ProbabilitySuccessor::ProbabilitySuccessor()
+ProbabilityNode::ProbabilityNode()
 {
 }
 
-ProbabilitySuccessor::~ProbabilitySuccessor()
+ProbabilityNode::ProbabilityNode(string line)
+{
+}
+
+ProbabilityNode::~ProbabilityNode()
 {
 }
