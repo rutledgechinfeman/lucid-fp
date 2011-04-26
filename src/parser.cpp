@@ -16,13 +16,11 @@ Parser::~Parser(){ }
 
 bool Parser::parseFile(string filename, Grammar &grammar, Factory &fac)
 {
-
-    cout << filename << endl;
-
     string line;
     ifstream myfile(filename.c_str());
 
-    if (!myfile.is_open() || !myfile.good()) {
+    if (!myfile.is_open() || !myfile.good())
+    {
         cout << "grammar file fail" << endl;
         return false;
     }
@@ -34,14 +32,10 @@ bool Parser::parseFile(string filename, Grammar &grammar, Factory &fac)
     getline(myfile, line);
     parseRuleFile(dir + line, grammar);
 
-
     myfile.close();
 
     return true;
 }
-
-
-
 
 bool Parser::parseSymbolFile(string filename, Factory &fac) {
 
