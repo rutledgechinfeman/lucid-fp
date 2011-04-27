@@ -14,6 +14,7 @@ Factory::~Factory()
     {
         delete ii->second;
     }
+
     for(map<string, Mesh*>::iterator ii = m_meshMap.begin(); ii != m_meshMap.end(); ++ ii)
     {
         delete ii->second;
@@ -30,20 +31,22 @@ bool Factory::addFeatureType(string id, bool isTerminal, string geom, string dat
 
     // Look for a datapath on terminal symbols only
     if(!isTerminal   ) { return true; }
-    if(geom     == "") { cout << "Error: terminal symbol used without a specified geometry" << endl; }
-    if(dataPath == "") { cout << "Error: terminal symbol used without a specified datapath" << endl; }
+    if(geom     == "") { cerr << "ERROR: terminal symbol used without a specified geometry" << endl; return false; }
+    if(dataPath == "") { cerr << "ERROR: terminal symbol used without a specified datapath" << endl; return false; }
 
     // Planes have textures (2D)
     if(geom == "plane" && m_texMap.find(dataPath) == m_texMap.end())
     {
         m_texMap[dataPath] = new QImage(QString(dataPath.c_str()));
     }
+
     // Meshes have... meshes. (3D)
     else if(geom == "mesh" && m_meshMap.find(dataPath) == m_meshMap.end())
     {
         m_meshMap[dataPath] = new Mesh(dataPath);
     }
-    else { cout << "Unknown geometry type: " << geom << endl; }
+
+    else { cerr << "ERROR: Unknown geometry type: " << geom << endl; }
 
     return true;
 }

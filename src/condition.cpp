@@ -69,7 +69,7 @@ bool Condition::evaluate(const Feature &f)
             break;
 
         default:
-            cout << "Unknown condition type" << endl;
+            cerr << "ERROR: Unknown condition type: " << m_type << endl;
             output = false;
     }
 
