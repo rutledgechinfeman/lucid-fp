@@ -224,7 +224,6 @@ struct mat4 {
     };
 };
 
-
 typedef mat4<REAL> Matrix4x4;
 
 
