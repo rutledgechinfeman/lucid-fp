@@ -11,7 +11,6 @@ int main(int argc, char *argv[])
 
     Referee ref("../data/grammar/first.gmr");
     ref.blowWhistle();
-    Mesh m = Mesh("../data/test.obj");
 
     return a.exec();
 }
