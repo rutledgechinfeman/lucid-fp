@@ -48,6 +48,10 @@ void Feature::setActive(bool b){
     m_active = b;
 }
 
+bool Feature::getActive(){
+    return m_active;
+}
+
 
 //Adds a feature child to the list of children
 //This is no longer a terminal if it ever was in the past

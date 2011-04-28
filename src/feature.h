@@ -29,7 +29,7 @@ public:
     void setMesh(Mesh* m);
     void setTexture(QImage* i);
     void setActive(bool b);
-
+    bool getActive();
     void setType(string geom);
 
 private:
