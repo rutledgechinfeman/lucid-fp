@@ -5,6 +5,7 @@
 #include <map>
 #include <QImage>
 #include "mesh.h"
+#include "feature.h"
 using std::string;
 using std::map;
 
@@ -30,7 +31,8 @@ public:
     Factory();
     virtual ~Factory();
 
-    bool addFeatureType(string id, bool isTerminal, string geom = "", string dataPath = "");
+    bool addFeatureType(string symbol, bool isTerminal, string geom = "", string dataPath = "");
+    Feature instanceOf(string symbol);
 
 private:
     map<string, FeatureProperties> m_featureListing;

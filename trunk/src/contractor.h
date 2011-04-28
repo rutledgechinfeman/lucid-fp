@@ -4,6 +4,8 @@
 #include "grammar.h"
 #include "factory.h"
 
+#define AXIOM_SYMBOL "A"
+
 class Contractor
 {
 public:
