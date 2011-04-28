@@ -21,7 +21,7 @@ void Contractor::expandFeature(Feature* current)
     // Base case
     if(current == NULL || !current->getActive()) { return; }
 
-    Rule* r = m_grammar.lookupRule(current->getSymbol());
+    Rule* r = m_grammar.lookupRule(current);
     r->apply(current);
 
     for(int i = 0; i < current->getNumChildren(); ++ i)

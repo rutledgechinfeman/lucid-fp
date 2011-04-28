@@ -5,6 +5,7 @@
 #include <map>
 #include <vector>
 #include "rule.h"
+#include "feature.h"
 
 using std::string;
 using std::map;
@@ -17,7 +18,7 @@ public:
     virtual ~Grammar();
 
     virtual void addRule(string pred, Rule* rule);
-    virtual Rule* lookupRule(string pred);
+    virtual Rule* lookupRule(Feature* parent);
 
 private:
     map< string, vector<Rule*> > m_ruleMap;
