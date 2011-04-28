@@ -71,6 +71,20 @@ bool Feature::getActive()
     return m_active;
 }
 
+string Feature::getSymbol()
+{
+    return m_symbol;
+}
+
+int Feature::getNumChildren()
+{
+    return m_children.size();
+}
+
+Feature* Feature::getChild(int index)
+{
+    return m_children.at(index);
+}
 
 //Adds a feature child to the list of children
 //This is no longer a terminal if it ever was in the past

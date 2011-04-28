@@ -32,11 +32,14 @@ public:
     void setMedia(void* data);
     void setActive(bool b);
     bool getActive();
+    string getSymbol();
+    int getNumChildren();
+    Feature* getChild(int index);
     void setType(string geom);
 
 private:
     /// Unique identifier
-    string m_id;
+    string m_id; // TODO: we probably will not use this
 
     /// Grammatical symbol representing this feature
     string m_symbol;
