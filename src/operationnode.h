@@ -25,6 +25,9 @@ public:
     /// CTOR
     OperationNode(string arg = "");
 
+    /// DTOR
+    virtual ~OperationNode();
+
     /// Operate on the feature's scope, add to it's children as applicable
     void evaluate(Feature* feat, Factory &fac);
 
