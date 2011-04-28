@@ -28,15 +28,26 @@ struct FeatureProperties
 class Factory
 {
 public:
+    /// CTOR
     Factory();
+
+    /// DTOR
     virtual ~Factory();
 
+    /// Add listings to the factory
     bool addFeatureType(string symbol, bool isTerminal, string geom = "", string dataPath = "");
+
+    /// Get a new instance from the factory (user is responsible for deletion)
     Feature* instanceOf(string symbol);
 
 private:
+    /// Master list of features
     map<string, FeatureProperties> m_featureListing;
+
+    /// Master list of textures to avoid unnecessary loading
     map<string, QImage*> m_texMap;
+
+    /// Master list of meshes to avoid unnecessary loading
     map<string, Mesh*> m_meshMap;
 };
 
