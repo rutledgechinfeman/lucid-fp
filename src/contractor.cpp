@@ -3,7 +3,7 @@
 Contractor::Contractor() { }
 Contractor::~Contractor() { }
 
-bool Contractor::build(Grammar &grammar, Factory &factory)
+Feature* Contractor::build(Grammar &grammar, Factory &factory)
 {
     // Set global class variables for recursion
     m_grammar = grammar;
@@ -13,7 +13,7 @@ bool Contractor::build(Grammar &grammar, Factory &factory)
     Feature* root = factory.instanceOf(AXIOM_SYMBOL);
     expandFeature(root);
 
-    return true;
+    return root;
 }
 
 void Contractor::expandFeature(Feature* current)

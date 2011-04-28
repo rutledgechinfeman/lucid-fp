@@ -77,6 +77,7 @@ void GLWidget::initializeGL()
 
 void GLWidget::paintGL()
 {
+    /*
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glLoadIdentity();
   glTranslated(0.0, 0.0, -10.0);
@@ -89,7 +90,7 @@ void GLWidget::paintGL()
      glVertex3d(1,0,0);
      glVertex3d(1,1,0);
      glVertex3d(0,1,0);
-     glEnd();
+     glEnd();*/
 }
 
 

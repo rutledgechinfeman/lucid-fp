@@ -1,4 +1,6 @@
 #include "feature.h"
+#include <qgl.h>
+
 
 Feature::Feature()
 {
@@ -118,5 +120,49 @@ Feature::~Feature()
 
 void Feature::draw()
 {
+    cout << m_scope.getYBasis() << endl;
+    if(m_children.size() == 0){
+
+
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+        glPushMatrix();
+
+        Matrix4x4 mat = getTransMat(m_scope.getPoint()) * m_scope.getBasis() * getScaleMat(m_scope.getScale());
+        REAL* matrix = new REAL[16];
+        cout << mat << endl;
+        mat.getTranspose().fillArray(matrix);
+        glLoadMatrixd(matrix);
+
+        switch (m_geom_type)
+        {
+            case PLANE:
+                glBegin(GL_QUADS);
+
+                glVertex3f(0.0, 0.0, 0.0);
+                glVertex3f(1.0, 0.0, 0.0);
+                glVertex3f(1.0, 1.0, 0.0);
+                glVertex3f(0.0, 1.0, 0.0);
+
+                glVertex3f(0.0, 0.0, 0.0);
+                glVertex3f(0.0, 1.0, 0.0);
+                glVertex3f(1.0, 1.0, 0.0);
+                glVertex3f(1.0, 0.0, 0.0);
+                glEnd();
+
+                break;
+
+            case MESH:
+                m_mesh->drawGL();
+                break;
+        }
+        glPopMatrix();
+
+    }
+    else{
+        for(int i=0; i<m_children.size(); i++){
+            m_children.at(i)->draw();
+        }
+    }
 
 }
