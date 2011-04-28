@@ -5,6 +5,7 @@
 #include <vector>
 #include "mesh.h"
 #include "QImage"
+#include "scope.h"
 
 using std::string;
 using std::vector;
@@ -19,7 +20,7 @@ class Feature
 {
 public:
     Feature();
-    Feature(string symbol, string geom, bool isActive = true, Feature* parent = NULL);
+    Feature(string symbol, string geom, bool isActive = true, Scope scope = Scope(), Feature* parent = NULL);
 
     virtual ~Feature();
 
@@ -30,14 +31,26 @@ public:
     void setMesh(Mesh* m);
     void setTexture(QImage* i);
     void setMedia(void* data);
+
     void setActive(bool b);
     bool getActive();
+    Scope getScope();
     string getSymbol();
     int getNumChildren();
     Feature* getChild(int index);
-    void setType(string geom);
+
+
+    Vector4 getPoint();
+
+    Vector4 getScale();
+
+    Matrix4x4 getBasis();
+
 
 private:
+
+    void setType(string geom);
+
     /// Unique identifier
     string m_id; // TODO: we probably will not use this
 
@@ -56,6 +69,8 @@ private:
     QImage* m_texture;
 
     Feature* m_parent;
+
+    Scope m_scope;
 
 };
 

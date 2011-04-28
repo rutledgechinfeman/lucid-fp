@@ -65,7 +65,7 @@ Mesh::Mesh(string filename)
                 triangles.push_back(atoi(face.at(0).c_str())); // Currently, we're only supporting the vertex numbers, not normals or textures
 
                 // TODO: if we ever implement this feature
-                if(tokens.size() > 1) { cerr << "WARNING: Currently, normals/textures are not supported for triangles. Skipping non-vertex data of: " << line << endl; }
+                if(face.size() > 1) { cerr << "WARNING: Currently, normals/textures are not supported for triangles. Skipping non-vertex data of: " << line << endl; }
             }
             currFace++;
         }
@@ -98,13 +98,6 @@ Mesh::Mesh(string filename)
     m_numtriangles = currFace;
     m_numvertices = vertices.size();
 
-
-    // TODO: remove, prints for testing purposes only
-    for(int i=0; i<m_numvertices; i++)
-    {
-        cout << i << endl;
-        cout << m_vertices[i].idx << ", " << m_vertices[i].p << endl;
-    }
 }
 
 // TODO: Would this constructor ever be used?
