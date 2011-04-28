@@ -8,6 +8,8 @@ class Operation : public GrammarNode
 public:
     Operation(string arg = "");
     virtual ~Operation();
+
+    void evaluate(Feature* feat, Factory &fac);
 };
 
 #endif // OPERATION_H
