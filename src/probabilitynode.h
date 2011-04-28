@@ -22,7 +22,7 @@ public:
     virtual ~ProbabilityNode();
 
 private:
-    double m_probability;
+    vector<double> m_probabilities;
 };
 
 #endif // PROBABILITYNODE_H
