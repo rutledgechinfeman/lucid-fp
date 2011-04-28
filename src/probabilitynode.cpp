@@ -43,3 +43,9 @@ ProbabilityNode::ProbabilityNode(string line)
 ProbabilityNode::~ProbabilityNode()
 {
 }
+
+
+void ProbabilityNode::evaluate(Feature* feat, Factory &fac) {
+
+
+}

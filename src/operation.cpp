@@ -8,3 +8,9 @@ Operation::~Operation()
 {
 
 }
+
+
+void Operation::evaluate(Feature* feat, Factory &fac)
+{
+
+}
