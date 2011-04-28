@@ -12,7 +12,7 @@ public:
     Contractor();
     virtual ~Contractor();
 
-    bool build(Grammar &grammar, Factory &factory);
+    Feature* build(Grammar &grammar, Factory &factory);
 
 private:
     void expandFeature(Feature* current);

@@ -17,6 +17,9 @@ public:
     Scope rotateX(REAL angle);
     Scope rotateY(REAL angle);
     Scope rotateZ(REAL angle);
+    Vector4 getXBasis();
+    Vector4 getYBasis();
+    Vector4 getZBasis();
 
 private:
     Vector4 m_point;
