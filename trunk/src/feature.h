@@ -57,9 +57,6 @@ public:
     /// Get isActive
     bool getActive();
 
-    /// Get current scope
-    Scope getScope();
-
     /// Get identifying symbol
     string getSymbol();
 
@@ -68,6 +65,9 @@ public:
 
     /// Get specific child (to prevent access to actual children vector)
     Feature* getChild(int index);
+
+    /// Get current scope
+    Scope getScope();
 
     /// Get Scope point
     Vector4 getPoint();
