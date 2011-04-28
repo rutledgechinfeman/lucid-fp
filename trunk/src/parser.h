@@ -13,10 +13,13 @@ class Grammar;
 class Parser
 {
 public:
+    /// CTOR
     Parser();
+
+    /// DTOR
     virtual ~Parser();
 
-    /*
+    /**
      * This is the only important method of this class, it takes a
      * filename that refers to a .gmr file it parses the grammer and
      * fills in the passed hash map with grammar rules.
@@ -26,11 +29,11 @@ public:
     bool parseFile(string filename, Grammar &grammar, Factory &fac);
 
 private:
+    /// Convenience method
     bool parseSymbolFile(string filename, Factory &fac);
-    bool parseRuleFile(string filename, Grammar &gram);
 
-    void split(string toSplit, char* on, vector<string> &result);
-    string trim(string in);
+    /// Convenience method
+    bool parseRuleFile(string filename, Grammar &gram);
 };
 
 #endif // PARSER_H

@@ -24,6 +24,8 @@ OperationNode::OperationNode(string arg)
     }
 }
 
+OperationNode::~OperationNode() { }
+
 void OperationNode::evaluate(Feature* feat, Factory &fac)
 {
     // TODO: We currently implement all operations, then all symbols
