@@ -15,6 +15,7 @@ OperationNode::OperationNode(string arg)
     vector<string> ops;
     StringUtil::split(arg, "_", ops);
 
+    // Parse each one
     string op;
     for (unsigned int i = 0; i < ops.size(); i ++)
     {
@@ -25,7 +26,36 @@ OperationNode::OperationNode(string arg)
 
 void OperationNode::evaluate(Feature* feat, Factory &fac)
 {
-    // TODO
+    // TODO: We currently implement all operations, then all symbols
+    // and don't consider that they might alternate.
+    for (unsigned int i = 0; i < m_operations.size(); ++ i)
+    {
+        m_operations[i]->evaluate(feat, fac);
+    }
+
+    switch(m_type)
+    {
+        case COMP:
+            // TODO
+            break;
+
+        case SUBDIV:
+            // TODO
+            break;
+
+        case REPEAT:
+            // TODO
+            break;
+
+        case NONE: // fall-through
+        default:
+            // For no type, don't actually do anything. Just let children do their thing;
+            // It is probably the case that there are no children here.
+            for (unsigned int i = 0; i < m_children.size(); ++ i)
+            {
+                m_children[i]->evaluate(feat, fac);
+            }
+    }
 }
 
 void OperationNode::parseOp(string line)

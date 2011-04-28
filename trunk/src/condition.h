@@ -38,19 +38,28 @@ using std::string;
 class Condition
 {
 public:
+    /// CTOR
     Condition(string line = "NULL");
+
+    /// DTOR
     virtual ~Condition();
 
+    /// See if the given feature passes or fails this condition
     virtual bool evaluate(const Feature &f);
 
 
 private:
-
+    /// Kind of condition
     int m_type;
-    int m_rhs;
-    int m_param;
-    int m_target;
 
+    /// What the condition has to equal
+    int m_rhs;
+
+    /// Parameter
+    int m_param;
+
+    /// I can't think of comments anymore
+    int m_target;
 };
 
 #endif // CONDITION_H

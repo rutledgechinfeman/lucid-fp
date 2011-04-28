@@ -19,36 +19,68 @@ using std::vector;
 class Feature
 {
 public:
+    /// CTOR
     Feature();
+
+    /// Convenience CTOR
     Feature(string symbol, string geom, bool isActive = true, Scope scope = Scope(), Feature* parent = NULL);
 
+    /// DTOR
     virtual ~Feature();
 
     /// Draw self with OpenGL
     virtual void draw();
 
+    /// Push back a child for this feature (used by grammarnodes)
     void addChild(Feature* f);
+
+    /**
+     * Setters
+     */
+
+    /// Set the mesh pointer
     void setMesh(Mesh* m);
+
+    /// Set the texture pointer
     void setTexture(QImage* i);
+
+    /// Set the mesh/texture pointer depending on geometry type
     void setMedia(void* data);
 
+    /// Set isActive
     void setActive(bool b);
+
+    /**
+     * Getters
+     */
+
+    /// Get isActive
     bool getActive();
+
+    /// Get current scope
     Scope getScope();
+
+    /// Get identifying symbol
     string getSymbol();
+
+    /// Get number of children (to prevent access to actual children vector)
     int getNumChildren();
+
+    /// Get specific child (to prevent access to actual children vector)
     Feature* getChild(int index);
 
-
+    /// Get Scope point
     Vector4 getPoint();
 
+    /// Get Scope scale
     Vector4 getScale();
 
+    /// Get Scope basis
     Matrix4x4 getBasis();
-
 
 private:
 
+    /// Convenience parser
     void setType(string geom);
 
     /// Unique identifier
@@ -57,6 +89,7 @@ private:
     /// Grammatical symbol representing this feature
     string m_symbol;
 
+    /// Enum, plane or mesh
     int m_geom_type;
 
     /// Whether this feature has children or is in active use
@@ -65,13 +98,17 @@ private:
     /// Children of this node, provided it is inactive
     vector<Feature*> m_children;
 
+    /// Mesh media pointer
     Mesh* m_mesh;
+
+    /// Texture media pointer
     QImage* m_texture;
 
+    /// Parent in feature tree
     Feature* m_parent;
 
+    /// Scope location
     Scope m_scope;
-
 };
 
 #endif // FEATURE_H
