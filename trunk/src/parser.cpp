@@ -1,14 +1,13 @@
-#include "parser.h"
-#include "factory.h"
-#include "grammar.h"
-
-#include <string>
 #include <fstream>
 #include <iostream>
+#include <string>
 #include <vector>
+
+#include "factory.h"
+#include "grammar.h"
+#include "parser.h"
 #include "probabilitynode.h"
 #include "stringutil.h"
-
 
 Parser::Parser(){ }
 
@@ -131,7 +130,6 @@ bool Parser::parseRuleFile(string filename, Grammar &gram)
         node->printSelf();
         cout << endl << "================" << endl;
     }
-
 
     // Clean up
     ruleFile.close();

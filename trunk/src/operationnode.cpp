@@ -9,10 +9,11 @@ using namespace std;
 
 OperationNode::OperationNode(string arg)
 {
+    m_type = NONE; // default value
+
+    // Split this operation into several subtypes
     vector<string> ops;
     StringUtil::split(arg, "_", ops);
-
-    m_type = NONE;
 
     string op;
     for (unsigned int i = 0; i < ops.size(); i ++)
@@ -20,7 +21,6 @@ OperationNode::OperationNode(string arg)
         op = StringUtil::trim(ops[i]);
         parseOp(op);
     }
-
 }
 
 void OperationNode::evaluate(Feature* feat, Factory &fac)
@@ -103,7 +103,6 @@ argument OperationNode::genArg(string argString)
         return argument(atof(argString.c_str()));
     }
 }
-
 
 void OperationNode::printSelf()
 {
