@@ -12,6 +12,7 @@ public:
     virtual ~Symbol();
 
     void evaluate(Feature* feat, Factory &fac);
+    virtual void printSelf();
 
 private:
     string m_symbol;
