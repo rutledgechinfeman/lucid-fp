@@ -3,6 +3,9 @@ facades n
 facade n
 tile n
 floor n
+wombat n
 wall t plane brick.jpg
 door t mesh door.obj
 window t mesh window.obj
+wom t plane wom.jpg
+bat t plane bat.jpg

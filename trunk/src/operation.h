@@ -6,7 +6,7 @@
 class Operation : public GrammarNode
 {
 public:
-    Operation();
+    Operation(string arg = "");
     virtual ~Operation();
 };
 
