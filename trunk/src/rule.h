@@ -11,17 +11,17 @@ using std::string;
 class Rule
 {
 public:
-    Rule(string pred = "", GrammarNode suc = GrammarNode(), Condition con = Condition());
+    Rule(string pred = "", GrammarNode* suc = NULL, Condition con = Condition());
 
     virtual ~Rule();
 
     virtual bool evaluateCondition(Feature &f);
-    virtual bool apply(Feature target);
+    virtual bool apply(Feature* target);
 
 private:
     string m_id;
     Condition m_condition;
-    GrammarNode m_successor;
+    GrammarNode* m_successor;
 };
 
 #endif // RULE_H

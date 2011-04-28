@@ -2,6 +2,7 @@
 
 Feature::Feature()
 {
+    m_active = false;
 }
 
 Feature::Feature(string symbol, string geom, bool isActive, Feature* parent)
@@ -27,28 +28,46 @@ Feature::Feature(string symbol, string geom, bool isActive, Feature* parent)
 
 }
 
-
-void Feature::setType(string geom){
-    if(geom == "plane") m_type = PLANE;
-    if(geom == "mesh") m_type = MESH;
+void Feature::setType(string geom)
+{
+    if(geom == "plane") { m_geom_type = PLANE; }
+    else if(geom == "mesh") { m_geom_type = MESH; }
+    else { m_geom_type = UNKNOWN; }
 }
-
 
 //This is here so that we don't have to include mesh and image in the constructor.
 //Convenient because feature may not have a mesh or a texture
-void Feature::setMesh(Mesh* mesh){
+void Feature::setMesh(Mesh* mesh)
+{
     m_mesh = mesh;
 }
 
-void Feature::setTexture(QImage* image){
+void Feature::setTexture(QImage* image)
+{
     m_texture = image;
 }
 
-void Feature::setActive(bool b){
+void Feature::setMedia(void* data)
+{
+    switch (m_geom_type)
+    {
+        case PLANE:
+            m_texture = (QImage*) data;
+            break;
+
+        case MESH:
+            m_mesh = (Mesh*) data;
+            break;
+    }
+}
+
+void Feature::setActive(bool b)
+{
     m_active = b;
 }
 
-bool Feature::getActive(){
+bool Feature::getActive()
+{
     return m_active;
 }
 

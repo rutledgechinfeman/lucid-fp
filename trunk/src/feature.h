@@ -8,11 +8,11 @@
 
 using std::string;
 using std::vector;
-#define UNKNOWN -1
 
-//Condition type
-#define PLANE 100;
-#define MESH 101;
+//Geometry type
+#define UNKNOWN -1
+#define PLANE 100
+#define MESH 101
 
 
 class Feature
@@ -25,9 +25,11 @@ public:
 
     /// Draw self with OpenGL
     virtual void draw();
+
     void addChild(Feature* f);
     void setMesh(Mesh* m);
     void setTexture(QImage* i);
+    void setMedia(void* data);
     void setActive(bool b);
     bool getActive();
     void setType(string geom);
@@ -39,7 +41,7 @@ private:
     /// Grammatical symbol representing this feature
     string m_symbol;
 
-    int m_type;
+    int m_geom_type;
 
     /// Whether this feature has children or is in active use
     bool m_active;
