@@ -5,7 +5,7 @@ Feature::Feature()
     m_active = false;
 }
 
-Feature::Feature(string symbol, string geom, bool isActive, Feature* parent)
+Feature::Feature(string symbol, string geom, bool isActive, Scope scope, Feature* parent)
 {
     /// I think this is for identification. We may add id later
     m_symbol = symbol;
@@ -18,14 +18,31 @@ Feature::Feature(string symbol, string geom, bool isActive, Feature* parent)
     m_parent = parent;
 
 
-    //Set mesh and texture to null. SET THESE LATER IF YOU WANT TO USE THE MESH OR TEXTURE
+    /// Set mesh and texture to null. SET THESE LATER IF YOU WANT TO USE THE MESH OR TEXTURE
     m_mesh = NULL;
     m_texture = NULL;
 
+    m_scope = scope;
 
     setType(geom);
 
 
+}
+
+Scope Feature::getScope(){
+    return m_scope;
+}
+
+Vector4 Feature::getPoint(){
+    return m_scope.getPoint();
+}
+
+Vector4 Feature::getScale(){
+    return m_scope.getScale();
+}
+
+Matrix4x4 Feature::getBasis(){
+    return m_scope.getBasis();
 }
 
 void Feature::setType(string geom)
