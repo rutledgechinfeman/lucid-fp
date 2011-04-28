@@ -7,7 +7,7 @@
 class Symbol : public GrammarNode
 {
 public:
-    Symbol();
+    Symbol(string arg = "");
     virtual ~Symbol();
 };
 
