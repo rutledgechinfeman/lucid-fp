@@ -48,11 +48,11 @@ void ProbabilityNode::evaluate(Feature* feat, Factory &fac) {
 
 void ProbabilityNode::printSelf()
 {
-    cout << "ProbabilityNode [";
-    for( int i = 0 ; i < m_children.size() ; ++ i )
+    cout << "ProbabilityNode[";
+    for( unsigned int i = 0 ; i < m_children.size() ; ++ i )
     {
-        cout << "p=" << m_probabilities[i];
+        cout << " p=" << m_probabilities[i] << ":";
         m_children[i]->printSelf();
     }
-    cout << "]" << endl;
+    cout << " ]";
 }
