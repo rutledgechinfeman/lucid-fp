@@ -51,19 +51,19 @@ bool Factory::addFeatureType(string id, bool isTerminal, string geom, string dat
     return true;
 }
 
-Feature Factory::instanceOf(string symbol)
+Feature* Factory::instanceOf(string symbol)
 {
-    Feature toReturn;
+    Feature* toReturn;
     if(m_featureListing.find(symbol) == m_featureListing.end())
     {
-        toReturn = Feature();
+        toReturn = new Feature();
     }
     else
     {
         FeatureProperties& f = m_featureListing[symbol];
-        toReturn = Feature(f.id, f.terminal, true);
+        toReturn = new Feature(f.id, f.terminal, true);
 
-        //toReturn.setMedia
+        //toReturn.setMedia TODO
     }
 
     return toReturn;
