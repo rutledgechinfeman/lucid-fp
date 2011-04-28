@@ -11,7 +11,7 @@ using std::string;
 class Rule
 {
 public:
-    Rule(string pred, GrammarNode suc, Condition con = Condition());
+    Rule(string pred = "", GrammarNode suc = GrammarNode(), Condition con = Condition());
 
     virtual ~Rule();
 

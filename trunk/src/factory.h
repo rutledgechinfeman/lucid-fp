@@ -32,7 +32,7 @@ public:
     virtual ~Factory();
 
     bool addFeatureType(string symbol, bool isTerminal, string geom = "", string dataPath = "");
-    Feature instanceOf(string symbol);
+    Feature* instanceOf(string symbol);
 
 private:
     map<string, FeatureProperties> m_featureListing;
