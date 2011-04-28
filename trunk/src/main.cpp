@@ -12,7 +12,8 @@ int main(int argc, char *argv[])
     w.show();
 
     Referee ref("../data/grammar/first.gmr");
-    ref.blowWhistle();
+    Feature* root = new Feature("cube", "plane", true, Scope(Vector4(0.0, 0.0, -10.0, 0.0)));//ref.blowWhistle();
+    w.setRoot(root);
 
     return a.exec();
 }

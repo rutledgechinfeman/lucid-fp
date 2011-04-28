@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "feature.h"
 
 class GLWidget;
 
@@ -16,9 +17,12 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    void setRoot(Feature* root);
+
 
 private:
     Ui::MainWindow *ui;
+
 };
 
 #endif // MAINWINDOW_H
