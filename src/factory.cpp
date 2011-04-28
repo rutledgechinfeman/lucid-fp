@@ -63,7 +63,7 @@ Feature* Factory::instanceOf(string symbol)
     else
     {
         FeatureProperties& f = m_featureListing[symbol];
-        toReturn = new Feature(f.id, f.geomType);
+        toReturn = new Feature(f.id, f.geomType, !f.terminal);
         toReturn->setMedia(f.dataPtr);
     }
 
