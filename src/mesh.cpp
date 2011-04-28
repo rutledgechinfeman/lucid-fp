@@ -94,7 +94,7 @@ Mesh::Mesh(string filename)
     int size = triangles.size()/3;
     if(size == 0){ cerr << "size = 0" << endl; }
     m_triangles = new MeshTriangle[size];
-    for(unsigned int i=0; i<size; i++)
+    for(int i=0; i<size; i++)
     {
         m_triangles[i].v0 = &m_vertices[triangles.at(i*3)];
         m_triangles[i].v1 = &m_vertices[triangles.at(i*3+1)];
