@@ -25,7 +25,7 @@ typedef double REAL;
 struct BGRA
 {
     BGRA() : b(0), g(0), r(0), a(0) {}
-    BGRA(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha = 255) : b(blue), g(green), r(red), a(a) {}
+    BGRA(unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha = 255) : b(blue), g(green), r(red), a(alpha) {}
 
     // C++ TIP:
     // A union struct. Essentially, this makes b <==> channels[0],
