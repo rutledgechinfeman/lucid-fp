@@ -30,12 +30,12 @@ Rule* Grammar::lookupRule(string pred)
 {
     if(m_ruleMap.find(pred) == m_ruleMap.end())
     {
-        return new Rule();
+        return NULL;
     }
     else
     {
         // TODO: pick a rule, somehow...
 
-        return new Rule();
+        return new Rule(); // we won't new this when we do it for real
     }
 }
