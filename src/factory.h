@@ -11,18 +11,18 @@ using std::map;
 
 struct FeatureProperties
 {
-    FeatureProperties(string identity = "", bool isTerminal = false, string geometryType = "", string pathToDataFile = "")
+    FeatureProperties(string identity = "", bool isTerminal = false, string geometryType = "")
     {
         id = identity;
         terminal = isTerminal;
         geomType = geometryType;
-        dataPath = pathToDataFile;
+        dataPtr = NULL;
     }
 
     string id;
     bool terminal;
     string geomType;
-    string dataPath;
+    void* dataPtr;
 };
 
 class Factory

@@ -12,7 +12,12 @@ public:
     Contractor();
     virtual ~Contractor();
 
-    bool build(Grammar &grammar, Factory &fac);
+    bool build(Grammar &grammar, Factory &factory);
+
+private:
+    void expandFeature(Feature* current);
+    Grammar m_grammar;
+    Factory m_factory;
 };
 
 #endif // CONTRACTOR_H

@@ -27,7 +27,7 @@ bool Factory::addFeatureType(string id, bool isTerminal, string geom, string dat
     if(m_featureListing.find(id) != m_featureListing.end()) { return false; }
 
     // Add a new listing
-    m_featureListing[id] = FeatureProperties(id, isTerminal, geom, dataPath);
+    m_featureListing[id] = FeatureProperties(id, isTerminal, geom);
 
     // Look for a datapath on terminal symbols only
     if(!isTerminal   ) { return true; }
@@ -38,12 +38,14 @@ bool Factory::addFeatureType(string id, bool isTerminal, string geom, string dat
     if(geom == "plane" && m_texMap.find(dataPath) == m_texMap.end())
     {
         m_texMap[dataPath] = new QImage(QString(dataPath.c_str()));
+        m_featureListing[id].dataPtr = (void*)m_texMap[dataPath];
     }
 
     // Meshes have... meshes. (3D)
     else if(geom == "mesh" && m_meshMap.find(dataPath) == m_meshMap.end())
     {
         m_meshMap[dataPath] = new Mesh(dataPath);
+        m_featureListing[id].dataPtr = (void*)m_meshMap[dataPath];
     }
 
     else { cerr << "ERROR: Unknown geometry type: " << geom << endl; }
@@ -61,9 +63,8 @@ Feature* Factory::instanceOf(string symbol)
     else
     {
         FeatureProperties& f = m_featureListing[symbol];
-        toReturn = new Feature(f.id, f.terminal, true);
-
-        //toReturn.setMedia TODO
+        toReturn = new Feature(f.id, f.geomType);
+        toReturn->setMedia(f.dataPtr);
     }
 
     return toReturn;

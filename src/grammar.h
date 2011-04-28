@@ -16,11 +16,11 @@ public:
     Grammar();
     virtual ~Grammar();
 
-    virtual void addRule(string pred, Rule rule);
-    virtual Rule lookupRule(string pred);
+    virtual void addRule(string pred, Rule* rule);
+    virtual Rule* lookupRule(string pred);
 
 private:
-    map< string, vector<Rule> > m_ruleMap;
+    map< string, vector<Rule*> > m_ruleMap;
 };
 
 #endif // GRAMMAR_H
