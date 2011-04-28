@@ -128,9 +128,8 @@ bool Parser::parseRuleFile(string filename, Grammar &gram)
         GrammarNode* node = new ProbabilityNode(rule);
         gram.addRule(pred, new Rule(pred, node, Condition(cond)));
 
-        cout << "================" << endl;
         node->printSelf();
-        cout << "================" << endl;
+        cout << endl << "================" << endl;
     }
 
 

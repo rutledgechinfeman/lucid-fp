@@ -20,6 +20,6 @@ void Symbol::evaluate(Feature* feat, Factory &fac) {
 
 void Symbol::printSelf()
 {
-    cout << "Symbol [" << m_symbol << "]" << endl;
+    cout << "Symbol[ " << m_symbol << " ]";
 }
 
