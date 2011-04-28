@@ -28,11 +28,12 @@ Mesh::Mesh(string filename)
     while (myfile.good())
     {
         getline(myfile, line);
-        if (line.size() == 0) continue;
+
 
         // Tokenize line
         tokens.clear();
         StringUtil::split(line, " ", tokens);
+        if(tokens.size() == 0) continue;
 
         // Skip over commented lines
         if(tokens.at(0) == "#") { continue; }
@@ -73,6 +74,8 @@ Mesh::Mesh(string filename)
         else if(tokens.at(0) == "n") { cerr << "WARNING: Currently, normals are not supported for mesh files. Skipping: " << line << endl; } // TODO
         // Parse a vertex texture line
         else if(tokens.at(0) == "t") { cerr << "WARNING: Currently, normals are not supported for mesh files. Skipping: " << line << endl; } // TODO
+
+
     }
 
     // Wrap up
@@ -87,15 +90,18 @@ Mesh::Mesh(string filename)
     }
 
     // Populate the master triangle list
-    m_triangles = new MeshTriangle[triangles.size()/3];
-    for(unsigned int i=0; i<triangles.size(); i++)
+    cout << triangles.size() << endl;
+    int size = triangles.size()/3;
+    if(size == 0){ cerr << "size = 0" << endl; }
+    m_triangles = new MeshTriangle[size];
+    for(unsigned int i=0; i<size; i++)
     {
-        m_triangles[i].v0 = &m_vertices[triangles[i*3]];
-        m_triangles[i].v1 = &m_vertices[triangles[i*3+1]];
-        m_triangles[i].v2 = &m_vertices[triangles[i*3+2]];
+        m_triangles[i].v0 = &m_vertices[triangles.at(i*3)];
+        m_triangles[i].v1 = &m_vertices[triangles.at(i*3+1)];
+        m_triangles[i].v2 = &m_vertices[triangles.at(i*3+2)];
     }
 
-    m_numtriangles = currFace;
+    m_numtriangles = size;
     m_numvertices = vertices.size();
 
 }
@@ -127,16 +133,18 @@ Mesh::~Mesh()
 
 void Mesh::drawGL()
 {
+
     glBegin(GL_TRIANGLES);
     for(int i=0; i < m_numtriangles; i++)
     {
-        glTexCoord2f(m_triangles[i].v0->t.x, m_triangles[i].v0->t.y);
+        cout << "p: " << m_triangles[i].v0->p << endl;
+        //glTexCoord2f(m_triangles[i].v0->t.x, m_triangles[i].v0->t.y);
         glVertex3f(m_triangles[i].v0->p.x, m_triangles[i].v0->p.y, m_triangles[i].v0->p.z);
 
-        glTexCoord2f(m_triangles[i].v1->t.x, m_triangles[i].v1->t.y);
+        //glTexCoord2f(m_triangles[i].v1->t.x, m_triangles[i].v1->t.y);
         glVertex3f(m_triangles[i].v1->p.x, m_triangles[i].v1->p.y, m_triangles[i].v1->p.z);
 
-        glTexCoord2f(m_triangles[i].v2->t.x, m_triangles[i].v2->t.y);
+        //glTexCoord2f(m_triangles[i].v2->t.x, m_triangles[i].v2->t.y);
         glVertex3f(m_triangles[i].v2->p.x, m_triangles[i].v2->p.y, m_triangles[i].v2->p.z);
     }
     glEnd();

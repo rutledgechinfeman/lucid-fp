@@ -14,3 +14,7 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
+
+void MainWindow::setRoot(Feature* root){
+    ui->glWidget->setRoot(root);
+}

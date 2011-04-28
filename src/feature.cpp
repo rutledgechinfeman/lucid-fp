@@ -5,6 +5,8 @@
 Feature::Feature()
 {
     m_active = false;
+    m_mesh = NULL;
+    m_texture = NULL;
 }
 
 Feature::Feature(string symbol, string geom, bool isActive, Scope scope, Feature* parent)
@@ -58,7 +60,9 @@ void Feature::setType(string geom)
 //Convenient because feature may not have a mesh or a texture
 void Feature::setMesh(Mesh* mesh)
 {
+
     m_mesh = mesh;
+
 }
 
 void Feature::setTexture(QImage* image)
@@ -120,9 +124,7 @@ Feature::~Feature()
 
 void Feature::draw()
 {
-    cout << m_scope.getYBasis() << endl;
-    if(m_children.size() == 0){
-
+    if(m_active){
 
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
@@ -130,7 +132,6 @@ void Feature::draw()
 
         Matrix4x4 mat = getTransMat(m_scope.getPoint()) * m_scope.getBasis() * getScaleMat(m_scope.getScale());
         REAL* matrix = new REAL[16];
-        cout << mat << endl;
         mat.getTranspose().fillArray(matrix);
         glLoadMatrixd(matrix);
 
@@ -153,14 +154,14 @@ void Feature::draw()
                 break;
 
             case MESH:
-                m_mesh->drawGL();
+                if(m_mesh) { m_mesh->drawGL(); }
                 break;
         }
         glPopMatrix();
 
     }
     else{
-        for(int i=0; i<m_children.size(); i++){
+        for(unsigned int i=0; i<m_children.size(); i++){
             m_children.at(i)->draw();
         }
     }

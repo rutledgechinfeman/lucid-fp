@@ -17,15 +17,9 @@ Referee::~Referee()
     delete m_contractor;
 }
 
-bool Referee::blowWhistle()
+Feature* Referee::blowWhistle()
 {
     m_parser->parseFile(m_file, *m_grammar, *m_fac);
-    m_contractor->build(*m_grammar, *m_fac)->draw();
-    Feature f = Feature("window", "plane", true, Scope(Vector4(-1.0, 1.0, -10.0, 1.0), Vector4(2.0, 1.0, 1.0, 1.0),
-                                                       Vector4(1.0, 0.0, 0.0, 0.0),
-                                                       Vector4(0.5, 0.5, 0.0, 0.0), Vector4(0.0, 0.0, 1.0, 0.0)), NULL);
-    f.draw();
-
-    return true;
+    return m_contractor->build(*m_grammar, *m_fac);
 }
 

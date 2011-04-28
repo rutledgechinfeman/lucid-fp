@@ -16,7 +16,7 @@ class Referee
 public:
     Referee(string file = "");
     virtual ~Referee();
-    bool blowWhistle();
+    Feature* blowWhistle();
 private:
     string m_file;
     Parser* m_parser;
