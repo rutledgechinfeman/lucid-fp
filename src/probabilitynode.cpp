@@ -1,6 +1,6 @@
 #include "probabilitynode.h"
 #include "stringutil.h"
-#include "operation.h"
+#include "operationnode.h"
 #include "symbol.h"
 #include <vector>
 #include <iostream>
@@ -11,8 +11,6 @@ using namespace std;
 
 ProbabilityNode::ProbabilityNode(string line)
 {
-
-    cout << line << endl;
 
     vector<string> rules;
     StringUtil::split(line, "~", rules);
@@ -25,17 +23,15 @@ ProbabilityNode::ProbabilityNode(string line)
         string arg = StringUtil::trim(rule.substr(0, rule.find(":")));
         if (rule.find("(") != string::npos)
         {
-            cout << "Operation: " << arg << endl;
-            prospectiveChild = new Operation(arg);
+            prospectiveChild = new OperationNode(arg);
         }
         else
         {
-            cout << "Symbol: " << arg << endl;
             prospectiveChild = new Symbol(arg);
         }
         m_children.push_back(prospectiveChild);
 
-        probString = StringUtil::trim(rule.substr(rule.find(":")));
+        probString = StringUtil::trim(rule.substr(rule.find(":") + 1));
         m_probabilities.push_back(atof(probString.c_str()));
     }
 }
@@ -48,4 +44,15 @@ ProbabilityNode::~ProbabilityNode()
 void ProbabilityNode::evaluate(Feature* feat, Factory &fac) {
 
 
+}
+
+void ProbabilityNode::printSelf()
+{
+    cout << "ProbabilityNode [";
+    for( int i = 0 ; i < m_children.size() ; ++ i )
+    {
+        cout << "p=" << m_probabilities[i];
+        m_children[i]->printSelf();
+    }
+    cout << "]" << endl;
 }

@@ -17,3 +17,9 @@ void Symbol::evaluate(Feature* feat, Factory &fac) {
     feat->addChild(fac.instanceOf(m_symbol));
 
 }
+
+void Symbol::printSelf()
+{
+    cout << "Symbol [" << m_symbol << "]" << endl;
+}
+

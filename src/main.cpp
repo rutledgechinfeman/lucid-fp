@@ -5,6 +5,8 @@
 
 int main(int argc, char *argv[])
 {
+    cout << endl;
+
     QApplication a(argc, argv);
     MainWindow w;
     w.show();

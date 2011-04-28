@@ -125,8 +125,14 @@ bool Parser::parseRuleFile(string filename, Grammar &gram)
         string rule = StringUtil::trim(line.substr(line.find("~")+1));
         if (rule.size() == 0) { cerr << "WARNING: Ignoring malformed rule file line: " << original << endl; continue; }
 
-        gram.addRule(pred, new Rule(pred, new ProbabilityNode(rule), Condition(cond)));
+        GrammarNode* node = new ProbabilityNode(rule);
+        gram.addRule(pred, new Rule(pred, node, Condition(cond)));
+
+        cout << "================" << endl;
+        node->printSelf();
+        cout << "================" << endl;
     }
+
 
     // Clean up
     ruleFile.close();

@@ -17,6 +17,7 @@ public:
     virtual ~GrammarNode();
 
     virtual void evaluate(Feature* feat, Factory &fac) = 0;
+    virtual void printSelf() = 0;
 
 protected:
     vector< GrammarNode* > m_children;

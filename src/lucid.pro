@@ -30,7 +30,8 @@ SOURCES += main.cpp\
     CS123Vector.inl \
     CS123Matrix.inl \
     CS123Matrix.cpp \
-    scope.cpp
+    scope.cpp \
+    operationnode.cpp
 
 HEADERS  += mainwindow.h \
     glwidget.h \
@@ -53,6 +54,7 @@ HEADERS  += mainwindow.h \
     CS123Matrix.h \
     CS123Algebra.h \
     scope.h \
-    CS123Common.h
+    CS123Common.h \
+    operationnode.h
 
 FORMS    += mainwindow.ui
