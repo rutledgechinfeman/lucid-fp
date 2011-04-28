@@ -18,7 +18,14 @@ bool Contractor::build(Grammar &grammar, Factory &factory)
 
 void Contractor::expandFeature(Feature* current)
 {
+    // Base case
     if(current == NULL || !current->getActive()) { return; }
 
+    Rule* r = m_grammar.lookupRule(current->getSymbol());
+    r->apply(current);
 
+    for(int i = 0; i < current->getNumChildren(); ++ i)
+    {
+        expandFeature(current->getChild(i));
+    }
 }
