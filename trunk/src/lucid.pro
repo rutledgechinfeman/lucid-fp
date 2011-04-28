@@ -29,7 +29,8 @@ SOURCES += main.cpp\
     probabilitynode.cpp \
     CS123Vector.inl \
     CS123Matrix.inl \
-    CS123Matrix.cpp
+    CS123Matrix.cpp \
+    scope.cpp
 
 HEADERS  += mainwindow.h \
     glwidget.h \
@@ -50,6 +51,8 @@ HEADERS  += mainwindow.h \
     probabilitynode.h \
     CS123Vector.h \
     CS123Matrix.h \
-    CS123Algebra.h
+    CS123Algebra.h \
+    scope.h \
+    CS123Common.h
 
 FORMS    += mainwindow.ui
