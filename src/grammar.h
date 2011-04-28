@@ -16,7 +16,8 @@ public:
     Grammar();
     virtual ~Grammar();
 
-    void addRule(string pred, Rule);
+    virtual void addRule(string pred, Rule rule);
+    virtual Rule lookupRule(string pred);
 
 private:
     map< string, vector<Rule> > m_ruleMap;
