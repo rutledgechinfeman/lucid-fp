@@ -26,16 +26,28 @@ void Grammar::addRule(string pred, Rule* rule)
     m_ruleMap[pred].push_back(rule);
 }
 
-Rule* Grammar::lookupRule(string pred)
+Rule* Grammar::lookupRule(Feature* parent)
 {
+    // Get the predecessor symbol
+    string pred = parent->getSymbol();
+
+    // Make sure rules exist for this predecessor
     if(m_ruleMap.find(pred) == m_ruleMap.end())
     {
+        cerr << "ERROR: Rule requested for symbol [" << pred << "] but there are none." << endl;
         return NULL;
     }
-    else
-    {
-        // TODO: pick a rule, somehow...
 
-        return new Rule(); // we won't new this when we do it for real
+    // Pick the first rule that can be applied
+    const vector<Rule*>& rules = m_ruleMap[pred];
+    for(unsigned int i = 0; i < rules.size(); ++i)
+    {
+        if(rules[i]->evaluateCondition(*parent))
+        {
+            return rules[i];
+        }
     }
+
+    cerr << "ERROR: Rule requested for symbol [" << pred << "] and no conditions evaluated to true." << endl;
+    return NULL;
 }
