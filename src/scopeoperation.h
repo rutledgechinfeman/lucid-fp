@@ -18,7 +18,7 @@ public:
     virtual ~ScopeOperation();
 
     /// Operate on the given feature's scope
-    void evaluate(Feature* feat, Factory &fac);
+    void evaluate(Feature* feat);
 
     /// For debugging purposes only
     void printSelf();
