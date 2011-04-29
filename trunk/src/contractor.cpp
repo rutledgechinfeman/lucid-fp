@@ -22,7 +22,7 @@ void Contractor::expandFeature(Feature* current)
     if(current == NULL || !current->getActive()) { return; }
 
     Rule* r = m_grammar.lookupRule(current);
-    r->apply(current);
+    r->apply(current, m_factory);
 
     for(int i = 0; i < current->getNumChildren(); ++ i)
     {

@@ -16,7 +16,7 @@ public:
     virtual ~Rule();
 
     virtual bool evaluateCondition(Feature &f);
-    virtual bool apply(Feature* target);
+    virtual bool apply(Feature* target, Factory& fac);
 
 private:
     string m_id;
