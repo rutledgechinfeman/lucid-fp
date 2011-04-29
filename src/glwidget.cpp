@@ -15,6 +15,7 @@ GLWidget::GLWidget(QWidget *parent)
     m_leftMouseDown = m_rightMouseDown = m_middleMouseDown = false;
     this->setFocusPolicy(Qt::StrongFocus);
     this->setMouseTracking(true);
+    m_root = NULL;
 }
 
 GLWidget::~GLWidget()
