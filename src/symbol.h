@@ -11,7 +11,7 @@ public:
     Symbol(string arg = "");
     virtual ~Symbol();
 
-    void evaluate(Feature* feat, Factory &fac);
+    void evaluate(Feature* feat, Factory &fac, Scope scope);
     virtual void printSelf();
 
 private:

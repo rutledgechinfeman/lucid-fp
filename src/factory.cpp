@@ -53,7 +53,7 @@ bool Factory::addFeatureType(string id, bool isTerminal, string geom, string dat
     return true;
 }
 
-Feature* Factory::instanceOf(string symbol)
+Feature* Factory::instanceOf(string symbol, Scope scope)
 {
     Feature* toReturn;
     if(m_featureListing.find(symbol) == m_featureListing.end())
@@ -66,6 +66,8 @@ Feature* Factory::instanceOf(string symbol)
         toReturn = new Feature(f.id, f.geomType, !f.terminal);
         toReturn->setMedia(f.dataPtr);
     }
+
+    toReturn->setScope(scope);
 
     return toReturn;
 }
