@@ -9,9 +9,10 @@ ScopeOperation::ScopeOperation(string arg)
 {
     // Default values
     m_type = UNKNOWN;
-    m_params[0] = 0.0;
-    m_params[1] = 0.0;
-    m_params[2] = 0.0;
+    m_params.data[0] = 0.0;
+    m_params.data[1] = 0.0;
+    m_params.data[2] = 0.0;
+    m_params.data[3] = 1.0;
 
     // Parse type
     string type = StringUtil::trim(arg.substr(0, arg.find("(")));
@@ -31,7 +32,7 @@ ScopeOperation::ScopeOperation(string arg)
     if (params.size() != 3) { cerr << "ERROR: Invalid number of params in operation line: " << arg << endl; }
     for (unsigned int i = 0; i < params.size(); ++ i)
     {
-        m_params[i] = strtod(params[i].c_str(), NULL);
+        m_params.data[i] = strtod(params[i].c_str(), NULL);
     }
 }
 
@@ -39,28 +40,54 @@ ScopeOperation::~ScopeOperation() { }
 
 void ScopeOperation::evaluate(Feature* feat, Factory &fac)
 {
-    // TODO
+    (void) fac; // Unused parameter
+
+    // Edit the scope of the input feature according to this operation type
+    switch (m_type)
+    {
+        case SCALE:
+            feat->getScope()->setSize(m_params);
+            break;
+
+        case ROTATE:
+            feat->getScope()->rotateX(m_params.x);
+            feat->getScope()->rotateY(m_params.y);
+            feat->getScope()->rotateZ(m_params.z);
+            break;
+
+        case TRANSLATE:
+            feat->getScope()->translate(m_params);
+            break;
+
+        case UNKNOWN: // fall-through
+        default:
+            break;
+    }
 }
 
 void ScopeOperation::printSelf()
 {
     cout << "Operation_";
 
-    switch(m_type)
+    switch (m_type)
     {
         case SCALE:
             cout << "S";
             break;
+
         case ROTATE:
             cout << "R";
             break;
+
         case TRANSLATE:
             cout << "T";
             break;
-        case UNKNOWN:
+
+        case UNKNOWN: // fall-through
+        default:
             cout << "?";
             break;
     }
 
-    cout << "(" << m_params[0] << ", " << m_params[1] << ", " << m_params[2] << ")";
+    cout << "(" << m_params.x << ", " << m_params.y << ", " << m_params.z << ")";
 }
