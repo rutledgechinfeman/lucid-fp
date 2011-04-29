@@ -1,5 +1,5 @@
-#ifndef OPERATION_H
-#define OPERATION_H
+#ifndef SCOPEOPERATION_H
+#define SCOPEOPERATION_H
 
 #include "grammarnode.h"
 
@@ -8,14 +8,14 @@
 #define TRANSLATE 102
 #define UNKNOWN   -1
 
-class Operation
+class ScopeOperation
 {
 public:
     /// CTOR
-    Operation(string arg = "");
+    ScopeOperation(string arg = "");
 
     /// DTOR
-    virtual ~Operation();
+    virtual ~ScopeOperation();
 
     /// Operate on the given feature's scope
     void evaluate(Feature* feat, Factory &fac);
@@ -31,4 +31,4 @@ private:
     double m_params[3];
 };
 
-#endif // OPERATION_H
+#endif // SCOPEOPERATION_H

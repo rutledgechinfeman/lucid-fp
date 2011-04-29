@@ -1,11 +1,11 @@
 #include <iostream>
 
-#include "operation.h"
+#include "scopeoperation.h"
 #include "stringutil.h"
 
 using namespace std;
 
-Operation::Operation(string arg)
+ScopeOperation::ScopeOperation(string arg)
 {
     // Default values
     m_type = UNKNOWN;
@@ -35,14 +35,14 @@ Operation::Operation(string arg)
     }
 }
 
-Operation::~Operation() { }
+ScopeOperation::~ScopeOperation() { }
 
-void Operation::evaluate(Feature* feat, Factory &fac)
+void ScopeOperation::evaluate(Feature* feat, Factory &fac)
 {
     // TODO
 }
 
-void Operation::printSelf()
+void ScopeOperation::printSelf()
 {
     cout << "Operation_";
 
