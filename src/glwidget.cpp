@@ -41,8 +41,8 @@ QSize GLWidget::sizeHint() const
 void GLWidget::perspectiveCamera(int width, int height) {
     float ratio = width / static_cast<float>(height);
     glMatrixMode(GL_PROJECTION);
-    /*glLoadIdentity();
-    gluPerspective(m_camera.fovy,ratio,m_camera.near,m_camera.far);*/
+    glLoadIdentity();
+    gluPerspective(m_camera.fovy,ratio,m_camera.near,m_camera.far);
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
@@ -65,13 +65,12 @@ void GLWidget::initializeGL()
 
 void GLWidget::paintGL()
 {
-    //glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT);
 
-    cout << m_camera.eye.z << endl;
     this->perspectiveCamera(this->width(), this->height());
 
     m_root->draw();
-    m_camera.eye.z += 100;
+    m_camera.eye.z -= .1;
 
 
 }
@@ -113,7 +112,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event) {
 
 void GLWidget::wheelEvent(QWheelEvent *event) {
 
-   int dx = event->delta();
+    int dx = event->delta();
     double3 look = (m_camera.center - m_camera.eye).getNormalized();
     m_camera.eye += look * 0.001 * dx;
     this->perspectiveCamera(this->width(), this->height());
@@ -125,7 +124,7 @@ void GLWidget::setDefaultCamera() {
     m_camera.center.x = 0.0,m_camera.center.y = 0.0,m_camera.center.z = 0.0;
     m_camera.eye.x = 0.0,m_camera.eye.y = 0.0f,m_camera.eye.z = 9.0;
     m_camera.up.x = 0.0,m_camera.up.y = 1.0,m_camera.up.z = 0.0;
-    m_camera.near = 0.001f,m_camera.far = 10.0;
+    m_camera.near = 0.001f,m_camera.far = 40.0;
     m_camera.fovy = 60.0;
     this->perspectiveCamera(this->width(), this->height());
 }
@@ -139,8 +138,6 @@ void GLWidget::mousePressEvent(QMouseEvent *event) {
         glGetDoublev(GL_MODELVIEW_MATRIX, mvmatrix);
         glGetDoublev(GL_PROJECTION_MATRIX, projmatrix);
 
-        /*if(m_texturererer) m_texturererer->paint(event->x(), event->y(), m_meshBrush, m_idImage,
-                                               viewport, projmatrix, mvmatrix);*/
         m_leftMouseDown = true;
     }
     if(event->buttons() & Qt::RightButton) m_rightMouseDown = true;

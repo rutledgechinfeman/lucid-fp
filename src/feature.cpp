@@ -132,13 +132,13 @@ void Feature::draw()
     if(m_active){
 
         glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
         glPushMatrix();
 
-        Matrix4x4 mat = getTransMat(m_scope.getPoint())/* * m_scope.getBasis() * getScaleMat(m_scope.getScale())*/;
+        Matrix4x4 mat = getTransMat(m_scope.getPoint()) * m_scope.getBasis() * getScaleMat(m_scope.getScale());
         REAL* matrix = new REAL[16];
         mat.getTranspose().fillArray(matrix);
-        glLoadMatrixd(matrix);
+
+        glMultMatrixd(matrix);
 
         switch (m_geom_type)
         {
