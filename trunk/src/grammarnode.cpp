@@ -6,10 +6,3 @@ GrammarNode::GrammarNode(string line)
 }
 
 GrammarNode::~GrammarNode() { }
-
-
-void GrammarNode::evaluate(Feature* feat, Factory &fac)
-{
-
-
-}
