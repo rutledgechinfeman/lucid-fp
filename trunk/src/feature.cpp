@@ -135,7 +135,7 @@ void Feature::draw()
         glLoadIdentity();
         glPushMatrix();
 
-        Matrix4x4 mat = getTransMat(m_scope.getPoint()) * m_scope.getBasis() * getScaleMat(m_scope.getScale());
+        Matrix4x4 mat = getTransMat(m_scope.getPoint())/* * m_scope.getBasis() * getScaleMat(m_scope.getScale())*/;
         REAL* matrix = new REAL[16];
         mat.getTranspose().fillArray(matrix);
         glLoadMatrixd(matrix);
@@ -149,11 +149,6 @@ void Feature::draw()
                 glVertex3f(1.0, 0.0, 0.0);
                 glVertex3f(1.0, 1.0, 0.0);
                 glVertex3f(0.0, 1.0, 0.0);
-
-                glVertex3f(0.0, 0.0, 0.0);
-                glVertex3f(0.0, 1.0, 0.0);
-                glVertex3f(1.0, 1.0, 0.0);
-                glVertex3f(1.0, 0.0, 0.0);
                 glEnd();
 
                 break;

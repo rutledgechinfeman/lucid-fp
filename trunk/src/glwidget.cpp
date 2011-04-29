@@ -16,6 +16,7 @@ GLWidget::GLWidget(QWidget *parent)
     this->setFocusPolicy(Qt::StrongFocus);
     this->setMouseTracking(true);
     m_root = NULL;
+    this->setDefaultCamera();
 }
 
 GLWidget::~GLWidget()
@@ -40,8 +41,8 @@ QSize GLWidget::sizeHint() const
 void GLWidget::perspectiveCamera(int width, int height) {
     float ratio = width / static_cast<float>(height);
     glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(m_camera.fovy,ratio,m_camera.near,m_camera.far);
+    /*glLoadIdentity();
+    gluPerspective(m_camera.fovy,ratio,m_camera.near,m_camera.far);*/
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
@@ -56,39 +57,22 @@ void GLWidget::initializeGL()
   glShadeModel(GL_FLAT);
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_CULL_FACE);
+
+  m_timer = new QTimer(this);
+  connect(m_timer, SIGNAL(timeout()), this, SLOT(repaint()));
+  m_timer->start(1000.0f / 30.0f);
 }
 
 void GLWidget::paintGL()
 {
-    cout << m_camera.center << endl;
-    /*this->perspectiveCamera(this->width(), this->height());
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    //Render the triangle ID Map.  If the mesh has really small triangles...they wont render to a pixel (darn)
-    //So we need to zoom in, using the brush mask as our viewport before rendering the id map.
-    GLint viewport[4];
-    GLdouble mvmatrix[16], projmatrix[16];
-    GLint realy;  GLdouble wx, wy, wz;
-    glGetIntegerv(GL_VIEWPORT, viewport);
-    glGetDoublev(GL_MODELVIEW_MATRIX, mvmatrix);
-    glGetDoublev(GL_PROJECTION_MATRIX, projmatrix);
-    realy = viewport[3] - (GLint) m_prevMousePos.y - 1;
-    gluUnProject ((GLdouble) m_prevMousePos.x, (GLdouble) realy, 1.0,
-                  mvmatrix, projmatrix, viewport, &wx, &wy, &wz);
-    double3 centerOld = m_camera.center;
-    m_camera.center.x = wx, m_camera.center.y = wy, m_camera.center.z = wz;
-    double fovOld = m_camera.fovy;
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glViewport(0,0,this->width(),this->height());
-    m_camera.center = centerOld;  m_camera.fovy = fovOld;
-    glBindTexture(GL_TEXTURE_2D, 0);*/
+    //glClear(GL_COLOR_BUFFER_BIT);
 
+    cout << m_camera.eye.z << endl;
+    this->perspectiveCamera(this->width(), this->height());
 
+    m_root->draw();
+    m_camera.eye.z += 100;
 
-    if(m_root) m_root->draw();
-
-    /*this->perspectiveCamera(this->width(), this->height());
-    glFlush();
-    this->swapBuffers();*/
 
 }
 
@@ -97,10 +81,6 @@ void GLWidget::resizeGL(int width, int height)
 {
   int side = qMin(width, height);
   glViewport((width - side) / 2, (height - side) / 2, side, side);
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  glOrtho(-1.5, +1.5, +1.5, -1.5, 4.0, 15.0);
-  glMatrixMode(GL_MODELVIEW);
 }
 
 
@@ -115,7 +95,7 @@ void GLWidget::normalizeAngle(int *angle)
 
 void GLWidget::mouseMoveEvent(QMouseEvent *event) {
 
-    if(m_rightMouseDown && !m_leftMouseDown) {
+    if(m_rightMouseDown) {
        float dx = event->x() - m_prevMousePos.x;
        float dy = event->y() - m_prevMousePos.y;
        double x = m_camera.eye.x, y = m_camera.eye.y, z = m_camera.eye.z;
@@ -128,23 +108,26 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event) {
        m_camera.eye.z = r * sin(theta) * sin(phi);
        m_camera.eye.y = r * cos(theta);
        this->perspectiveCamera(this->width(), this->height());
-    } else if (m_middleMouseDown) {
-        float dy = event->y() - m_prevMousePos.y;
-        m_camera.eye.y += dy / 500.f;
-        m_camera.center.y += dy / 500.f;
-        this->perspectiveCamera(this->width(), this->height());
-    } else if (m_leftMouseDown && !m_rightMouseDown && !m_middleMouseDown) {
-        GLint viewport[4];
-        GLdouble mvmatrix[16], projmatrix[16];
-        glGetIntegerv(GL_VIEWPORT, viewport);
-        glGetDoublev(GL_MODELVIEW_MATRIX, mvmatrix);
-        glGetDoublev(GL_PROJECTION_MATRIX, projmatrix);
-
-        /*if(m_texturererer) m_texturererer->paint(event->x(), event->y(), m_meshBrush, m_idImage,
-                                                 viewport, projmatrix, mvmatrix);*/
     }
+}
 
-    m_prevMousePos.x = event->x(); m_prevMousePos.y = event->y();
+void GLWidget::wheelEvent(QWheelEvent *event) {
+
+   int dx = event->delta();
+    double3 look = (m_camera.center - m_camera.eye).getNormalized();
+    m_camera.eye += look * 0.001 * dx;
+    this->perspectiveCamera(this->width(), this->height());
+
+
+}
+
+void GLWidget::setDefaultCamera() {
+    m_camera.center.x = 0.0,m_camera.center.y = 0.0,m_camera.center.z = 0.0;
+    m_camera.eye.x = 0.0,m_camera.eye.y = 0.0f,m_camera.eye.z = 9.0;
+    m_camera.up.x = 0.0,m_camera.up.y = 1.0,m_camera.up.z = 0.0;
+    m_camera.near = 0.001f,m_camera.far = 10.0;
+    m_camera.fovy = 60.0;
+    this->perspectiveCamera(this->width(), this->height());
 }
 
 void GLWidget::mousePressEvent(QMouseEvent *event) {
