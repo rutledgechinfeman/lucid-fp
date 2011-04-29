@@ -29,9 +29,10 @@ void OperationNode::evaluate(Feature* feat, Factory &fac)
 {
     // TODO: We currently implement all operations, then all symbols
     // and don't consider that they might alternate.
+    Scope tempScope = *(feat->getScope());
     for (unsigned int i = 0; i < m_operations.size(); ++ i)
     {
-        m_operations[i]->evaluate(feat);
+        tempScope = m_operations[i]->evaluate(tempScope);
     }
 
     switch(m_type)
