@@ -38,10 +38,8 @@ ScopeOperation::ScopeOperation(string arg)
 
 ScopeOperation::~ScopeOperation() { }
 
-void ScopeOperation::evaluate(Feature* feat, Factory &fac)
+void ScopeOperation::evaluate(Feature* feat)
 {
-    (void) fac; // Unused parameter
-
     // Edit the scope of the input feature according to this operation type
     switch (m_type)
     {

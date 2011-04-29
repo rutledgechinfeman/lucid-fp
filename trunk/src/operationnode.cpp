@@ -31,7 +31,7 @@ void OperationNode::evaluate(Feature* feat, Factory &fac)
     // and don't consider that they might alternate.
     for (unsigned int i = 0; i < m_operations.size(); ++ i)
     {
-        m_operations[i]->evaluate(feat, fac);
+        m_operations[i]->evaluate(feat);
     }
 
     switch(m_type)
