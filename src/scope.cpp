@@ -64,3 +64,7 @@ Scope Scope::rotateY(REAL angle){
 Scope Scope::rotateZ(REAL angle){
     return Scope(m_point, m_scale, getRotMat(m_point, m_zbasis, angle) * m_basis);
 }
+
+Scope Scope::copy(){
+    return Scope(m_point, m_scale, m_basis);
+}

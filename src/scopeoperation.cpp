@@ -38,29 +38,33 @@ ScopeOperation::ScopeOperation(string arg)
 
 ScopeOperation::~ScopeOperation() { }
 
-void ScopeOperation::evaluate(Feature* feat)
+Scope ScopeOperation::evaluate(Scope &in)
 {
+    Scope toReturn = in.copy();
+
     // Edit the scope of the input feature according to this operation type
     switch (m_type)
     {
         case SCALE:
-            feat->getScope()->setSize(m_params);
+            toReturn.setSize(m_params);
             break;
 
         case ROTATE:
-            feat->getScope()->rotateX(m_params.x);
-            feat->getScope()->rotateY(m_params.y);
-            feat->getScope()->rotateZ(m_params.z);
+            toReturn.rotateX(m_params.x);
+            toReturn.rotateY(m_params.y);
+            toReturn.rotateZ(m_params.z);
             break;
 
         case TRANSLATE:
-            feat->getScope()->translate(m_params);
+            toReturn.translate(m_params);
             break;
 
         case UNKNOWN: // fall-through
         default:
             break;
     }
+
+    return toReturn;
 }
 
 void ScopeOperation::printSelf()

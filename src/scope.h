@@ -21,6 +21,8 @@ public:
     Vector4 getYBasis();
     Vector4 getZBasis();
 
+    Scope copy();
+
 private:
     Vector4 m_point;
     Matrix4x4 m_basis;
