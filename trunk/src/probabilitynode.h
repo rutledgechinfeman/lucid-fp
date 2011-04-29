@@ -14,7 +14,7 @@ public:
     virtual ~ProbabilityNode();
 
     /// Apply to feature
-    void evaluate(Feature* feat, Factory &fac);
+    void evaluate(Feature* feat, Factory &fac, Scope scope);
 
     /// For debugging purposes
     virtual void printSelf();

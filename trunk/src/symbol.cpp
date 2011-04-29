@@ -10,12 +10,10 @@ Symbol::Symbol(string arg)
 Symbol::~Symbol() { }
 
 
-void Symbol::evaluate(Feature* feat, Factory &fac) {
-
+void Symbol::evaluate(Feature* feat, Factory &fac, Scope scope)
+{
+    feat->addChild(fac.instanceOf(m_symbol, scope));
     feat->setActive(false);
-
-    feat->addChild(fac.instanceOf(m_symbol));
-
 }
 
 void Symbol::printSelf()

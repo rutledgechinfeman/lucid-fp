@@ -33,8 +33,8 @@ Feature::Feature(string symbol, string geom, bool isActive, Scope scope, Feature
 
 }
 
-Scope* Feature::getScope(){
-    return &m_scope;
+Scope Feature::getScope(){
+    return m_scope;
 }
 
 Vector4 Feature::getPoint(){
@@ -54,6 +54,11 @@ void Feature::setType(string geom)
     if(geom == "plane") { m_geom_type = PLANE; }
     else if(geom == "mesh") { m_geom_type = MESH; }
     else { m_geom_type = UNKNOWN; }
+}
+
+void Feature::setScope(Scope scope)
+{
+    m_scope = scope;
 }
 
 //This is here so that we don't have to include mesh and image in the constructor.

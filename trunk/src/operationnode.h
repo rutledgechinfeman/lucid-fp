@@ -30,7 +30,7 @@ public:
     virtual ~OperationNode();
 
     /// Operate on the feature's scope, add to it's children as applicable
-    void evaluate(Feature* feat, Factory &fac);
+    void evaluate(Feature* feat, Factory &fac, Scope scope);
 
     /// Debug purposes only
     virtual void printSelf();

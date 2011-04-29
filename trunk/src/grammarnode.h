@@ -20,7 +20,7 @@ public:
     virtual ~GrammarNode();
 
     /// Pure virtual method to edit a parent feature and give it children
-    virtual void evaluate(Feature* feat, Factory &fac) = 0;
+    virtual void evaluate(Feature* feat, Factory &fac, Scope scope) = 0;
 
     /// For debugging purposes only
     virtual void printSelf() = 0;

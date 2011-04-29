@@ -6,6 +6,7 @@
 #include <QImage>
 #include "mesh.h"
 #include "feature.h"
+#include "scope.h"
 using std::string;
 using std::map;
 
@@ -38,7 +39,7 @@ public:
     bool addFeatureType(string symbol, bool isTerminal, string geom = "", string dataPath = "");
 
     /// Get a new instance from the factory (user is responsible for deletion)
-    Feature* instanceOf(string symbol);
+    Feature* instanceOf(string symbol, Scope scope = Scope());
 
 private:
     /// Master list of features

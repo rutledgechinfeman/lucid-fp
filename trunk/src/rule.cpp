@@ -17,11 +17,11 @@ bool Rule::evaluateCondition(Feature &f)
     return m_condition.evaluate(f);
 }
 
-bool Rule::apply(Feature* target, Factory& fac)
+bool Rule::apply(Feature* target, Factory& fac, Scope scope)
 {
     if (!m_successor) { return false; }
 
-    m_successor->evaluate(target, fac);
+    m_successor->evaluate(target, fac, scope);
 
     return true;
 }

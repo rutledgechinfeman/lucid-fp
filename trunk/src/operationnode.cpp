@@ -25,14 +25,13 @@ OperationNode::OperationNode(string arg)
 
 OperationNode::~OperationNode() { }
 
-void OperationNode::evaluate(Feature* feat, Factory &fac)
+void OperationNode::evaluate(Feature* feat, Factory &fac, Scope scope)
 {
     // TODO: We currently implement all operations, then all symbols
     // and don't consider that they might alternate.
-    Scope tempScope = *(feat->getScope());
     for (unsigned int i = 0; i < m_operations.size(); ++ i)
     {
-        tempScope = m_operations[i]->evaluate(tempScope);
+        scope = m_operations[i]->evaluate(scope);
     }
 
     switch(m_type)
@@ -55,7 +54,7 @@ void OperationNode::evaluate(Feature* feat, Factory &fac)
             // It is probably the case that there are no children here.
             for (unsigned int i = 0; i < m_children.size(); ++ i)
             {
-                m_children[i]->evaluate(feat, fac);
+                m_children[i]->evaluate(feat, fac, scope);
             }
     }
 }

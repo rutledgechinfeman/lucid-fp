@@ -41,9 +41,9 @@ ProbabilityNode::~ProbabilityNode()
 }
 
 
-void ProbabilityNode::evaluate(Feature* feat, Factory &fac)
+void ProbabilityNode::evaluate(Feature* feat, Factory &fac, Scope scope)
 {
-    double sample = (double) rand() / (double) RAND_MAX; // random number between 0 and 1
+    double sample = (double) rand() / (double) RAND_MAX; // random number between 0 and 1 (found this online)
     double total = 0;
     unsigned int i;
     for (i = 0; i < m_probabilities.size(); ++ i)
@@ -51,13 +51,13 @@ void ProbabilityNode::evaluate(Feature* feat, Factory &fac)
         total += m_probabilities[i];
         if( total >= sample )
         {
-            m_children[i]->evaluate(feat, fac);
+            m_children[i]->evaluate(feat, fac, scope);
             break;
         }
     }
     feat->setActive(false); // just in case
 
-    // Check if we ran off the end, warn of it
+    // Check if we ran off the end, warn if so
     if (i == m_probabilities.size()) { cerr << "ERROR: Probability node didn't pick a rule! Probability was: " << sample << endl; }
 }
 
