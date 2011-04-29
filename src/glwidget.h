@@ -5,6 +5,7 @@
 #include <QGLWidget>
 #include "common.h"
 #include "feature.h"
+class QTimer;
 
 
 class GLWidget : public QGLWidget
@@ -17,13 +18,20 @@ public:
    ~GLWidget();
 
    void setRoot(Feature* root);
-
+   REAL m_r;
+   REAL m_phi;
+   REAL m_theta;
    //Basic setup
    QSize minimumSizeHint() const;
    QSize sizeHint() const;
+
+   QTimer *m_timer;
+
    struct double2 {
        double x,y;
    } m_prevMousePos;
+
+   void wheelEvent(QWheelEvent *event);
 
    /// Loads a perspective projection into OpenGL.
    void perspectiveCamera(int width, int height);
@@ -32,6 +40,8 @@ public:
        double3 eye, center, up;
    } m_camera;
    Feature* m_root;
+
+   void setDefaultCamera();
 
 // Not really C++ but these are the handler functions
 // for the events
