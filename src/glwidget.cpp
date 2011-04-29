@@ -99,8 +99,7 @@ void GLWidget::normalizeAngle(int *angle)
 }
 
 void GLWidget::mouseMoveEvent(QMouseEvent *event) {
-
-    if(m_rightMouseDown) {
+    if(m_rightMouseDown && !m_leftMouseDown) {
        float dx = event->x() - m_prevMousePos.x;
        float dy = event->y() - m_prevMousePos.y;
        double x = m_camera.eye.x, y = m_camera.eye.y, z = m_camera.eye.z;
@@ -113,12 +112,24 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event) {
        m_camera.eye.z = r * sin(theta) * sin(phi);
        m_camera.eye.y = r * cos(theta);
        this->perspectiveCamera(this->width(), this->height());
+    } else if (m_middleMouseDown) {
+        float dy = event->y() - m_prevMousePos.y;
+        m_camera.eye.y += dy / 500.f;
+        m_camera.center.y += dy / 500.f;
+        this->perspectiveCamera(this->width(), this->height());
+    } else if (m_leftMouseDown && !m_rightMouseDown && !m_middleMouseDown) {
+        GLint viewport[4];
+        GLdouble mvmatrix[16], projmatrix[16];
+        glGetIntegerv(GL_VIEWPORT, viewport);
+        glGetDoublev(GL_MODELVIEW_MATRIX, mvmatrix);
+        glGetDoublev(GL_PROJECTION_MATRIX, projmatrix);
     }
+
+    m_prevMousePos.x = event->x(); m_prevMousePos.y = event->y();
 }
 
 void GLWidget::wheelEvent(QWheelEvent *event) {
 
-    //glClear(GL_COLOR_BUFFER_BIT);
     int dx = event->delta();
     double3 look = (m_camera.center - m_camera.eye).getNormalized();
     m_camera.eye += look * 0.001 * dx;
@@ -136,15 +147,19 @@ void GLWidget::setDefaultCamera() {
     this->perspectiveCamera(this->width(), this->height());
 }
 
-void GLWidget::mousePressEvent(QMouseEvent *event) {
+void GLWidget::mouseReleaseEvent(QMouseEvent *event) {
+    if(!(event->buttons() & Qt::LeftButton)) m_leftMouseDown = false;
+    if(!(event->buttons() & Qt::RightButton)) m_rightMouseDown = false;
+    if(!(event->buttons() & Qt::MidButton)) m_middleMouseDown = false;
+}
 
+void GLWidget::mousePressEvent(QMouseEvent *event) {
     if(event->buttons() & Qt::LeftButton)  {
         GLint viewport[4];
         GLdouble mvmatrix[16], projmatrix[16];
         glGetIntegerv(GL_VIEWPORT, viewport);
         glGetDoublev(GL_MODELVIEW_MATRIX, mvmatrix);
         glGetDoublev(GL_PROJECTION_MATRIX, projmatrix);
-
         m_leftMouseDown = true;
     }
     if(event->buttons() & Qt::RightButton) m_rightMouseDown = true;
