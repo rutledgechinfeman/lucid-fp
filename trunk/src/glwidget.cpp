@@ -53,24 +53,30 @@ void GLWidget::perspectiveCamera(int width, int height) {
 
 void GLWidget::initializeGL()
 {
-  // Set the way we want things to look
-  glShadeModel(GL_FLAT);
-  glEnable(GL_DEPTH_TEST);
-  glEnable(GL_CULL_FACE);
+    this->setDefaultCamera();
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_LIGHT0);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glCullFace(GL_BACK);
+    glDepthFunc(GL_LEQUAL);
+    glEnable(GL_DEPTH_TEST);
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+    glEnable(GL_TEXTURE_2D);
+    glColorMaterial ( GL_FRONT_AND_BACK, GL_DIFFUSE ) ;
+    glEnable(GL_COLOR_MATERIAL);
 
-  m_timer = new QTimer(this);
-  connect(m_timer, SIGNAL(timeout()), this, SLOT(repaint()));
-  m_timer->start(1000.0f / 30.0f);
+    m_timer = new QTimer(this);
+    connect(m_timer, SIGNAL(timeout()), this, SLOT(repaint()));
+    m_timer->start(1000.0f / 30.0f);
 }
 
 void GLWidget::paintGL()
 {
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     this->perspectiveCamera(this->width(), this->height());
-
     m_root->draw();
-    m_camera.eye.z -= .1;
+
 
 
 }
@@ -112,6 +118,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event) {
 
 void GLWidget::wheelEvent(QWheelEvent *event) {
 
+    //glClear(GL_COLOR_BUFFER_BIT);
     int dx = event->delta();
     double3 look = (m_camera.center - m_camera.eye).getNormalized();
     m_camera.eye += look * 0.001 * dx;
