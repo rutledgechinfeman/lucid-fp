@@ -42,6 +42,7 @@ public:
    Feature* m_root;
 
    void setDefaultCamera();
+   void mouseReleaseEvent(QMouseEvent *event);
 
 // Not really C++ but these are the handler functions
 // for the events

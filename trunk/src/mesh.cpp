@@ -94,12 +94,19 @@ Mesh::Mesh(string filename)
     int size = triangles.size()/3;
     if(size == 0){ cerr << "size = 0" << endl; }
     m_triangles = new MeshTriangle[size];
+    cout << "starting: "<< endl;
     for(int i=0; i<size; i++)
     {
-        m_triangles[i].v0 = &m_vertices[triangles.at(i*3)];
-        m_triangles[i].v1 = &m_vertices[triangles.at(i*3+1)];
-        m_triangles[i].v2 = &m_vertices[triangles.at(i*3+2)];
+        m_triangles[i].v0 = &m_vertices[triangles.at(i*3)-1];
+        m_triangles[i].v1 = &m_vertices[triangles.at(i*3+1)-1];
+        m_triangles[i].v2 = &m_vertices[triangles.at(i*3+2)-1];
+        cout << m_triangles[i].v0->p << endl;
+
+        cout << m_triangles[i].v1->p << endl;
+
+        cout << m_triangles[i].v2->p << endl;
     }
+    cout << "ending: " << endl;
 
     m_numtriangles = size;
     m_numvertices = vertices.size();
