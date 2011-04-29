@@ -33,8 +33,8 @@ Feature::Feature(string symbol, string geom, bool isActive, Scope scope, Feature
 
 }
 
-Scope Feature::getScope(){
-    return m_scope;
+Scope* Feature::getScope(){
+    return &m_scope;
 }
 
 Vector4 Feature::getPoint(){

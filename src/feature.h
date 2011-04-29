@@ -66,8 +66,8 @@ public:
     /// Get specific child (to prevent access to actual children vector)
     Feature* getChild(int index);
 
-    /// Get current scope
-    Scope getScope();
+    /// Get current scope for editing
+    Scope* getScope();
 
     /// Get Scope point
     Vector4 getPoint();

@@ -28,7 +28,7 @@ private:
     int m_type;
 
     /// Parameters of the operation (ie, xyz in S(x,y,z))
-    double m_params[3];
+    Vector4 m_params;
 };
 
 #endif // SCOPEOPERATION_H
