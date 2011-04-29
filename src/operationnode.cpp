@@ -1,6 +1,5 @@
 #include "operationnode.h"
 #include "symbol.h"
-#include "operation.h"
 #include <iostream>
 #include <vector>
 #include "stringutil.h"
@@ -75,7 +74,7 @@ void OperationNode::parseOp(string line)
     // Operation: has parens but no braces
     if (line.find("{") == string::npos)
     {
-        m_operations.push_back(new Operation(line));
+        m_operations.push_back(new ScopeOperation(line));
         return;
     }
 

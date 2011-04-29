@@ -23,7 +23,7 @@ SOURCES += main.cpp\
     condition.cpp \
     grammarnode.cpp \
     symbol.cpp \
-    operation.cpp \
+    scopeoperation.cpp \
     mesh.cpp \
     stringutil.cpp \
     probabilitynode.cpp \
@@ -46,7 +46,7 @@ HEADERS  += mainwindow.h \
     condition.h \
     grammarnode.h \
     symbol.h \
-    operation.h \
+    scopeoperation.h \
     mesh.h \
     stringutil.h \
     probabilitynode.h \

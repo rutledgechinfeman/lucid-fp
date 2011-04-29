@@ -1,9 +1,10 @@
 #ifndef OPERATIONNODE_H
 #define OPERATIONNODE_H
 
-#include "grammarnode.h"
-#include "operation.h"
 #include <string>
+
+#include "grammarnode.h"
+#include "scopeoperation.h"
 
 #define NONE 0
 #define COMP 100
@@ -51,7 +52,7 @@ private:
     vector<argument> m_otherArgs;
 
     /// Child operations that apply only to the scope, ie S, T, R
-    vector<Operation*> m_operations;
+    vector<ScopeOperation*> m_operations;
 };
 
 #endif // OPERATIONNODE_H
