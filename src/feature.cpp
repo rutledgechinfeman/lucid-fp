@@ -2,6 +2,7 @@
 #include <qgl.h>
 #include <glwidget.h>
 #include <iostream>
+#include <QGLFramebufferObject>
 
 using namespace std;
 
@@ -34,6 +35,7 @@ Feature::Feature(string symbol, string geom, bool isActive, Scope scope, Feature
 
     setType(geom);
 
+    m_id = -1;
 
 }
 
@@ -139,13 +141,14 @@ extern "C"{
 GLuint Feature::loadTexture(QImage* img) {
 
     QImage texture;
-    GLuint toReturn = -1;
+    GLuint toReturn;
     texture = QGLWidget::convertToGLFormat(*img);
 
     glGenTextures(1, &toReturn);
     m_texture = new QImage(texture);
-    //glTexImage2D(GL_TEXTURE_2D, 0, 3, m_texture->width(), m_texture->height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, m_texture->bits());
-    gluBuild2DMipmaps(GL_TEXTURE_2D, 3, m_texture->width(), m_texture->height(), GL_RGBA, GL_UNSIGNED_BYTE, m_texture->bits());
+
+    glBindTexture(GL_TEXTURE_2D, toReturn);
+    gluBuild2DMipmaps(GL_TEXTURE_2D, 4, m_texture->width(), m_texture->height(), GL_RGBA, GL_UNSIGNED_BYTE, m_texture->bits());
 
     return toReturn;
 }
@@ -167,25 +170,12 @@ void Feature::draw()
 
         switch (m_geom_type)
         {
-        case PLANE:
+            case PLANE:
                 glEnable(GL_TEXTURE_2D);
-                glShadeModel(GL_SMOOTH);
-                glEnable(GL_POLYGON_SMOOTH); //Enable smoothing
-
-                glEnable(GL_DEPTH_TEST);
-
-                glClearColor(0.0, 0.0, 0.0, 0.0);
-
-                glActiveTexture(GL_TEXTURE0+m_id);
-
                 glBindTexture(GL_TEXTURE_2D, m_id);
-
-
-
-
-                //m_scope.printSelf();
-
                 glBegin(GL_QUADS);
+
+
                 //xy
                 glTexCoord2f(0.0, 0.0);
                 glVertex3f(0.0, 0.0, 0.0);
@@ -251,10 +241,8 @@ void Feature::draw()
                 glVertex3f(1.0, 1.0, 1.0);
                 glTexCoord2f(0.0, 1.0);
                 glVertex3f(1.0, 0.0, 1.0);
-
 
                 glEnd();
-                glBindTexture(GL_TEXTURE_2D, m_id+1);
 
                 break;
 

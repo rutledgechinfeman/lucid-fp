@@ -1,6 +1,8 @@
-A : NULL ~ S(8,6,10) _ T(1,0,0) _ facades : 1.0
+A : NULL ~ S(20,6,10) _ T(1,0,0) _ facades : 1.0
 facades : NULL ~ Comp(sidefaces){facade} : 1.0
 #facade : NULL ~ Subdiv(Y,3,3){floor|floor} : 1.0
-facade : NULL ~ Repeat(X, 4){tile} : 1.0
-#tile : NULL ~ Subdiv(X, 1r, 1r){window | window} : 1.0
-tile : NULL ~ Subdiv(X, 1r, 1.5, 1r){wall | Subdiv(Y, 1r, 2, 1r){wall | window | wall} | wall} : 1.0
+facade : NULL ~ Subdiv(Y, 1r, 1r, 1r){floor | floor | floor} : 1.0
+floor : NULL ~ Repeat(X, 4){tile} : 1.0
+#tile : NULL ~ Subdiv(X, 1r, 1r){window | window } : 1.0
+tile : NULL ~ Subdiv(X, 1r, 1.5, 1r){wall | Subdiv(Y, 1r, 2r, 0.5r){wall | window | wall} | wall} : 1.0
+#tile : NULL ~ Subdiv(X, 1r, 1.5, 1r){wall | Subdiv(Y, 1r, 2, 1r){wall | wall | wall} | window} : 1.0

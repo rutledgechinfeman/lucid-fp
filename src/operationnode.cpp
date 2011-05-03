@@ -41,9 +41,6 @@ void OperationNode::evaluate(Feature* feat, Factory &fac, Scope scope)
         Scope one = scope.setScaleComponent(0.1, 2);
         m_children[0]->evaluate(feat, fac, one);
 
-        one.printSelf();
-
-
         Scope two = scope.copy();
         Vector4 temp = two.getBasisComponent(0);
         two = two.setBasisComponent(0, two.getBasisComponent(2));
@@ -52,8 +49,6 @@ void OperationNode::evaluate(Feature* feat, Factory &fac, Scope scope)
 
         two = two.setScaleComponent(0.1, 2);
         m_children[0]->evaluate(feat, fac, two);
-
-        two.printSelf();
 
         Scope three = scope.translate(Vector4(scope.getScale().x, 0.0, scope.getScale().z, 0.0));
         three = three.setBasisComponent(0, -three.getBasisComponent(0));

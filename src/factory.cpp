@@ -41,7 +41,6 @@ bool Factory::addFeatureType(string id, bool isTerminal, string geom, string dat
     // Planes have textures (2D)
     if(geom == "plane" && m_texMap.find(dataPath) == m_texMap.end())
     {
-        cout << dataPath << endl;
         m_texMap[dataPath] = new QImage(QString(dataPath.c_str()));
         m_featureListing[id].dataPtr = (void*)m_texMap[dataPath];
     }
