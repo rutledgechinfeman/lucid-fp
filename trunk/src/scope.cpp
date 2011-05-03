@@ -43,15 +43,50 @@ Vector4 Scope::getYBasis(){
 Vector4 Scope::getZBasis(){
     return m_zbasis;
 }
+Vector4 Scope::getBasisComponent(int i){
+    switch (i) {
+        case 0:
+            return getXBasis();
+        case 1:
+            return getYBasis();
+        case 2:
+            return getZBasis();
+        default:
+            return Vector4::zero();
+    }
+}
+
+Scope Scope::setBasisComponent(int i, Vector4 vec) {
+
+    switch (i) {
+    case 0:
+        return Scope(m_point, m_scale, vec, m_ybasis, m_zbasis);
+    case 1:
+        return Scope(m_point, m_scale, m_xbasis, vec, m_zbasis);
+    case 2:
+        return Scope(m_point, m_scale, m_xbasis, m_ybasis, vec);
+    default:
+        return this->copy();
+    }
+}
 
 
 Scope Scope::translate(Vector4 v){
     return Scope(m_point+v, m_scale, m_basis);
 }
 
-Scope Scope::setSize(Vector4 v){
+Scope Scope::setScale(Vector4 v){
     return Scope(m_point, v, m_basis);
 }
+
+Scope Scope::setScaleComponent(REAL v, int i) {
+
+    Vector4 newScale = Vector4(m_scale);
+    newScale.data[i] = v;
+
+    return Scope(m_point, newScale, m_basis);
+}
+
 
 Scope Scope::rotateX(REAL angle){
     return Scope(m_point, m_scale, getRotMat(m_point, m_xbasis, angle) * m_basis);
@@ -67,4 +102,14 @@ Scope Scope::rotateZ(REAL angle){
 
 Scope Scope::copy(){
     return Scope(m_point, m_scale, m_basis);
+}
+
+void Scope::printSelf()
+{
+    cout << "============" << endl;
+    cout << "Scope:" << endl;
+    cout << "Basis:" << endl << m_basis << endl;
+    cout << "Scale:" << endl << m_scale << endl;
+    cout << "Point:" << endl << m_point << endl;
+    cout << "============" << endl;
 }

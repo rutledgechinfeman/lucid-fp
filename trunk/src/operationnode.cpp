@@ -34,28 +34,112 @@ void OperationNode::evaluate(Feature* feat, Factory &fac, Scope scope)
         scope = m_operations[i]->evaluate(scope);
     }
 
-    switch(m_type)
+    if (m_type == COMP)
     {
-        case COMP:
-            // TODO
-            break;
+        if(m_stringArg != "sidefaces") { cout << "ERROR: We only support the comp operation on 'sidefaces', not: " << m_stringArg << endl; return; }
 
-        case SUBDIV:
-            // TODO
-            break;
+        Scope one = scope.setScaleComponent(0.0, 2);
+        m_children[0]->evaluate(feat, fac, one);
 
-        case REPEAT:
-            // TODO
-            break;
+        one.printSelf();
 
-        case NONE: // fall-through
-        default:
-            // For no type, don't actually do anything. Just let children do their thing;
-            // It is probably the case that there are no children here.
-            for (unsigned int i = 0; i < m_children.size(); ++ i)
+        Scope two = scope.copy();
+        two = two.translate(two.getXBasis()*two.getScale().x);
+        two = two.setScaleComponent(0.0, 0);
+        m_children[0]->evaluate(feat, fac, two);
+
+        two.printSelf();
+
+        Scope three = scope.copy();
+        three = three.translate(three.getXBasis()*three.getScale().x);
+        three = three.translate(three.getZBasis()*three.getScale().z);
+        three = three.setBasisComponent(2, -three.getBasisComponent(2));
+        three = three.setScaleComponent(0.0, 2);
+        m_children[0]->evaluate(feat, fac, three);
+
+        three.printSelf();
+
+        Scope four = scope.copy();
+        four = four.translate(four.getZBasis()*four.getScale().z);
+        four = four.setBasisComponent(0, -four.getBasisComponent(0));
+        four = four.setScaleComponent(0.0, 0);
+        m_children[0]->evaluate(feat, fac, four);
+
+        four.printSelf();
+    }
+    else if (m_type == SUBDIV)
+    {
+        // Figure out what axis we're repeating on
+        int index = -1;
+        if      (m_stringArg == "X") { index = 0; }
+        else if (m_stringArg == "Y") { index = 1; }
+        else if (m_stringArg == "Z") { index = 2; }
+        else { cerr << "ERROR: Unrecognized string argument in Subdiv operation: " << m_stringArg << endl; return; }
+
+        // Sum (non-)relative repeat lengths
+        double rel = 0.0;
+        double notrel = 0.0;
+        for (int i = 0 ; i < m_otherArgs.size(); ++ i)
+        {
+            if (m_otherArgs[i].relative) { rel    += m_otherArgs[i].value; }
+            else                         { notrel += m_otherArgs[i].value; }
+        }
+
+        double dimLen = scope.getScale().data[index];
+        double remainingSpace = dimLen - notrel;
+        double relativeUnit = remainingSpace / rel;
+
+        // Insert children based on calculated size
+        for (int i = 0; i < m_children.size(); ++ i)
+        {
+            // TODO this could be cleaned up
+            if (m_otherArgs[i].relative)
             {
+                scope = scope.setScaleComponent(m_otherArgs[i].value * relativeUnit, index);
                 m_children[i]->evaluate(feat, fac, scope);
+                scope = scope.translate(scope.getBasisComponent(index)  * m_otherArgs[i].value * relativeUnit);
             }
+            else
+            {
+                scope = scope.setScaleComponent(m_otherArgs[i].value, index);
+                m_children[i]->evaluate(feat, fac, scope);
+                scope = scope.translate(scope.getBasisComponent(index)  * m_otherArgs[i].value);
+            }
+        }
+    }
+    else if (m_type == REPEAT)
+    {
+        // Figure out what axis we're repeating on
+        int index = -1;
+        if      (m_stringArg == "X") { index = 0; }
+        else if (m_stringArg == "Y") { index = 1; }
+        else if (m_stringArg == "Z") { index = 2; }
+        else { cerr << "ERROR: Unrecognized string argument in Repeat operation: " << m_stringArg << endl; return; }
+
+        // Calculate repeat specifications
+        double dimLen = scope.getScale().data[index];
+        int numRepeats = dimLen / m_otherArgs[index].value;
+        double repeatLength = dimLen / ((double) numRepeats);
+
+        // Get a new scope to translate for each child
+        Scope newScope = scope.setScaleComponent(repeatLength, index);
+        Vector4 transVec = scope.getBasisComponent(index) * repeatLength;
+
+        for (int i = 0; i < numRepeats; i ++)
+        {
+            // Pass the new scope down, and translate it for the next one
+            m_children[0]->evaluate(feat, fac, newScope);
+            newScope = newScope.translate(transVec);
+        }
+    }
+    else // NONE (eg, just had scales/repeats/etc. children) and anything else
+    {
+        // For no type, don't actually do anything. Just let children do their thing;
+        // It is probably the case that there are no children here.
+        for (unsigned int i = 0; i < m_children.size(); ++ i)
+        {
+            m_children[i]->evaluate(feat, fac, scope);
+        }
     }
 }
 
@@ -111,7 +195,7 @@ void OperationNode::parseOp(string line)
      */
     string targetString = line.substr(line.find("{") + 1, line.find_last_of("}") - line.find("{") - 1);
     vector<string> targets;
-    StringUtil::split(targetString, ",", targets);
+    StringUtil::split(targetString, "|", targets);
 
     string target;
     for (unsigned int i = 0; i < targets.size(); i ++)
