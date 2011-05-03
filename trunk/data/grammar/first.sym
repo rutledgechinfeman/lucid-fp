@@ -4,7 +4,7 @@ facade n
 tile n
 floor n
 wombat n
-wall t plane rainbow.png
+wall t plane brick.png
 door t mesh door.obj
 window t plane busted_window.png
 wom t plane wom.png

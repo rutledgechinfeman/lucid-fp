@@ -8,6 +8,7 @@
 #include "scope.h"
 #include <QFile>
 #include <qgl.h>
+#include <QGLFramebufferObject>
 
 using std::string;
 using std::vector;
