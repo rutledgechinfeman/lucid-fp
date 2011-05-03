@@ -200,7 +200,7 @@ void OperationNode::parseOp(string line)
      */
     string targetString = line.substr(line.find("{") + 1, line.find_last_of("}") - line.find("{") - 1);
     vector<string> targets;
-    StringUtil::split(targetString, "|", targets);
+    StringUtil::split(targetString, "|", targets, false, "{", "}");
 
     string target;
     for (unsigned int i = 0; i < targets.size(); i ++)
