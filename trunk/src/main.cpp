@@ -5,7 +5,6 @@
 
 int main(int argc, char *argv[])
 {
-    cout << endl;
 
     QApplication a(argc, argv);
     MainWindow w;
@@ -14,10 +13,11 @@ int main(int argc, char *argv[])
     Referee ref("../data/grammar/first.gmr");
     Feature* root = ref.blowWhistle();
 
-    //Feature* root = new Feature("cube", "plane", true, Scope(Vector4(0.0, 0.0, 1.0, 0.0)));//ref.blowWhistle();
-    //Mesh* m = new Msh("../data/test.obj");
+    //Feature* root = new Feature("cube", "mesh", true, Scope());//ref.blowWhistle();
+    //Mesh* m = new Mesh("../data/ring.obj");
     //root->setMesh(m);
     w.setRoot(root);
+    root->draw();
     //root->setMedia(new QImage("../data/rainbow.png"));
     return a.exec();
 }

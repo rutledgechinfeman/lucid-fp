@@ -31,7 +31,8 @@ SOURCES += main.cpp\
     CS123Matrix.inl \
     CS123Matrix.cpp \
     scope.cpp \
-    operationnode.cpp
+    operationnode.cpp \
+    scenery.cpp
 
 HEADERS  += mainwindow.h \
     glwidget.h \
@@ -55,6 +56,7 @@ HEADERS  += mainwindow.h \
     CS123Algebra.h \
     scope.h \
     CS123Common.h \
-    operationnode.h
+    operationnode.h \
+    scenery.h
 
 FORMS    += mainwindow.ui
