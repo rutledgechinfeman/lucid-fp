@@ -24,8 +24,9 @@ GLWidget::~GLWidget()
   // Delete anything you have created
 }
 
-void GLWidget::setRoot(Feature* root){
-    m_root = root;
+void GLWidget::setRoot(Feature* root)
+{
+    m_root = root; // TODO, delete the old one?
 }
 
 QSize GLWidget::minimumSizeHint() const
@@ -75,17 +76,15 @@ void GLWidget::paintGL()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     this->perspectiveCamera(this->width(), this->height());
-    m_root->draw();
 
-
-
+    if( m_root) { m_root->draw(); }
 }
 
 
 void GLWidget::resizeGL(int width, int height)
 {
-  int side = qMin(width, height);
-  glViewport((width - side) / 2, (height - side) / 2, side, side);
+    int side = qMin(width, height);
+    glViewport((width - side) / 2, (height - side) / 2, side, side);
 }
 
 
