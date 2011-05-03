@@ -84,7 +84,7 @@ void OperationNode::evaluate(Feature* feat, Factory &fac, Scope scope)
         // Sum (non-)relative repeat lengths
         double rel = 0.0;
         double notrel = 0.0;
-        for (int i = 0 ; i < m_otherArgs.size(); ++ i)
+        for (unsigned int i = 0 ; i < m_otherArgs.size(); ++ i)
         {
             if (m_otherArgs[i].relative) { rel    += m_otherArgs[i].value; }
             else                         { notrel += m_otherArgs[i].value; }
@@ -95,7 +95,7 @@ void OperationNode::evaluate(Feature* feat, Factory &fac, Scope scope)
         double relativeUnit = remainingSpace / rel;
 
         // Insert children based on calculated size
-        for (int i = 0; i < m_children.size(); ++ i)
+        for (unsigned int i = 0; i < m_children.size(); ++ i)
         {
             // TODO this could be cleaned up
             if (m_otherArgs[i].relative)
