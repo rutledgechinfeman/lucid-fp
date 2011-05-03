@@ -175,7 +175,8 @@ void Feature::draw()
         {
             case PLANE:
 
-                cout << "drawing plane" << endl;
+                //m_scope.printSelf();
+
                 glBegin(GL_QUADS);
                 //xy
                 glTexCoord2f(0.0, 0.0);
