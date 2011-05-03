@@ -42,7 +42,7 @@ public:
 
     /// Set the mesh pointer
     void setMesh(Mesh* m);
-    GLuint loadTexture(const QFile &file);
+    GLuint loadTexture(QImage* img);
 
     /// Set the texture pointer
     void setTexture(QImage* i);
@@ -106,7 +106,7 @@ private:
     Mesh* m_mesh;
 
     /// Texture media pointer
-    QImage* m_texture;
+    QImage* m_texture, *m_image;
 
     /// Parent in feature tree
     Feature* m_parent;
