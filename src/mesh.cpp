@@ -90,23 +90,23 @@ Mesh::Mesh(string filename)
     }
 
     // Populate the master triangle list
-    cout << triangles.size() << endl;
+    //cout << triangles.size() << endl;
     int size = triangles.size()/3;
     if(size == 0){ cerr << "size = 0" << endl; }
     m_triangles = new MeshTriangle[size];
-    cout << "starting: "<< endl;
+    //cout << "starting: "<< endl;
     for(int i=0; i<size; i++)
     {
         m_triangles[i].v0 = &m_vertices[triangles.at(i*3)-1];
         m_triangles[i].v1 = &m_vertices[triangles.at(i*3+1)-1];
         m_triangles[i].v2 = &m_vertices[triangles.at(i*3+2)-1];
-        cout << m_triangles[i].v0->p << endl;
+        //cout << m_triangles[i].v0->p << endl;
 
-        cout << m_triangles[i].v1->p << endl;
+        //cout << m_triangles[i].v1->p << endl;
 
-        cout << m_triangles[i].v2->p << endl;
+        //cout << m_triangles[i].v2->p << endl;
     }
-    cout << "ending: " << endl;
+    //cout << "ending: " << endl;
 
     m_numtriangles = size;
     m_numvertices = vertices.size();
@@ -144,7 +144,7 @@ void Mesh::drawGL()
     glBegin(GL_TRIANGLES);
     for(int i=0; i < m_numtriangles; i++)
     {
-        cout << "p: " << m_triangles[i].v0->p << endl;
+        //cout << "p: " << m_triangles[i].v0->p << endl;
         //glTexCoord2f(m_triangles[i].v0->t.x, m_triangles[i].v0->t.y);
         glVertex3f(m_triangles[i].v0->p.x, m_triangles[i].v0->p.y, m_triangles[i].v0->p.z);
 

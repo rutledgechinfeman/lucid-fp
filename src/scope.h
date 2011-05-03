@@ -13,13 +13,18 @@ public:
     Vector4 getScale();
 
     Scope translate(Vector4 v);
-    Scope setSize(Vector4 v);
+    Scope setScale(Vector4 v);
+    Scope setScaleComponent(REAL v, int i);
     Scope rotateX(REAL angle);
     Scope rotateY(REAL angle);
     Scope rotateZ(REAL angle);
     Vector4 getXBasis();
     Vector4 getYBasis();
     Vector4 getZBasis();
+    Vector4 getBasisComponent(int i);
+    Scope setBasisComponent(int i, Vector4 vec);
+
+    void printSelf();
 
     Scope copy();
 

@@ -46,17 +46,17 @@ Scope ScopeOperation::evaluate(Scope &in)
     switch (m_type)
     {
         case SCALE:
-            toReturn.setSize(m_params);
+            toReturn = toReturn.setScale(m_params);
             break;
 
         case ROTATE:
-            toReturn.rotateX(m_params.x);
-            toReturn.rotateY(m_params.y);
-            toReturn.rotateZ(m_params.z);
+            toReturn = toReturn.rotateX(m_params.x);
+            toReturn = toReturn.rotateY(m_params.y);
+            toReturn = toReturn.rotateZ(m_params.z);
             break;
 
         case TRANSLATE:
-            toReturn.translate(m_params);
+            toReturn = toReturn.translate(m_params);
             break;
 
         case UNKNOWN: // fall-through
