@@ -1,5 +1,4 @@
 A : NULL ~ S(8,6,10) _ T(1,0,0) _ facades : 1.0
-facades : NULL ~ Comp(sidefaces){facade} : .99 ~ wombat : .01
+facades : NULL ~ Comp(sidefaces){facade} : 1.0
 facade : NULL ~ Subdiv(Y,3,3){floor|floor} : 1.0
-floor : NULL ~ Repeat(X, 2){window} : 0.5 ~ Repeat(X, 2){wall} : 0.5
-wombat : NULL ~ wom : 0.5 ~ bat : 0.5
+floor : NULL ~ Repeat(X, 2){window} : 0.0 ~ Repeat(X, 2){wall} : 1.0

@@ -55,7 +55,6 @@ Matrix4x4 Feature::getBasis(){
 
 void Feature::setType(string geom)
 {
-    cout << "set type: " << geom << endl;
     if(geom == "plane") { m_geom_type = PLANE; }
     else if(geom == "mesh") { m_geom_type = MESH; }
     else { m_geom_type = UNKNOWN; }
@@ -92,10 +91,6 @@ void Feature::setMedia(void* data)
         case MESH:
             m_mesh = (Mesh*) data;
             break;
-
-
-        default:
-            cout << "************HIfuck" << endl;
     }
 
 }
@@ -179,6 +174,8 @@ void Feature::draw()
         switch (m_geom_type)
         {
             case PLANE:
+
+                cout << "drawing plane" << endl;
                 glBegin(GL_QUADS);
                 //xy
                 glTexCoord2f(0.0, 0.0);
@@ -252,6 +249,7 @@ void Feature::draw()
                 break;
 
             case MESH:
+                cout << "bah!" << endl;
                 if(m_mesh) { m_mesh->drawGL(); }
                 break;
         }
