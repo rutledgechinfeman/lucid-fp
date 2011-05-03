@@ -6,6 +6,6 @@ floor n
 wombat n
 wall t plane brick.png
 door t mesh door.obj
-window t mesh window.obj
+window t plane busted_window.png
 wom t plane wom.png
 bat t plane bat.png

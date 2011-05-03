@@ -106,7 +106,7 @@ bool Parser::parseRuleFile(string filename, Grammar &gram)
     {
         getline(ruleFile, original);
         line = original; // Keep original copy for error reporting
-        if (line.size() == 0) continue;
+        if (line.size() == 0 || StringUtil::trim(line).find("#") == 0) continue;
 
         // Peel out predecessor id
         string pred = line.substr(0, line.find(" "));
