@@ -33,7 +33,6 @@ Feature::Feature(string symbol, string geom, bool isActive, Scope scope, Feature
     m_scope = scope;
 
     setType(geom);
-    m_id = loadTexture(QFile("../data/rainbow.png"));
 
 
 }
@@ -85,7 +84,8 @@ void Feature::setMedia(void* data)
     switch (m_geom_type)
     {
         case PLANE:
-            m_texture = (QImage*) data;
+            m_image = (QImage*) data;
+            m_id = loadTexture(m_image);
             break;
 
         case MESH:
@@ -135,20 +135,11 @@ Feature::~Feature()
 extern "C"{
     extern void APIENTRY glActiveTexture (GLenum);
 }
-GLuint Feature::loadTexture(const QFile &file) {
+GLuint Feature::loadTexture(QImage* img) {
 
-    QImage image, texture;
+    QImage texture;
     GLuint toReturn = -1;
-    if(!file.exists()){
-        cout << "texture load fail" << endl;
-        return -1;
-    }
-    else{
-           cout << "texture load success" << endl;
-
-    }
-    image.load(file.fileName());
-    texture = QGLWidget::convertToGLFormat(image);
+    texture = QGLWidget::convertToGLFormat(*img);
 
     glGenTextures(1, &toReturn);
     m_texture = new QImage(texture);
@@ -160,7 +151,7 @@ GLuint Feature::loadTexture(const QFile &file) {
 
 void Feature::draw()
 {
-    if(m_active){
+    if(m_children.size()==0){
 
         glMatrixMode(GL_MODELVIEW);
         glPushMatrix();
@@ -183,14 +174,74 @@ void Feature::draw()
         {
             case PLANE:
                 glBegin(GL_QUADS);
+                //xy
+                glTexCoord2f(0.0, 0.0);
+                glVertex3f(0.0, 0.0, 0.0);
+                glTexCoord2f(0.0, 1.0);
+                glVertex3f(0.0, 1.0, 0.0);
+                glTexCoord2f(1.0, 1.0);
+                glVertex3f(1.0, 1.0, 0.0);
+                glTexCoord2f(1.0, 0.0);
+                glVertex3f(1.0, 0.0, 0.0);
+
+                //xz
+
                 glTexCoord2f(0.0, 0.0);
                 glVertex3f(0.0, 0.0, 0.0);
                 glTexCoord2f(1.0, 0.0);
                 glVertex3f(1.0, 0.0, 0.0);
                 glTexCoord2f(1.0, 1.0);
-                glVertex3f(1.0, 1.0, 0.0);
+                glVertex3f(1.0, 0.0, 1.0);
                 glTexCoord2f(0.0, 1.0);
+                glVertex3f(0.0, 0.0, 1.0);
+
+                //yz
+
+                glTexCoord2f(0.0, 0.0);
+                glVertex3f(0.0, 0.0, 0.0);
+
+                glTexCoord2f(0.0, 1.0);
+                glVertex3f(0.0, 0.0, 1.0);
+
+                glTexCoord2f(1.0, 1.0);
+                glVertex3f(0.0, 1.0, 1.0);
+                glTexCoord2f(1.0, 0.0);
                 glVertex3f(0.0, 1.0, 0.0);
+
+                //xy
+
+                glTexCoord2f(0.0, 0.0);
+                glVertex3f(0.0, 0.0, 1.0);
+                glTexCoord2f(1.0, 0.0);
+                glVertex3f(1.0, 0.0, 1.0);
+                glTexCoord2f(1.0, 1.0);
+                glVertex3f(1.0, 1.0, 1.0);
+                glTexCoord2f(0.0, 1.0);
+                glVertex3f(0.0, 1.0, 1.0);
+
+                //xz
+                glTexCoord2f(0.0, 0.0);
+                glVertex3f(0.0, 1.0, 0.0);
+                glTexCoord2f(0.0, 1.0);
+                glVertex3f(0.0, 1.0, 1.0);
+                glTexCoord2f(1.0, 1.0);
+                glVertex3f(1.0, 1.0, 1.0);
+                glTexCoord2f(1.0, 0.0);
+                glVertex3f(1.0, 1.0, 0.0);
+
+                //yz
+
+                glTexCoord2f(0.0, 0.0);
+                glVertex3f(1.0, 0.0, 0.0);
+                glTexCoord2f(1.0, 0.0);
+                glVertex3f(1.0, 1.0, 0.0);
+                glTexCoord2f(1.0, 1.0);
+                glVertex3f(1.0, 1.0, 1.0);
+                glTexCoord2f(0.0, 1.0);
+                glVertex3f(1.0, 0.0, 1.0);
+
+
+
                 glEnd();
                 break;
 
