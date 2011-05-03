@@ -144,6 +144,7 @@ GLuint Feature::loadTexture(QImage* img) {
 
     glGenTextures(1, &toReturn);
     m_texture = new QImage(texture);
+    //glTexImage2D(GL_TEXTURE_2D, 0, 3, m_texture->width(), m_texture->height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, m_texture->bits());
     gluBuild2DMipmaps(GL_TEXTURE_2D, 3, m_texture->width(), m_texture->height(), GL_RGBA, GL_UNSIGNED_BYTE, m_texture->bits());
 
     return toReturn;
@@ -160,20 +161,27 @@ void Feature::draw()
         Matrix4x4 mat = getTransMat(m_scope.getPoint()) * m_scope.getBasis() * getScaleMat(m_scope.getScale());
         REAL* matrix = new REAL[16];
         mat.getTranspose().fillArray(matrix);
-        glEnable(GL_TEXTURE_2D);
-        glShadeModel(GL_SMOOTH);
-        glEnable(GL_POLYGON_SMOOTH); //Enable smoothing
-
-        glEnable(GL_DEPTH_TEST);
-
-        glActiveTexture(GL_TEXTURE0+m_id );
-        glBindTexture(GL_TEXTURE_2D, GL_TEXTURE0+m_id);
-
 
         glMultMatrixd(matrix);
+
+
         switch (m_geom_type)
         {
-            case PLANE:
+        case PLANE:
+                glEnable(GL_TEXTURE_2D);
+                glShadeModel(GL_SMOOTH);
+                glEnable(GL_POLYGON_SMOOTH); //Enable smoothing
+
+                glEnable(GL_DEPTH_TEST);
+
+                glClearColor(0.0, 0.0, 0.0, 0.0);
+
+                glActiveTexture(GL_TEXTURE0+m_id);
+
+                glBindTexture(GL_TEXTURE_2D, m_id);
+
+
+
 
                 //m_scope.printSelf();
 
@@ -245,12 +253,12 @@ void Feature::draw()
                 glVertex3f(1.0, 0.0, 1.0);
 
 
-
                 glEnd();
+                glBindTexture(GL_TEXTURE_2D, m_id+1);
+
                 break;
 
             case MESH:
-                cout << "bah!" << endl;
                 if(m_mesh) { m_mesh->drawGL(); }
                 break;
         }

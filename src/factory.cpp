@@ -10,6 +10,7 @@ Factory::Factory()
 
 Factory::~Factory()
 {
+
     for(map<string, QImage*>::iterator ii = m_texMap.begin(); ii != m_texMap.end(); ++ ii)
     {
         delete ii->second;
@@ -34,14 +35,13 @@ bool Factory::addFeatureType(string id, bool isTerminal, string geom, string dat
     if(geom     == "") { cerr << "ERROR: terminal symbol used without a specified geometry" << endl; return false; }
     if(dataPath == "") { cerr << "ERROR: terminal symbol used without a specified datapath" << endl; return false; }
 
-    cout << dataPath << endl;
     dataPath = "../data/" + dataPath;
-    cout << dataPath << endl;
 
 
     // Planes have textures (2D)
     if(geom == "plane" && m_texMap.find(dataPath) == m_texMap.end())
     {
+        cout << dataPath << endl;
         m_texMap[dataPath] = new QImage(QString(dataPath.c_str()));
         m_featureListing[id].dataPtr = (void*)m_texMap[dataPath];
     }

@@ -17,8 +17,7 @@ Mesh::Mesh(string filename)
         cerr << "ERROR: Could not open mesh file: " << filename << endl;
     }
 
-    vector<MeshVertex*> vertices;
-    vector<int> triangles;
+
 
     // Iterate over each line in the file
     string line;
@@ -46,9 +45,8 @@ Mesh::Mesh(string filename)
             // Make a new vertex for this line
             MeshVertex* vert = new MeshVertex();
             vert->idx = currVertex; // set ID
-            vert->p = double3(atoi(tokens[1].c_str()), atoi(tokens[2].c_str()), atoi(tokens[3].c_str())); // set coordinates
+            vert->p = double3(strtod(tokens.at(1).c_str(), NULL), strtod(tokens.at(2).c_str(), NULL), strtod(tokens.at(3).c_str(), NULL)); // set coordinates
             vertices.push_back(vert); // add to the list
-
             currVertex++;
         }
 
@@ -62,89 +60,59 @@ Mesh::Mesh(string filename)
             for(unsigned int i=1; i<tokens.size(); i++)
             {
                 face.clear();
-                StringUtil::split(tokens.at(i), "/", face);
-                triangles.push_back(atoi(face.at(0).c_str())); // Currently, we're only supporting the vertex numbers, not normals or textures
-
+                StringUtil::split(tokens.at(i), "/", face, true);
+                //normal of the ith vertex on this face:
+                if(atoi(face.at(2).c_str())-1 >= normals.size()){
+                    cout << atoi(face.at(2).c_str())-1 << endl;
+                    cout << normals.size() << endl;
+                }
+                Vector4 v = Vector4(strtod(face.at(0).c_str(), NULL), strtod(face.at(1).c_str(), NULL), strtod(face.at(2).c_str(), NULL), 0);
+                triangles.push_back(v); // Currently, we're only supporting the vertex numbers, not normals or texture
                 // TODO: if we ever implement this feature
-                if(face.size() > 1) { cerr << "WARNING: Currently, normals/textures are not supported for triangles. Skipping non-vertex data of: " << line << endl; }
+
             }
             currFace++;
         }
         // Parse a vertex normal line
-        else if(tokens.at(0) == "n") { cerr << "WARNING: Currently, normals are not supported for mesh files. Skipping: " << line << endl; } // TODO
+
+        else if(tokens.at(0) == "vn") {
+            if(tokens.size() != 4) {
+                cerr << "WARNING: Skipping malformed vertex line in mesh file: " << line << endl;
+                continue;
+            }
+            double3 d = double3(strtod(tokens.at(1).c_str(), NULL), strtod(tokens.at(2).c_str(), NULL), strtod(tokens.at(3).c_str(), NULL));
+            normals.push_back(d); // set coordinates
+        }
         // Parse a vertex texture line
-        else if(tokens.at(0) == "t") { cerr << "WARNING: Currently, normals are not supported for mesh files. Skipping: " << line << endl; } // TODO
+        else if(tokens.at(0) == "vt") {
+            //vertices.at(texNum)->t = double2(atof(tokens.at(1).c_str()), atof(tokens.at(2).c_str()));
+            //texNum ++;
+
+        }
 
 
     }
-
     // Wrap up
     myfile.close();
 
-    // Populate the master vertex list
-    m_vertices = new MeshVertex[vertices.size()];
-    for(unsigned int i=0; i<vertices.size(); i++)
-    {
-        m_vertices[i].idx = vertices.at(i)->idx;
-        m_vertices[i].p = vertices.at(i)->p;
-    }
-
-    // Populate the master triangle list
-    int size = triangles.size()/3;
-    if(size == 0){ cerr << "size = 0" << endl; }
-    m_triangles = new MeshTriangle[size];
-    for(int i=0; i<size; i++)
-    {
-        m_triangles[i].v0 = &m_vertices[triangles.at(i*3)-1];
-        m_triangles[i].v1 = &m_vertices[triangles.at(i*3+1)-1];
-        m_triangles[i].v2 = &m_vertices[triangles.at(i*3+2)-1];
-
-    }
-
-    m_numtriangles = size;
-    m_numvertices = vertices.size();
-
-}
-
-// TODO: Would this constructor ever be used?
-Mesh::Mesh(MeshVertex *vertexlist, int numvertices, int *trilist, int numtriangles)
-{
-    m_vertices = new MeshVertex[numvertices];
-    memcpy(m_vertices, vertexlist, sizeof(MeshVertex) * numvertices);
-    m_triangles = new MeshTriangle[numtriangles];
-
-    for(int i=0; i<numtriangles; i++)
-    {
-        m_triangles[i].v0 = &m_vertices[trilist[i*3]];
-        m_triangles[i].v1 = &m_vertices[trilist[i*3+1]];
-        m_triangles[i].v2 = &m_vertices[trilist[i*3+2]];
-    }
-
-    m_numtriangles = numtriangles;
-    m_numvertices = numvertices;
 }
 
 
 Mesh::~Mesh()
 {
-    delete[] m_triangles;
-    delete[] m_vertices;
 }
 
 void Mesh::drawGL()
 {
 
+    //cout << "drawing" << endl;
     glBegin(GL_TRIANGLES);
-    for(int i=0; i < m_numtriangles; i++)
+    for(int i=0; i < triangles.size(); i++)
     {
-        //glTexCoord2f(m_triangles[i].v0->t.x, m_triangles[i].v0->t.y);
-        glVertex3f(m_triangles[i].v0->p.x, m_triangles[i].v0->p.y, m_triangles[i].v0->p.z);
-
-        //glTexCoord2f(m_triangles[i].v1->t.x, m_triangles[i].v1->t.y);
-        glVertex3f(m_triangles[i].v1->p.x, m_triangles[i].v1->p.y, m_triangles[i].v1->p.z);
-
-        //glTexCoord2f(m_triangles[i].v2->t.x, m_triangles[i].v2->t.y);
-        glVertex3f(m_triangles[i].v2->p.x, m_triangles[i].v2->p.y, m_triangles[i].v2->p.z);
+        double3 thisNorm = normals.at(triangles.at(i).z - 1 );
+        MeshVertex* thisVert = vertices.at(triangles.at(i).x -1);
+        glNormal3f(thisNorm.x, thisNorm.y, thisNorm.z);
+        glVertex3f(thisVert->p.x, thisVert->p.y, thisVert->p.z);
     }
     glEnd();
 }
