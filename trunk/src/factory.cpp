@@ -34,6 +34,11 @@ bool Factory::addFeatureType(string id, bool isTerminal, string geom, string dat
     if(geom     == "") { cerr << "ERROR: terminal symbol used without a specified geometry" << endl; return false; }
     if(dataPath == "") { cerr << "ERROR: terminal symbol used without a specified datapath" << endl; return false; }
 
+    cout << dataPath << endl;
+    dataPath = "../data/" + dataPath;
+    cout << dataPath << endl;
+
+
     // Planes have textures (2D)
     if(geom == "plane" && m_texMap.find(dataPath) == m_texMap.end())
     {
@@ -64,7 +69,8 @@ Feature* Factory::instanceOf(string symbol, Scope scope)
     {
         FeatureProperties& f = m_featureListing[symbol];
         toReturn = new Feature(f.id, f.geomType, !f.terminal);
-        toReturn->setMedia(f.dataPtr);
+        if (m_featureListing[symbol].terminal || true){
+            toReturn->setMedia(f.dataPtr); }
     }
 
     toReturn->setScope(scope);

@@ -55,6 +55,7 @@ Matrix4x4 Feature::getBasis(){
 
 void Feature::setType(string geom)
 {
+    cout << "set type: " << geom << endl;
     if(geom == "plane") { m_geom_type = PLANE; }
     else if(geom == "mesh") { m_geom_type = MESH; }
     else { m_geom_type = UNKNOWN; }
@@ -91,7 +92,12 @@ void Feature::setMedia(void* data)
         case MESH:
             m_mesh = (Mesh*) data;
             break;
+
+
+        default:
+            cout << "************HIfuck" << endl;
     }
+
 }
 
 void Feature::setActive(bool b)
