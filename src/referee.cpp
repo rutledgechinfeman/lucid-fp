@@ -11,10 +11,10 @@ Referee::Referee(string file)
 
 Referee::~Referee()
 {
+    delete m_contractor; // delete contractor first, it contains/uses a parser and a grammar
     delete m_parser;
     delete m_grammar;
     delete m_fac;
-    delete m_contractor;
 }
 
 Feature* Referee::blowWhistle()

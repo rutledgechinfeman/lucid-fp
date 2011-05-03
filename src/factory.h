@@ -17,13 +17,15 @@ struct FeatureProperties
         id = identity;
         terminal = isTerminal;
         geomType = geometryType;
-        dataPtr = NULL;
+        mesh = NULL;
+        texId = -1;
     }
 
     string id;
     bool terminal;
     string geomType;
-    void* dataPtr;
+    Mesh* mesh;
+    GLuint texId;
 };
 
 class Factory
@@ -46,7 +48,7 @@ private:
     map<string, FeatureProperties> m_featureListing;
 
     /// Master list of textures to avoid unnecessary loading
-    map<string, QImage*> m_texMap;
+    map<string, GLuint> m_texMap;
 
     /// Master list of meshes to avoid unnecessary loading
     map<string, Mesh*> m_meshMap;
