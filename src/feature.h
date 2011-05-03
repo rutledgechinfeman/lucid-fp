@@ -6,6 +6,8 @@
 #include "mesh.h"
 #include "QImage"
 #include "scope.h"
+#include <QFile>
+#include <qgl.h>
 
 using std::string;
 using std::vector;
@@ -40,6 +42,7 @@ public:
 
     /// Set the mesh pointer
     void setMesh(Mesh* m);
+    GLuint loadTexture(const QFile &file);
 
     /// Set the texture pointer
     void setTexture(QImage* i);
@@ -86,8 +89,6 @@ private:
     /// Convenience parser
     void setType(string geom);
 
-    /// Unique identifier
-    string m_id; // TODO: we probably will not use this
 
     /// Grammatical symbol representing this feature
     string m_symbol;
@@ -112,6 +113,9 @@ private:
 
     /// Scope location
     Scope m_scope;
+
+    int m_height, m_width;
+    GLuint m_id;
 };
 
 #endif // FEATURE_H
