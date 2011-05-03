@@ -4,8 +4,8 @@ facade n
 tile n
 floor n
 wombat n
-wall t plane brick.jpg
+wall t plane brick.png
 door t mesh door.obj
 window t mesh window.obj
-wom t plane wom.jpg
-bat t plane bat.jpg
+wom t plane wom.png
+bat t plane bat.png

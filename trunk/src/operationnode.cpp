@@ -41,14 +41,12 @@ void OperationNode::evaluate(Feature* feat, Factory &fac, Scope scope)
         Scope one = scope.setScaleComponent(0.0, 2);
         m_children[0]->evaluate(feat, fac, one);
 
-        one.printSelf();
 
         Scope two = scope.copy();
         two = two.translate(two.getXBasis()*two.getScale().x);
         two = two.setScaleComponent(0.0, 0);
         m_children[0]->evaluate(feat, fac, two);
 
-        two.printSelf();
 
         Scope three = scope.copy();
         three = three.translate(three.getXBasis()*three.getScale().x);
@@ -57,7 +55,6 @@ void OperationNode::evaluate(Feature* feat, Factory &fac, Scope scope)
         three = three.setScaleComponent(0.0, 2);
         m_children[0]->evaluate(feat, fac, three);
 
-        three.printSelf();
 
         Scope four = scope.copy();
         four = four.translate(four.getZBasis()*four.getScale().z);
@@ -65,7 +62,6 @@ void OperationNode::evaluate(Feature* feat, Factory &fac, Scope scope)
         four = four.setScaleComponent(0.0, 0);
         m_children[0]->evaluate(feat, fac, four);
 
-        four.printSelf();
     }
     else if (m_type == SUBDIV)
     {
