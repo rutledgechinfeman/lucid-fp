@@ -132,7 +132,7 @@ void GLWidget::wheelEvent(QWheelEvent *event) {
 
     int dx = event->delta();
     double3 look = (m_camera.center - m_camera.eye).getNormalized();
-    m_camera.eye += look * 0.001 * dx;
+    m_camera.eye += look * 0.01 * dx;
     this->perspectiveCamera(this->width(), this->height());
 
 
