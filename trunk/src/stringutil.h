@@ -9,7 +9,7 @@ class StringUtil
 {
 public:
     StringUtil();
-    static void split(string toSplit, const char* on, vector<string> &result);
+    static void split(string toSplit, const char* on, vector<string> &result, bool emptyStrings = false, string openContainer = "", string closeContainer = "");
     static string trim(string in);
 };
 
