@@ -86,8 +86,8 @@ void Feature::setMedia(void* data)
     switch (m_geom_type)
     {
         case PLANE:
-            m_image = (QImage*) data;
-            m_id = loadTexture(m_image);
+            m_texture = (QImage*) data;
+            if (data) m_id = loadTexture();
             break;
 
         case MESH:
@@ -135,20 +135,14 @@ Feature::~Feature()
 
 }
 
-extern "C"{
-    extern void APIENTRY glActiveTexture (GLenum);
-}
-GLuint Feature::loadTexture(QImage* img) {
-
-    QImage texture;
+extern "C" { extern void APIENTRY glActiveTexture (GLenum); }
+GLuint Feature::loadTexture()
+{
     GLuint toReturn;
-    texture = QGLWidget::convertToGLFormat(*img);
-
     glGenTextures(1, &toReturn);
-    m_texture = new QImage(texture);
 
     glBindTexture(GL_TEXTURE_2D, toReturn);
-    gluBuild2DMipmaps(GL_TEXTURE_2D, 4, m_texture->width(), m_texture->height(), GL_RGBA, GL_UNSIGNED_BYTE, m_texture->bits());
+    gluBuild2DMipmaps(GL_TEXTURE_2D, 4, m_texture->width(), m_texture->height(), GL_BGRA, GL_UNSIGNED_BYTE, m_texture->bits());
 
     return toReturn;
 }

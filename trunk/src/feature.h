@@ -43,7 +43,9 @@ public:
 
     /// Set the mesh pointer
     void setMesh(Mesh* m);
-    GLuint loadTexture(QImage* img);
+
+
+    GLuint loadTexture();
 
     /// Set the texture pointer
     void setTexture(QImage* i);
@@ -90,7 +92,6 @@ private:
     /// Convenience parser
     void setType(string geom);
 
-
     /// Grammatical symbol representing this feature
     string m_symbol;
 
@@ -107,7 +108,7 @@ private:
     Mesh* m_mesh;
 
     /// Texture media pointer
-    QImage* m_texture, *m_image;
+    QImage* m_texture;
 
     /// Parent in feature tree
     Feature* m_parent;
