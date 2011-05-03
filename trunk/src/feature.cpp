@@ -1,5 +1,9 @@
 #include "feature.h"
 #include <qgl.h>
+#include <glwidget.h>
+#include <iostream>
+
+using namespace std;
 
 
 Feature::Feature()
@@ -29,6 +33,7 @@ Feature::Feature(string symbol, string geom, bool isActive, Scope scope, Feature
     m_scope = scope;
 
     setType(geom);
+    m_id = loadTexture(QFile("../data/rainbow.png"));
 
 
 }
@@ -127,6 +132,32 @@ Feature::~Feature()
 
 }
 
+extern "C"{
+    extern void APIENTRY glActiveTexture (GLenum);
+}
+GLuint Feature::loadTexture(const QFile &file) {
+
+    QImage image, texture;
+    GLuint toReturn = -1;
+    if(!file.exists()){
+        cout << "texture load fail" << endl;
+        return -1;
+    }
+    else{
+           cout << "texture load success" << endl;
+
+    }
+    image.load(file.fileName());
+    texture = QGLWidget::convertToGLFormat(image);
+
+    glGenTextures(1, &toReturn);
+    m_texture = new QImage(texture);
+    gluBuild2DMipmaps(GL_TEXTURE_2D, 3, m_texture->width(), m_texture->height(), GL_RGBA, GL_UNSIGNED_BYTE, m_texture->bits());
+
+    return toReturn;
+}
+
+
 void Feature::draw()
 {
     if(m_active){
@@ -137,21 +168,30 @@ void Feature::draw()
         Matrix4x4 mat = getTransMat(m_scope.getPoint()) * m_scope.getBasis() * getScaleMat(m_scope.getScale());
         REAL* matrix = new REAL[16];
         mat.getTranspose().fillArray(matrix);
+        glEnable(GL_TEXTURE_2D);
+        glShadeModel(GL_SMOOTH);
+        glEnable(GL_POLYGON_SMOOTH); //Enable smoothing
+
+        glEnable(GL_DEPTH_TEST);
+
+        glActiveTexture(GL_TEXTURE0+m_id );
+        glBindTexture(GL_TEXTURE_2D, GL_TEXTURE0+m_id);
+
 
         glMultMatrixd(matrix);
-
         switch (m_geom_type)
         {
             case PLANE:
                 glBegin(GL_QUADS);
-
-                glNormal3f(0.0, 0.0, 1.0);
+                glTexCoord2f(0.0, 0.0);
                 glVertex3f(0.0, 0.0, 0.0);
+                glTexCoord2f(1.0, 0.0);
                 glVertex3f(1.0, 0.0, 0.0);
+                glTexCoord2f(1.0, 1.0);
                 glVertex3f(1.0, 1.0, 0.0);
+                glTexCoord2f(0.0, 1.0);
                 glVertex3f(0.0, 1.0, 0.0);
                 glEnd();
-
                 break;
 
             case MESH:
@@ -166,5 +206,6 @@ void Feature::draw()
             m_children.at(i)->draw();
         }
     }
+    glFlush();
 
 }
