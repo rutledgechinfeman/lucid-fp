@@ -41,16 +41,31 @@ void OperationNode::evaluate(Feature* feat, Factory &fac, Scope scope)
         Scope one = scope.setScaleComponent(0.1, 2);
         m_children[0]->evaluate(feat, fac, one);
 
+        one.printSelf();
 
-        Scope two = scope.setScaleComponent(0.1, 0);
+
+        Scope two = scope.copy();
+        Vector4 temp = two.getBasisComponent(0);
+        two = two.setBasisComponent(0, two.getBasisComponent(2));
+        two = two.setBasisComponent(2, temp);
+        two = two.setScale(Vector4(two.getScale().z, two.getScale().y, two.getScale().x, 1.0));
+
+        two = two.setScaleComponent(0.1, 2);
         m_children[0]->evaluate(feat, fac, two);
 
+        two.printSelf();
 
         Scope three = scope.translate(Vector4(scope.getScale().x, 0.0, scope.getScale().z, 0.0));
         three = three.setBasisComponent(0, -three.getBasisComponent(0));
         three = three.setBasisComponent(2, -three.getBasisComponent(2));
         Scope four = three.copy();
-        three = three.setScaleComponent(0.1, 0);
+        temp = three.getBasisComponent(0);
+        three = three.setBasisComponent(0, three.getBasisComponent(2));
+        three = three.setBasisComponent(2, temp);
+        three = three.setScale(Vector4(three.getScale().z, three.getScale().y, three.getScale().x, 1.0));
+
+
+        three = three.setScaleComponent(0.1, 2);
         m_children[0]->evaluate(feat, fac, three);
 
         four = four.setScaleComponent(0.1, 2);
