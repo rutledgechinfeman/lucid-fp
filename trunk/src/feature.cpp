@@ -11,7 +11,6 @@ Feature::Feature()
 {
     m_active = false;
     m_mesh = NULL;
-    m_texture = NULL;
 }
 
 Feature::Feature(string symbol, string geom, bool isActive, Scope scope, Feature* parent)
@@ -29,14 +28,10 @@ Feature::Feature(string symbol, string geom, bool isActive, Scope scope, Feature
 
     /// Set mesh and texture to null. SET THESE LATER IF YOU WANT TO USE THE MESH OR TEXTURE
     m_mesh = NULL;
-    m_texture = NULL;
 
     m_scope = scope;
 
     setType(geom);
-
-    m_id = -1;
-
 }
 
 Scope Feature::getScope(){
@@ -76,25 +71,9 @@ void Feature::setMesh(Mesh* mesh)
 
 }
 
-void Feature::setTexture(QImage* image)
+void Feature::setTextureID(GLuint i)
 {
-    m_texture = image;
-}
-
-void Feature::setMedia(void* data)
-{
-    switch (m_geom_type)
-    {
-        case PLANE:
-            m_texture = (QImage*) data;
-            if (data) m_id = loadTexture();
-            break;
-
-        case MESH:
-            m_mesh = (Mesh*) data;
-            break;
-    }
-
+    m_textureId = i;
 }
 
 void Feature::setActive(bool b)
@@ -135,19 +114,6 @@ Feature::~Feature()
 
 }
 
-extern "C" { extern void APIENTRY glActiveTexture (GLenum); }
-GLuint Feature::loadTexture()
-{
-    GLuint toReturn;
-    glGenTextures(1, &toReturn);
-
-    glBindTexture(GL_TEXTURE_2D, toReturn);
-    gluBuild2DMipmaps(GL_TEXTURE_2D, 4, m_texture->width(), m_texture->height(), GL_BGRA, GL_UNSIGNED_BYTE, m_texture->bits());
-
-    return toReturn;
-}
-
-
 void Feature::draw()
 {
     if(m_children.size()==0){
@@ -166,7 +132,7 @@ void Feature::draw()
         {
             case PLANE:
                 glEnable(GL_TEXTURE_2D);
-                glBindTexture(GL_TEXTURE_2D, m_id);
+                glBindTexture(GL_TEXTURE_2D, m_textureId);
                 glBegin(GL_QUADS);
 
 

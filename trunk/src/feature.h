@@ -48,10 +48,7 @@ public:
     GLuint loadTexture();
 
     /// Set the texture pointer
-    void setTexture(QImage* i);
-
-    /// Set the mesh/texture pointer depending on geometry type
-    void setMedia(void* data);
+    void setTextureID(GLuint i);
 
     /// Set isActive
     void setActive(bool b);
@@ -108,16 +105,13 @@ private:
     Mesh* m_mesh;
 
     /// Texture media pointer
-    QImage* m_texture;
+    GLuint m_textureId;
 
     /// Parent in feature tree
     Feature* m_parent;
 
     /// Scope location
     Scope m_scope;
-
-    int m_height, m_width;
-    GLuint m_id;
 };
 
 #endif // FEATURE_H
