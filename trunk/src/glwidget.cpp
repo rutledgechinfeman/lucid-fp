@@ -13,6 +13,7 @@ GLWidget::GLWidget(QWidget *parent)
 {
     m_prevMousePos.x = 0.0; m_prevMousePos.y = 0.0;
     m_leftMouseDown = m_rightMouseDown = m_middleMouseDown = false;
+    scenery = new Scenery();
     this->setFocusPolicy(Qt::StrongFocus);
     this->setMouseTracking(true);
     m_root = NULL;
@@ -76,6 +77,10 @@ void GLWidget::paintGL()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     this->perspectiveCamera(this->width(), this->height());
+    //TODO: make some scenery variable
+    if(true){
+        scenery->draw(m_camera.center.x, m_camera.center.y, m_camera.center.z);
+    }
 
     if( m_root) { m_root->draw(); }
 }

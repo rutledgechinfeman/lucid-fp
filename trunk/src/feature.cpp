@@ -131,30 +131,33 @@ void Feature::draw()
         switch (m_geom_type)
         {
             case PLANE:
+
                 glEnable(GL_TEXTURE_2D);
                 glBindTexture(GL_TEXTURE_2D, m_textureId);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
                 glBegin(GL_QUADS);
 
 
                 //xy
                 glTexCoord2f(0.0, 0.0);
                 glVertex3f(0.0, 0.0, 0.0);
-                glTexCoord2f(0.0, 1.0);
+                glTexCoord2f(0.0, this->getScale().y);
                 glVertex3f(0.0, 1.0, 0.0);
-                glTexCoord2f(1.0, 1.0);
+                glTexCoord2f(this->getScale().x, this->getScale().y);
                 glVertex3f(1.0, 1.0, 0.0);
-                glTexCoord2f(1.0, 0.0);
+                glTexCoord2f(this->getScale().x, 0.0);
                 glVertex3f(1.0, 0.0, 0.0);
 
                 //xz
 
                 glTexCoord2f(0.0, 0.0);
                 glVertex3f(0.0, 0.0, 0.0);
-                glTexCoord2f(1.0, 0.0);
+                glTexCoord2f(this->getScale().x, 0.0);
                 glVertex3f(1.0, 0.0, 0.0);
-                glTexCoord2f(1.0, 1.0);
+                glTexCoord2f(this->getScale().x, this->getScale().y);
                 glVertex3f(1.0, 0.0, 1.0);
-                glTexCoord2f(0.0, 1.0);
+                glTexCoord2f(0.0, this->getScale().y);
                 glVertex3f(0.0, 0.0, 1.0);
 
                 //yz
@@ -162,44 +165,44 @@ void Feature::draw()
                 glTexCoord2f(0.0, 0.0);
                 glVertex3f(0.0, 0.0, 0.0);
 
-                glTexCoord2f(0.0, 1.0);
+                glTexCoord2f(0.0, this->getScale().y);
                 glVertex3f(0.0, 0.0, 1.0);
 
-                glTexCoord2f(1.0, 1.0);
+                glTexCoord2f(this->getScale().x, this->getScale().y);
                 glVertex3f(0.0, 1.0, 1.0);
-                glTexCoord2f(1.0, 0.0);
+                glTexCoord2f(this->getScale().x, 0.0);
                 glVertex3f(0.0, 1.0, 0.0);
 
                 //xy
 
                 glTexCoord2f(0.0, 0.0);
                 glVertex3f(0.0, 0.0, 1.0);
-                glTexCoord2f(1.0, 0.0);
+                glTexCoord2f(this->getScale().x, 0.0);
                 glVertex3f(1.0, 0.0, 1.0);
-                glTexCoord2f(1.0, 1.0);
+                glTexCoord2f(this->getScale().x, this->getScale().y);
                 glVertex3f(1.0, 1.0, 1.0);
-                glTexCoord2f(0.0, 1.0);
+                glTexCoord2f(0.0, this->getScale().y);
                 glVertex3f(0.0, 1.0, 1.0);
 
                 //xz
                 glTexCoord2f(0.0, 0.0);
                 glVertex3f(0.0, 1.0, 0.0);
-                glTexCoord2f(0.0, 1.0);
+                glTexCoord2f(0.0, this->getScale().y);
                 glVertex3f(0.0, 1.0, 1.0);
-                glTexCoord2f(1.0, 1.0);
+                glTexCoord2f(this->getScale().x, this->getScale().y);
                 glVertex3f(1.0, 1.0, 1.0);
-                glTexCoord2f(1.0, 0.0);
+                glTexCoord2f(this->getScale().x, 0.0);
                 glVertex3f(1.0, 1.0, 0.0);
 
                 //yz
 
                 glTexCoord2f(0.0, 0.0);
                 glVertex3f(1.0, 0.0, 0.0);
-                glTexCoord2f(1.0, 0.0);
+                glTexCoord2f(this->getScale().x, 0.0);
                 glVertex3f(1.0, 1.0, 0.0);
-                glTexCoord2f(1.0, 1.0);
+                glTexCoord2f(this->getScale().x, this->getScale().y);
                 glVertex3f(1.0, 1.0, 1.0);
-                glTexCoord2f(0.0, 1.0);
+                glTexCoord2f(0.0, this->getScale().y);
                 glVertex3f(1.0, 0.0, 1.0);
 
                 glEnd();

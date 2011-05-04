@@ -117,7 +117,7 @@ void Mesh::drawGL()
         glVertex3f(thisVert->p.x, thisVert->p.y, thisVert->p.z);
     }
     glEnd();
-    //glDisable(GL_LIGHTING);
+    glDisable(GL_LIGHTING);
 }
 
 /*void Mesh::drawTriangleIDs()

@@ -42,6 +42,7 @@ protected:
     vector<MeshVertex*> vertices;
     vector<Vector4> triangles;
     vector<double3> normals;
+    vector<double2> texcoords;
     //MeshVertex *m_vertices;
     //MeshTriangle *m_triangles;
     //double *m_texcoords;
