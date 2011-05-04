@@ -2,6 +2,7 @@
 
 #include "scopeoperation.h"
 #include "stringutil.h"
+#include <stdlib.h>
 
 using namespace std;
 
@@ -26,13 +27,29 @@ ScopeOperation::ScopeOperation(string arg)
     int paramEnd = arg.find(")");
     string paramString = StringUtil::trim(arg.substr(paramStart, paramEnd - paramStart ));
     vector<string> params;
-    StringUtil::split(paramString, ",", params);
+    StringUtil::split(paramString, ",", params, false, "[", "]");
 
     // Parse each param
     if (params.size() != 3) { cerr << "ERROR: Invalid number of params in operation line: " << arg << endl; }
     for (unsigned int i = 0; i < params.size(); ++ i)
     {
-        m_params.data[i] = strtod(params[i].c_str(), NULL);
+        // Straight number param
+        if (params[i].find("[") == string::npos) { m_params.data[i] = strtod(params[i].c_str(), NULL); }
+
+        // Random interval
+        else
+        {
+            vector<string> randParams;
+            StringUtil::split(params[i].substr(1, params[i].size() - 2), ",", randParams);
+            double rando = (double)rand() / (double)RAND_MAX;
+
+            double upperBound = strtod(randParams[1].c_str(), NULL);
+            double lowerBound = strtod(randParams[0].c_str(), NULL);
+            rando *= upperBound - lowerBound;
+            rando += lowerBound;
+
+            m_params.data[i] = rando;
+        }
     }
 }
 

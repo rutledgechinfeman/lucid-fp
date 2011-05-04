@@ -31,8 +31,12 @@ Feature::Feature(string symbol, string geom, bool isActive, Scope scope, Feature
 
     m_scope = scope;
 
+    m_tileTex = false;
+
     setType(geom);
 }
+
+Feature::~Feature() { }
 
 Scope Feature::getScope(){
     return m_scope;
@@ -66,9 +70,12 @@ void Feature::setScope(Scope scope)
 //Convenient because feature may not have a mesh or a texture
 void Feature::setMesh(Mesh* mesh)
 {
-
     m_mesh = mesh;
+}
 
+void Feature::setTileTex(bool tileTex)
+{
+    m_tileTex = tileTex;
 }
 
 void Feature::setTextureID(GLuint i)
@@ -103,15 +110,9 @@ Feature* Feature::getChild(int index)
 
 //Adds a feature child to the list of children
 //This is no longer a terminal if it ever was in the past
-void Feature::addChild(Feature* f){
-    m_children.push_back(f);
-
-}
-
-
-Feature::~Feature()
+void Feature::addChild(Feature* f)
 {
-
+    m_children.push_back(f);
 }
 
 void Feature::draw()
@@ -138,72 +139,8 @@ void Feature::draw()
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
                 glBegin(GL_QUADS);
 
-
-                //xy
-                glTexCoord2f(0.0, 0.0);
-                glVertex3f(0.0, 0.0, 0.0);
-                glTexCoord2f(0.0, this->getScale().y);
-                glVertex3f(0.0, 1.0, 0.0);
-                glTexCoord2f(this->getScale().x, this->getScale().y);
-                glVertex3f(1.0, 1.0, 0.0);
-                glTexCoord2f(this->getScale().x, 0.0);
-                glVertex3f(1.0, 0.0, 0.0);
-
-                //xz
-
-                glTexCoord2f(0.0, 0.0);
-                glVertex3f(0.0, 0.0, 0.0);
-                glTexCoord2f(this->getScale().x, 0.0);
-                glVertex3f(1.0, 0.0, 0.0);
-                glTexCoord2f(this->getScale().x, this->getScale().y);
-                glVertex3f(1.0, 0.0, 1.0);
-                glTexCoord2f(0.0, this->getScale().y);
-                glVertex3f(0.0, 0.0, 1.0);
-
-                //yz
-
-                glTexCoord2f(0.0, 0.0);
-                glVertex3f(0.0, 0.0, 0.0);
-
-                glTexCoord2f(0.0, this->getScale().y);
-                glVertex3f(0.0, 0.0, 1.0);
-
-                glTexCoord2f(this->getScale().x, this->getScale().y);
-                glVertex3f(0.0, 1.0, 1.0);
-                glTexCoord2f(this->getScale().x, 0.0);
-                glVertex3f(0.0, 1.0, 0.0);
-
-                //xy
-
-                glTexCoord2f(0.0, 0.0);
-                glVertex3f(0.0, 0.0, 1.0);
-                glTexCoord2f(this->getScale().x, 0.0);
-                glVertex3f(1.0, 0.0, 1.0);
-                glTexCoord2f(this->getScale().x, this->getScale().y);
-                glVertex3f(1.0, 1.0, 1.0);
-                glTexCoord2f(0.0, this->getScale().y);
-                glVertex3f(0.0, 1.0, 1.0);
-
-                //xz
-                glTexCoord2f(0.0, 0.0);
-                glVertex3f(0.0, 1.0, 0.0);
-                glTexCoord2f(0.0, this->getScale().y);
-                glVertex3f(0.0, 1.0, 1.0);
-                glTexCoord2f(this->getScale().x, this->getScale().y);
-                glVertex3f(1.0, 1.0, 1.0);
-                glTexCoord2f(this->getScale().x, 0.0);
-                glVertex3f(1.0, 1.0, 0.0);
-
-                //yz
-
-                glTexCoord2f(0.0, 0.0);
-                glVertex3f(1.0, 0.0, 0.0);
-                glTexCoord2f(this->getScale().x, 0.0);
-                glVertex3f(1.0, 1.0, 0.0);
-                glTexCoord2f(this->getScale().x, this->getScale().y);
-                glVertex3f(1.0, 1.0, 1.0);
-                glTexCoord2f(0.0, this->getScale().y);
-                glVertex3f(1.0, 0.0, 1.0);
+                if (m_tileTex) { drawTiledSelf();     }
+                else           { drawStretchedSelf(); }
 
                 glEnd();
 
@@ -223,4 +160,130 @@ void Feature::draw()
     }
     glFlush();
 
+}
+
+void Feature::drawTiledSelf()
+{
+    //xy
+    glTexCoord2f(0.0, 0.0);
+    glVertex3f(0.0, 0.0, 0.0);
+    glTexCoord2f(0.0, this->getScale().y);
+    glVertex3f(0.0, 1.0, 0.0);
+    glTexCoord2f(this->getScale().x, this->getScale().y);
+    glVertex3f(1.0, 1.0, 0.0);
+    glTexCoord2f(this->getScale().x, 0.0);
+    glVertex3f(1.0, 0.0, 0.0);
+
+    //xz
+    glTexCoord2f(0.0, 0.0);
+    glVertex3f(0.0, 0.0, 0.0);
+    glTexCoord2f(this->getScale().x, 0.0);
+    glVertex3f(1.0, 0.0, 0.0);
+    glTexCoord2f(this->getScale().x, this->getScale().y);
+    glVertex3f(1.0, 0.0, 1.0);
+    glTexCoord2f(0.0, this->getScale().y);
+    glVertex3f(0.0, 0.0, 1.0);
+
+    //yz
+    glTexCoord2f(0.0, 0.0);
+    glVertex3f(0.0, 0.0, 0.0);
+    glTexCoord2f(0.0, this->getScale().y);
+    glVertex3f(0.0, 0.0, 1.0);
+    glTexCoord2f(this->getScale().x, this->getScale().y);
+    glVertex3f(0.0, 1.0, 1.0);
+    glTexCoord2f(this->getScale().x, 0.0);
+    glVertex3f(0.0, 1.0, 0.0);
+
+    //xy
+    glTexCoord2f(0.0, 0.0);
+    glVertex3f(0.0, 0.0, 1.0);
+    glTexCoord2f(this->getScale().x, 0.0);
+    glVertex3f(1.0, 0.0, 1.0);
+    glTexCoord2f(this->getScale().x, this->getScale().y);
+    glVertex3f(1.0, 1.0, 1.0);
+    glTexCoord2f(0.0, this->getScale().y);
+    glVertex3f(0.0, 1.0, 1.0);
+
+    //xz
+    glTexCoord2f(0.0, 0.0);
+    glVertex3f(0.0, 1.0, 0.0);
+    glTexCoord2f(0.0, this->getScale().y);
+    glVertex3f(0.0, 1.0, 1.0);
+    glTexCoord2f(this->getScale().x, this->getScale().y);
+    glVertex3f(1.0, 1.0, 1.0);
+    glTexCoord2f(this->getScale().x, 0.0);
+    glVertex3f(1.0, 1.0, 0.0);
+
+    //yz
+    glTexCoord2f(0.0, 0.0);
+    glVertex3f(1.0, 0.0, 0.0);
+    glTexCoord2f(this->getScale().x, 0.0);
+    glVertex3f(1.0, 1.0, 0.0);
+    glTexCoord2f(this->getScale().x, this->getScale().y);
+    glVertex3f(1.0, 1.0, 1.0);
+    glTexCoord2f(0.0, this->getScale().y);
+    glVertex3f(1.0, 0.0, 1.0);
+}
+
+void Feature::drawStretchedSelf()
+{
+    //xy
+    glTexCoord2f(0.0, 0.0);
+    glVertex3f(0.0, 0.0, 0.0);
+    glTexCoord2f(0.0, 1.0);
+    glVertex3f(0.0, 1.0, 0.0);
+    glTexCoord2f(1.0, 1.0);
+    glVertex3f(1.0, 1.0, 0.0);
+    glTexCoord2f(1.0, 0.0);
+    glVertex3f(1.0, 0.0, 0.0);
+
+    //xz
+    glTexCoord2f(0.0, 0.0);
+    glVertex3f(0.0, 0.0, 0.0);
+    glTexCoord2f(1.0, 0.0);
+    glVertex3f(1.0, 0.0, 0.0);
+    glTexCoord2f(1.0, 1.0);
+    glVertex3f(1.0, 0.0, 1.0);
+    glTexCoord2f(0.0, 1.0);
+    glVertex3f(0.0, 0.0, 1.0);
+
+    //yz
+    glTexCoord2f(0.0, 0.0);
+    glVertex3f(0.0, 0.0, 0.0);
+    glTexCoord2f(0.0, 1.0);
+    glVertex3f(0.0, 0.0, 1.0);
+    glTexCoord2f(1.0, 1.0);
+    glVertex3f(0.0, 1.0, 1.0);
+    glTexCoord2f(1.0, 0.0);
+    glVertex3f(0.0, 1.0, 0.0);
+
+    //xy
+    glTexCoord2f(0.0, 0.0);
+    glVertex3f(0.0, 0.0, 1.0);
+    glTexCoord2f(1.0, 0.0);
+    glVertex3f(1.0, 0.0, 1.0);
+    glTexCoord2f(1.0, 1.0);
+    glVertex3f(1.0, 1.0, 1.0);
+    glTexCoord2f(0.0, 1.0);
+    glVertex3f(0.0, 1.0, 1.0);
+
+    //xz
+    glTexCoord2f(0.0, 0.0);
+    glVertex3f(0.0, 1.0, 0.0);
+    glTexCoord2f(0.0, 1.0);
+    glVertex3f(0.0, 1.0, 1.0);
+    glTexCoord2f(1.0, 1.0);
+    glVertex3f(1.0, 1.0, 1.0);
+    glTexCoord2f(1.0, 0.0);
+    glVertex3f(1.0, 1.0, 0.0);
+
+    //yz
+    glTexCoord2f(0.0, 0.0);
+    glVertex3f(1.0, 0.0, 0.0);
+    glTexCoord2f(1.0, 0.0);
+    glVertex3f(1.0, 1.0, 0.0);
+    glTexCoord2f(1.0, 1.0);
+    glVertex3f(1.0, 1.0, 1.0);
+    glTexCoord2f(0.0, 1.0);
+    glVertex3f(1.0, 0.0, 1.0);
 }

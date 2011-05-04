@@ -79,7 +79,7 @@ bool Parser::parseSymbolFile(string filename, Factory &fac)
         else
         {
             // Defensive coding; make sure we at least have the right number of tokens
-            if (tokens.size() == 4) { fac.addFeatureType(tokens.at(0), true, tokens.at(2), tokens.at(3)); }
+            if (tokens.size() == 5) { fac.addFeatureType(tokens.at(0), true, tokens.at(2), tokens.at(3), tokens.at(4)); }
             else { cerr << "WARNING: Ignoring invalid terminal declaration in symbol file: " << line << endl; }
         }
     }
