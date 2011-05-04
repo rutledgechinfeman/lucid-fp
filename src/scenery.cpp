@@ -83,10 +83,7 @@ GLuint Scenery::load_cube_map(QList<QFile *> files) {
         texture = texture.scaledToWidth(1024,Qt::SmoothTransformation);
 
         glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,3,3,texture.width(),texture.height(),0,GL_RGBA,GL_UNSIGNED_BYTE,texture.bits());
-
-        cout << "dafsd" << endl;
         gluBuild2DMipmaps(GL_TEXTURE_CUBE_MAP_POSITIVE_X +i, 3, texture.width(), texture.height(), GL_RGBA, GL_UNSIGNED_BYTE, texture.bits());
-        cout << "\t \033[32m" << files[i]->fileName().toStdString() << "\033[0m" << endl;
     }
     glTexParameteri(GL_TEXTURE_CUBE_MAP,GL_TEXTURE_MIN_FILTER,GL_NEAREST_MIPMAP_NEAREST);
     glTexParameteri(GL_TEXTURE_CUBE_MAP,GL_TEXTURE_MAG_FILTER,GL_NEAREST_MIPMAP_NEAREST);
@@ -99,10 +96,13 @@ GLuint Scenery::load_cube_map(QList<QFile *> files) {
 void Scenery::draw(){
     glPushMatrix();
 
+    float fExtent = 50.f;
+
     glEnable(GL_TEXTURE_CUBE_MAP);
     glBindTexture(GL_TEXTURE_CUBE_MAP,textures_["cube_map_1"]);
     glBegin(GL_QUADS);
-    float fExtent = 50.f;
+
+
     glTexCoord3f(1.0f,-1.0f,-1.0f); glVertex3f(fExtent,-fExtent,-fExtent);
     glTexCoord3f(-1.0f,-1.0f,-1.0f);glVertex3f(-fExtent,-fExtent,-fExtent);
     glTexCoord3f(-1.0f,1.0f,-1.0f);glVertex3f(-fExtent,fExtent,-fExtent);
@@ -128,10 +128,13 @@ void Scenery::draw(){
     glTexCoord3f(1.0f,1.0f,1.0f);glVertex3f(fExtent,fExtent,fExtent);
     glTexCoord3f(1.0f,1.0f,-1.0f);glVertex3f(fExtent,fExtent,-fExtent);
 
-    glTexCoord3f(-1.0f,-1.0f,-1.0f);glVertex3f(-fExtent,-fExtent,-fExtent);
-    glTexCoord3f(1.0f,-1.0f,-1.0f);glVertex3f(fExtent,-fExtent,-fExtent);
-    glTexCoord3f(1.0f,-1.0f,1.0f); glVertex3f(fExtent,-fExtent,fExtent);
-    glTexCoord3f(-1.0f,-1.0f,1.0f);glVertex3f(-fExtent,-fExtent,fExtent);
+    glTexCoord3f(-1.0f,-1.0f,-1.0f);glVertex3f(-fExtent, 0, -fExtent);
+    glTexCoord3f(1.0f,-1.0f,-1.0f);glVertex3f(fExtent, 0, -fExtent);
+    glTexCoord3f(1.0f,-1.0f,1.0f); glVertex3f(fExtent, 0, fExtent);
+    glTexCoord3f(-1.0f,-1.0f,1.0f);glVertex3f(-fExtent, 0, fExtent);
+
+
+
     glEnd();
 
 
