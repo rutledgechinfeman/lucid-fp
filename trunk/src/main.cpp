@@ -10,12 +10,12 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
 
-    //Referee ref("../data/grammar/first.gmr");
-    //Feature* root = ref.blowWhistle();
-    Feature* root = new Feature("window", "mesh", true, Scope(), NULL);
-    Mesh* m = new Mesh("../data/buddha.obj");
+    Referee ref("../data/grammar/first.gmr");
+    Feature* root = ref.blowWhistle();
 
-    root->setMesh(m);
+//    Feature* root = new Feature("window", "mesh", true, Scope(), NULL);
+//    Mesh* m = new Mesh("../data/buddha.obj");
+//    root->setMesh(m);
 
     w.setRoot(root);
     root->draw();
