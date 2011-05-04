@@ -49,10 +49,8 @@ Condition::~Condition()
 {
 }
 
-bool Condition::evaluate(const Feature &f)
+bool Condition::evaluate(Feature &f)
 {
-    (void) f; // TODO
-
     bool output = false;
     switch (m_type)
     {
@@ -61,7 +59,8 @@ bool Condition::evaluate(const Feature &f)
             break;
 
         case VISIBLE:
-            output = true;
+            if (m_param == STREET) { return f.getScope().getBasisComponent(0).x > 0; }
+            else { cerr << "WARNING: Visibility condition only supported for STREET, and not #: " << m_param << endl; }
             break;
 
         case OCCLUDED:

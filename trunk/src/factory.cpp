@@ -36,7 +36,7 @@ bool Factory::addFeatureType(string id, bool isTerminal, string geom, string dat
     {
         if (m_texMap.find(dataPath) == m_texMap.end())
         {
-            QImage* img = new QImage(QImage(QString(dataPath.c_str())).mirrored());
+            QImage* img = new QImage(QImage(QString(dataPath.c_str())).mirrored()); // OpenGL mirrors images vertically
             GLuint temp = 0;
             m_texMap[dataPath] = temp;
             glGenTextures(1, &m_texMap[dataPath]);
