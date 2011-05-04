@@ -105,16 +105,19 @@ Mesh::~Mesh()
 void Mesh::drawGL()
 {
 
+    glEnable(GL_LIGHTING);
     //cout << "drawing" << endl;
     glBegin(GL_TRIANGLES);
     for(int i=0; i < triangles.size(); i++)
     {
+        //for each element on a face we index into normals, vertices, and maybe texture coords
         double3 thisNorm = normals.at(triangles.at(i).z - 1 );
         MeshVertex* thisVert = vertices.at(triangles.at(i).x -1);
         glNormal3f(thisNorm.x, thisNorm.y, thisNorm.z);
         glVertex3f(thisVert->p.x, thisVert->p.y, thisVert->p.z);
     }
     glEnd();
+    //glDisable(GL_LIGHTING);
 }
 
 /*void Mesh::drawTriangleIDs()
