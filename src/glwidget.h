@@ -5,6 +5,7 @@
 #include <QGLWidget>
 #include "common.h"
 #include "feature.h"
+#include "scenery.h"
 class QTimer;
 
 
@@ -43,6 +44,7 @@ public:
 
    void setDefaultCamera();
    void mouseReleaseEvent(QMouseEvent *event);
+   Scenery* scenery;
 
 // Not really C++ but these are the handler functions
 // for the events
