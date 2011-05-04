@@ -13,8 +13,9 @@ GLWidget::GLWidget(QWidget *parent)
 {
     m_prevMousePos.x = 0.0; m_prevMousePos.y = 0.0;
     m_leftMouseDown = m_rightMouseDown = m_middleMouseDown = false;
-    scenery = new Scenery();
     this->setFocusPolicy(Qt::StrongFocus);
+
+
     this->setMouseTracking(true);
     m_root = NULL;
     this->setDefaultCamera();
@@ -28,6 +29,8 @@ GLWidget::~GLWidget()
 void GLWidget::setRoot(Feature* root)
 {
     m_root = root; // TODO, delete the old one?
+
+    scenery = new Scenery();
 }
 
 QSize GLWidget::minimumSizeHint() const
@@ -78,11 +81,14 @@ void GLWidget::paintGL()
 
     this->perspectiveCamera(this->width(), this->height());
     //TODO: make some scenery variable
+
     if(true){
-        scenery->draw(m_camera.center.x, m_camera.center.y, m_camera.center.z);
+
+        scenery->draw();
     }
 
     if( m_root) { m_root->draw(); }
+
 }
 
 
@@ -146,7 +152,7 @@ void GLWidget::setDefaultCamera() {
     m_camera.center.x = 0.0,m_camera.center.y = 0.0,m_camera.center.z = 0.0;
     m_camera.eye.x = -14.61,m_camera.eye.y = 12.81,m_camera.eye.z = -10.74;
     m_camera.up.x = 0.0,m_camera.up.y = 1.0,m_camera.up.z = 0.0;
-    m_camera.near = 0.001f,m_camera.far = 100.0;
+    m_camera.near = 0.001f,m_camera.far = 200.0;
     m_camera.fovy = 60.0;
     this->perspectiveCamera(this->width(), this->height());
 }

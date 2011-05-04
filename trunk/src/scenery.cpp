@@ -25,24 +25,22 @@ extern "C"{
 
 Scenery::Scenery()
 {
-    //_scenery = new GLuint[6];
-    //setIds();
+
+    glEnable(GL_TEXTURE_2D);
+    glFrontFace(GL_CW);
+    loadtextures();
 }
 
-void Scenery::setIds(){
-   // GLuint temp = 0;
-    //m_texMap[dataPath] = temp;
-    //glGenTextures(6, _scenery);
-}
 
 void Scenery::loadtextures(){
     QList<QFile *> fileList;
-    fileList.append(new QFile("textures/astra/posx.jpg"));
-    fileList.append(new QFile("textures/astra/negx.jpg"));
-    fileList.append(new QFile("textures/astra/posy.jpg"));
-    fileList.append(new QFile("textures/astra/negy.jpg"));
-    fileList.append(new QFile("textures/astra/posz.jpg"));
-    fileList.append(new QFile("textures/astra/negz.jpg"));
+    fileList.append(new QFile("../data/skybox/brightday1_positive_x.png"));
+    fileList.append(new QFile("../data/skybox/brightday1_negative_x.png"));
+    fileList.append(new QFile("../data/skybox/brightday1_positive_y.png"));
+    fileList.append(new QFile("../data/skybox/brightday1_negative_y.png"));
+    fileList.append(new QFile("../data/skybox/brightday1_positive_z.png"));
+    fileList.append(new QFile("../data/skybox/brightday1_negative_z.png"));
+
     textures_["cube_map_1"] = load_cube_map(fileList);
 }
 
@@ -55,6 +53,25 @@ void Scenery::loadtextures(){
   @return The assigned OpenGL id to the cube map.
 **/
 GLuint Scenery::load_cube_map(QList<QFile *> files) {
+    /*m_texMap = new GLuint[6];
+
+    for(unsigned int i=0; i<6; i++){
+        QImage* img = new QImage(files.at(i)->fileName());
+        GLuint temp = 0;
+
+        glGenTextures(1, &temp);
+
+        m_texMap[i]= temp;
+
+        glBindTexture(GL_TEXTURE_2D, temp);
+        cout << "here" << endl;
+        gluBuild2DMipmaps(GL_TEXTURE_2D, 4, img->width(), img->height(), GL_BGRA, GL_UNSIGNED_BYTE, img->bits());
+        cout << "here1" << endl;
+        delete img;
+    }
+    return m_texMap[0];*/
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     GLuint id;
     glGenTextures(1,&id);
     glBindTexture(GL_TEXTURE_CUBE_MAP,id);
@@ -64,7 +81,10 @@ GLuint Scenery::load_cube_map(QList<QFile *> files) {
         image = image.mirrored(false,true);
         texture = QGLWidget::convertToGLFormat(image);
         texture = texture.scaledToWidth(1024,Qt::SmoothTransformation);
+
         glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,3,3,texture.width(),texture.height(),0,GL_RGBA,GL_UNSIGNED_BYTE,texture.bits());
+
+        cout << "dafsd" << endl;
         gluBuild2DMipmaps(GL_TEXTURE_CUBE_MAP_POSITIVE_X +i, 3, texture.width(), texture.height(), GL_RGBA, GL_UNSIGNED_BYTE, texture.bits());
         cout << "\t \033[32m" << files[i]->fileName().toStdString() << "\033[0m" << endl;
     }
@@ -72,132 +92,51 @@ GLuint Scenery::load_cube_map(QList<QFile *> files) {
     glTexParameteri(GL_TEXTURE_CUBE_MAP,GL_TEXTURE_MAG_FILTER,GL_NEAREST_MIPMAP_NEAREST);
     glBindTexture(GL_TEXTURE_CUBE_MAP,0);
     return id;
+
 }
 
 
-void Scenery::draw(float x, float y, float z){
-/*
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+void Scenery::draw(){
     glPushMatrix();
 
-    glLoadIdentity();
-
-    gluLookAt(0,0,0, x, y, z, 0, 1, 0);
-
-    glPushAttrib(GL_ENABLE_BIT);
-    glEnable(GL_TEXTURE_2D);
-    glDisable(GL_DEPTH_TEST);
-    glDisable(GL_LIGHTING);
-    glDisable(GL_BLEND);
-
-    glColor4f(1,1,1,1);
-
-    glBindTexture(GL_TEXTURE_2D, _skybox[0]);
-
-
+    glEnable(GL_TEXTURE_CUBE_MAP);
+    glBindTexture(GL_TEXTURE_CUBE_MAP,textures_["cube_map_1"]);
     glBegin(GL_QUADS);
-        glTexCoord2f(0, 0); glVertex3f(  0.5f, -0.5f, -0.5f );
-        glTexCoord2f(1, 0); glVertex3f( -0.5f, -0.5f, -0.5f );
-        glTexCoord2f(1, 1); glVertex3f( -0.5f,  0.5f, -0.5f );
-        glTexCoord2f(0, 1); glVertex3f(  0.5f,  0.5f, -0.5f );
+    float fExtent = 50.f;
+    glTexCoord3f(1.0f,-1.0f,-1.0f); glVertex3f(fExtent,-fExtent,-fExtent);
+    glTexCoord3f(-1.0f,-1.0f,-1.0f);glVertex3f(-fExtent,-fExtent,-fExtent);
+    glTexCoord3f(-1.0f,1.0f,-1.0f);glVertex3f(-fExtent,fExtent,-fExtent);
+    glTexCoord3f(1.0f,1.0f,-1.0f); glVertex3f(fExtent,fExtent,-fExtent);
+
+    glTexCoord3f(1.0f,-1.0f,1.0f);glVertex3f(fExtent,-fExtent,fExtent);
+    glTexCoord3f(1.0f,-1.0f,-1.0f); glVertex3f(fExtent,-fExtent,-fExtent);
+    glTexCoord3f(1.0f,1.0f,-1.0f);  glVertex3f(fExtent,fExtent,-fExtent);
+    glTexCoord3f(1.0f,1.0f,1.0f); glVertex3f(fExtent,fExtent,fExtent);
+
+    glTexCoord3f(-1.0f,-1.0f,1.0f);  glVertex3f(-fExtent,-fExtent,fExtent);
+    glTexCoord3f(1.0f,-1.0f,1.0f); glVertex3f(fExtent,-fExtent,fExtent);
+    glTexCoord3f(1.0f,1.0f,1.0f);  glVertex3f(fExtent,fExtent,fExtent);
+    glTexCoord3f(-1.0f,1.0f,1.0f); glVertex3f(-fExtent,fExtent,fExtent);
+
+    glTexCoord3f(-1.0f,-1.0f,-1.0f); glVertex3f(-fExtent,-fExtent,-fExtent);
+    glTexCoord3f(-1.0f,-1.0f,1.0f);glVertex3f(-fExtent,-fExtent,fExtent);
+    glTexCoord3f(-1.0f,1.0f,1.0f); glVertex3f(-fExtent,fExtent,fExtent);
+    glTexCoord3f(-1.0f,1.0f,-1.0f);glVertex3f(-fExtent,fExtent,-fExtent);
+
+    glTexCoord3f(-1.0f,1.0f,-1.0f);glVertex3f(-fExtent,fExtent,-fExtent);
+    glTexCoord3f(-1.0f,1.0f,1.0f);glVertex3f(-fExtent,fExtent,fExtent);
+    glTexCoord3f(1.0f,1.0f,1.0f);glVertex3f(fExtent,fExtent,fExtent);
+    glTexCoord3f(1.0f,1.0f,-1.0f);glVertex3f(fExtent,fExtent,-fExtent);
+
+    glTexCoord3f(-1.0f,-1.0f,-1.0f);glVertex3f(-fExtent,-fExtent,-fExtent);
+    glTexCoord3f(1.0f,-1.0f,-1.0f);glVertex3f(fExtent,-fExtent,-fExtent);
+    glTexCoord3f(1.0f,-1.0f,1.0f); glVertex3f(fExtent,-fExtent,fExtent);
+    glTexCoord3f(-1.0f,-1.0f,1.0f);glVertex3f(-fExtent,-fExtent,fExtent);
     glEnd();
 
-    // Render the left quad
-    glBindTexture(GL_TEXTURE_2D, _skybox[1]);
 
-   glBegin(GL_QUADS);
-
-       glTexCoord2f(0, 0); glVertex3f(  0.5f, -0.5f,  0.5f );
-
-      glTexCoord2f(1, 0); glVertex3f(  0.5f, -0.5f, -0.5f );
-
-     glTexCoord2f(1, 1); glVertex3f(  0.5f,  0.5f, -0.5f );
-
-       glTexCoord2f(0, 1); glVertex3f(  0.5f,  0.5f,  0.5f );
-
-   glEnd();
-
-
-
-   // Render the back quad
-
-   glBindTexture(GL_TEXTURE_2D, _skybox[2]);
-
-   glBegin(GL_QUADS);
-
-       glTexCoord2f(0, 0); glVertex3f( -0.5f, -0.5f,  0.5f );
-
-       glTexCoord2f(1, 0); glVertex3f(  0.5f, -0.5f,  0.5f );
-
-       glTexCoord2f(1, 1); glVertex3f(  0.5f,  0.5f,  0.5f );
-
-       glTexCoord2f(0, 1); glVertex3f( -0.5f,  0.5f,  0.5f );
-
-
-
-   glEnd();
-
-
-
-   // Render the right quad
-
-   glBindTexture(GL_TEXTURE_2D, _skybox[3]);
-
-   glBegin(GL_QUADS);
-
-       glTexCoord2f(0, 0); glVertex3f( -0.5f, -0.5f, -0.5f );
-
-       glTexCoord2f(1, 0); glVertex3f( -0.5f, -0.5f,  0.5f );
-
-       glTexCoord2f(1, 1); glVertex3f( -0.5f,  0.5f,  0.5f );
-
-       glTexCoord2f(0, 1); glVertex3f( -0.5f,  0.5f, -0.5f );
-
-   glEnd();
-
-
-
-   // Render the top quad
-
-   glBindTexture(GL_TEXTURE_2D, _skybox[4]);
-
-   glBegin(GL_QUADS);
-
-       glTexCoord2f(0, 1); glVertex3f( -0.5f,  0.5f, -0.5f );
-
-       glTexCoord2f(0, 0); glVertex3f( -0.5f,  0.5f,  0.5f );
-
-       glTexCoord2f(1, 0); glVertex3f(  0.5f,  0.5f,  0.5f );
-
-       glTexCoord2f(1, 1); glVertex3f(  0.5f,  0.5f, -0.5f );
-
-   glEnd();
-
-
-
-   // Render the bottom quad
-
-   glBindTexture(GL_TEXTURE_2D, _skybox[5]);
-
-   glBegin(GL_QUADS);
-
-       glTexCoord2f(0, 0); glVertex3f( -0.5f, -0.5f, -0.5f );
-
-       glTexCoord2f(0, 1); glVertex3f( -0.5f, -0.5f,  0.5f );
-
-       glTexCoord2f(1, 1); glVertex3f(  0.5f, -0.5f,  0.5f );
-
-       glTexCoord2f(1, 0); glVertex3f(  0.5f, -0.5f, -0.5f );
-
-   glEnd();
-
-
-
-   // Restore enable bits and matrix
-
-   glPopAttrib();
-
+    glBindTexture(GL_TEXTURE_2D, 0);
     glPopMatrix();
-*/
+    glDisable(GL_TEXTURE_CUBE_MAP);
+
 }

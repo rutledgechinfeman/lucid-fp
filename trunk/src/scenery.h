@@ -5,21 +5,25 @@
 #include <qgl.h>
 #include "common.h"
 
-class QGLContext;
-class QGLShaderProgram;
-class QFile;
-class QGLFramebufferObject;
-class QKeyEvent;
+#include <string>
+#include <map>
+#include <QImage>
+#include "mesh.h"
+#include "feature.h"
+#include "scope.h"
+using std::string;
+using std::map;
 
 class Scenery
 {
 public:
     Scenery();
-    void draw(float x, float y, float z);
+    void draw();
     void setIds();
     QHash<QString, GLuint>                      textures_; ///hashmap of all textures
     GLuint load_cube_map(QList<QFile *> files);
     void loadtextures();
+    GLuint* m_texMap;
 
 };
 
