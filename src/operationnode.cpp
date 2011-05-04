@@ -36,7 +36,7 @@ void OperationNode::evaluate(Feature* feat, Factory &fac, Scope scope)
 
     if (m_type == COMP)
     {
-        if(m_stringArg != "sidefaces") { cout << "ERROR: We only support the comp operation on 'sidefaces', not: " << m_stringArg << endl; return; }
+        if(m_stringArg != "sidefaces") { cerr << "ERROR: We only support the comp operation on 'sidefaces', not: " << m_stringArg << endl; return; }
 
         Scope one = scope.setScaleComponent(0.1, 2);
         m_children[0]->evaluate(feat, fac, one);
@@ -118,7 +118,7 @@ void OperationNode::evaluate(Feature* feat, Factory &fac, Scope scope)
 
         // Calculate repeat specifications
         double dimLen = scope.getScale().data[index];
-        int numRepeats = dimLen / m_otherArgs[index].value;
+        int numRepeats = dimLen / m_otherArgs[0].value;
         double repeatLength = dimLen / ((double) numRepeats);
 
         // Get a new scope to translate for each child
