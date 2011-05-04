@@ -45,7 +45,7 @@ public:
     virtual ~Condition();
 
     /// See if the given feature passes or fails this condition
-    virtual bool evaluate(const Feature &f);
+    virtual bool evaluate(Feature &f);
 
 
 private:
