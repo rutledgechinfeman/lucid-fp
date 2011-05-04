@@ -58,8 +58,11 @@ ScopeOperation::~ScopeOperation() { }
 Scope ScopeOperation::evaluate(Scope &in)
 {
     Scope toReturn = in.copy();
-
     // Edit the scope of the input feature according to this operation type
+
+
+    printSelf();
+
     switch (m_type)
     {
         case SCALE:
@@ -108,5 +111,5 @@ void ScopeOperation::printSelf()
             break;
     }
 
-    cout << "(" << m_params.x << ", " << m_params.y << ", " << m_params.z << ")";
+    cout << "(" << m_params.x << ", " << m_params.y << ", " << m_params.z << ")" << endl;
 }
