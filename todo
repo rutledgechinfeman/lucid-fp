@@ -1,7 +1,8 @@
 TODO:
-
- - implement tile/stretch
+ - roofs
+ - multiple axioms and scale/translate ordering
  - fix comp to have consistent x bases
+ - texture snapping
 
 worry about this case:
 T(x,y,z) symbol S(x,y,z) // the ordering is not enforcable yet.

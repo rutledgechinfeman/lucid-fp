@@ -19,7 +19,7 @@ OperationNode::OperationNode(string arg)
     for (unsigned int i = 0; i < ops.size(); i ++)
     {
         op = StringUtil::trim(ops[i]);
-        parseOp(op);
+        parseOp(op, i);
     }
 }
 
@@ -27,13 +27,32 @@ OperationNode::~OperationNode() { }
 
 void OperationNode::evaluate(Feature* feat, Factory &fac, Scope scope)
 {
-    // TODO: We currently implement all operations, then all symbols
-    // and don't consider that they might alternate.
-    for (unsigned int i = 0; i < m_operations.size(); ++ i)
+    // If childIndices is greater than 0 then this operation node has only scope ops and
+    // symbols as children. We just execute the scope ops, and evaluate the symbol children
+    // in the proper order
+    if (m_childIndices.size() > 0)
     {
-        scope = m_operations[i]->evaluate(scope);
+        int childIndex = 0;
+        int opIndex = 0;
+        for (unsigned int i = 0; i < m_childIndices.size() + m_opIndices.size(); ++ i)
+        {
+            if (m_childIndices.find(i) != m_childIndices.end())
+            {
+                m_children[childIndex]->evaluate(feat, fac, scope);
+                childIndex++;
+            }
+            else if (m_opIndices.find(i) != m_opIndices.end())
+            {
+                scope = m_operations[opIndex]->evaluate(scope);
+                opIndex++;
+            }
+            else { cerr << "ERROR: Index somehow not contained in either ops or children" << endl; }
+        }
+
+        return;
     }
 
+    // Otherwise, this is an operation in and of itself, and we have to evaluate it
     if (m_type == COMP)
     {
         if(m_stringArg != "sidefaces") { cerr << "ERROR: We only support the comp operation on 'sidefaces', not: " << m_stringArg << endl; return; }
@@ -131,18 +150,9 @@ void OperationNode::evaluate(Feature* feat, Factory &fac, Scope scope)
             newScope = newScope.translate(transVec);
         }
     }
-    else // NONE (eg, just had scales/repeats/etc. children) and anything else
-    {
-        // For no type, don't actually do anything. Just let children do their thing;
-        // It is probably the case that there are no children here.
-        for (unsigned int i = 0; i < m_children.size(); ++ i)
-        {
-            m_children[i]->evaluate(feat, fac, scope);
-        }
-    }
 }
 
-void OperationNode::parseOp(string line)
+void OperationNode::parseOp(string line, int index)
 {
     /*
      * Pick the child-type based on which characters are present
@@ -151,6 +161,7 @@ void OperationNode::parseOp(string line)
     if (line.find("(") == string::npos)
     {
         m_children.push_back(new Symbol(line));
+        m_childIndices.insert(index);
         return;
     }
 
@@ -158,6 +169,7 @@ void OperationNode::parseOp(string line)
     if (line.find("{") == string::npos)
     {
         m_operations.push_back(new ScopeOperation(line));
+        m_opIndices.insert(index);
         return;
     }
 

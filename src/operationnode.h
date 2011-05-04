@@ -2,6 +2,7 @@
 #define OPERATIONNODE_H
 
 #include <string>
+#include <set>
 
 #include "grammarnode.h"
 #include "scopeoperation.h"
@@ -37,7 +38,7 @@ public:
 
 private:
     /// Parse any operation (symbol, opnode, op)
-    void parseOp(string line);
+    void parseOp(string line, int index);
 
     /// Parse an argument, determine its value and whether it is relative
     argument genArg(string argString);
@@ -53,6 +54,10 @@ private:
 
     /// Child operations that apply only to the scope, ie S, T, R
     vector<ScopeOperation*> m_operations;
+
+
+    set<int> m_opIndices;
+    set<int> m_childIndices;
 };
 
 #endif // OPERATIONNODE_H
