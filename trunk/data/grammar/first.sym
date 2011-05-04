@@ -2,10 +2,9 @@ A n
 facades n
 facade n
 tile n
+groundfloor n
 floor n
 wombat n
-wall t plane brick.png
-door t mesh door.obj
-window t plane busted_window.png
-wom t plane wom.png
-bat t plane bat.png
+wall t plane brick.png tile
+door t plane door.png stretch
+window t plane busted_window.png stretch

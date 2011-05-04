@@ -38,7 +38,7 @@ void OperationNode::evaluate(Feature* feat, Factory &fac, Scope scope)
     {
         if(m_stringArg != "sidefaces") { cerr << "ERROR: We only support the comp operation on 'sidefaces', not: " << m_stringArg << endl; return; }
 
-        Scope one = scope.setScaleComponent(0.1, 2);
+        Scope one = scope.setScaleComponent(0.0, 2);
         m_children[0]->evaluate(feat, fac, one);
 
         Scope two = scope.copy();
@@ -47,7 +47,7 @@ void OperationNode::evaluate(Feature* feat, Factory &fac, Scope scope)
         two = two.setBasisComponent(2, temp);
         two = two.setScale(Vector4(two.getScale().z, two.getScale().y, two.getScale().x, 1.0));
 
-        two = two.setScaleComponent(0.1, 2);
+        two = two.setScaleComponent(0.0, 2);
         m_children[0]->evaluate(feat, fac, two);
 
         Scope three = scope.translate(Vector4(scope.getScale().x, 0.0, scope.getScale().z, 0.0));
@@ -59,11 +59,10 @@ void OperationNode::evaluate(Feature* feat, Factory &fac, Scope scope)
         three = three.setBasisComponent(2, temp);
         three = three.setScale(Vector4(three.getScale().z, three.getScale().y, three.getScale().x, 1.0));
 
-
-        three = three.setScaleComponent(0.1, 2);
+        three = three.setScaleComponent(0.0, 2);
         m_children[0]->evaluate(feat, fac, three);
 
-        four = four.setScaleComponent(0.1, 2);
+        four = four.setScaleComponent(0.0, 2);
         m_children[0]->evaluate(feat, fac, four);
 
     }

@@ -16,13 +16,13 @@ Factory::~Factory()
     }
 }
 
-bool Factory::addFeatureType(string id, bool isTerminal, string geom, string dataPath)
+bool Factory::addFeatureType(string id, bool isTerminal, string geom, string dataPath, string tileOrStretch)
 {
     // If it's already in the map, return false
     if(m_featureListing.find(id) != m_featureListing.end()) { return false; }
 
     // Add a new listing
-    m_featureListing[id] = FeatureProperties(id, isTerminal, geom);
+    m_featureListing[id] = FeatureProperties(id, isTerminal, geom, tileOrStretch);
 
     // Look for a datapath on terminal symbols only
     if(!isTerminal   ) { return true; }
@@ -36,7 +36,7 @@ bool Factory::addFeatureType(string id, bool isTerminal, string geom, string dat
     {
         if (m_texMap.find(dataPath) == m_texMap.end())
         {
-            QImage* img = new QImage(QString(dataPath.c_str()));
+            QImage* img = new QImage(QImage(QString(dataPath.c_str())).mirrored());
             GLuint temp = 0;
             m_texMap[dataPath] = temp;
             glGenTextures(1, &m_texMap[dataPath]);
@@ -65,12 +65,14 @@ Feature* Factory::instanceOf(string symbol, Scope scope)
     Feature* toReturn;
     if(m_featureListing.find(symbol) == m_featureListing.end())
     {
+        cerr << "WARNING: Requested feature of type [" << symbol << "], which has not be created yet. Returning an empty Feature." << endl;
         toReturn = new Feature();
     }
     else
     {
         FeatureProperties& f = m_featureListing[symbol];
         toReturn = new Feature(f.id, f.geomType, !f.terminal);
+        toReturn->setTileTex(f.tile);
         if (m_featureListing[symbol].terminal)
         {
             if (m_featureListing[symbol].geomType == "plane")

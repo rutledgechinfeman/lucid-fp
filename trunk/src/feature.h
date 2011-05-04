@@ -37,6 +37,12 @@ public:
     /// Push back a child for this feature (used by grammarnodes)
     void addChild(Feature* f);
 
+    /// Helper method to paint the texture in a tiled fashion
+    void drawTiledSelf();
+
+    /// Helper method to stretch the texture across faces
+    void drawStretchedSelf();
+
     /**
      * Setters
      */
@@ -55,6 +61,9 @@ public:
 
     /// Set scope
     void setScope(Scope scope);
+
+    /// Set whether to tile the texture
+    void setTileTex(bool tileTex);
 
     /**
      * Getters
@@ -112,6 +121,9 @@ private:
 
     /// Scope location
     Scope m_scope;
+
+    /// Whether to tile the texture
+    bool m_tileTex;
 };
 
 #endif // FEATURE_H
