@@ -123,16 +123,20 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event) {
        m_camera.eye.y = r * cos(theta);
        this->perspectiveCamera(this->width(), this->height());
     } else if (m_middleMouseDown) {
+        /*
         float dy = event->y() - m_prevMousePos.y;
         m_camera.eye.y += dy / 500.f;
         m_camera.center.y += dy / 500.f;
-        this->perspectiveCamera(this->width(), this->height());
+        this->perspectiveCamera(this->width(), this->height());*/
     } else if (m_leftMouseDown && !m_rightMouseDown && !m_middleMouseDown) {
-        GLint viewport[4];
-        GLdouble mvmatrix[16], projmatrix[16];
-        glGetIntegerv(GL_VIEWPORT, viewport);
-        glGetDoublev(GL_MODELVIEW_MATRIX, mvmatrix);
-        glGetDoublev(GL_PROJECTION_MATRIX, projmatrix);
+        float dy = event->y() - m_prevMousePos.y;
+        m_camera.eye.y += dy / 100.f;
+        m_camera.center.y += dy / 100.f;
+        float dx = event->x() - m_prevMousePos.x;
+        m_camera.eye.x += dx / 100.f;
+        m_camera.center.x += dx / 100.f;
+        this->perspectiveCamera(this->width(), this->height());
+
     }
 
     m_prevMousePos.x = event->x(); m_prevMousePos.y = event->y();
