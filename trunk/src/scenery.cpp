@@ -143,12 +143,25 @@ void Scenery::draw(){
     glColor3f(.5, .5, .5);
 
     glNormal3f(0.0, 1.0, 0.0);
-    glVertex3f(-fExtent, -fExtent + 42.3, -15);
-    glVertex3f(fExtent, -fExtent + 42.3, -15);
-    glVertex3f(fExtent, -fExtent + 42.3, -2);
-    glVertex3f(-fExtent, -fExtent + 42.3, -2);
+    glVertex3f(-fExtent, -fExtent + 42.2, -15);
+    glVertex3f(fExtent, -fExtent + 42.2, -15);
+    glVertex3f(fExtent, -fExtent + 42.2, -2);
+    glVertex3f(-fExtent, -fExtent + 42.2, -2);
 
-    glColor3f(1.0, 1.0, 1.0); //TODO ??
+    glColor3f(1.0, 1.0, 0.0);
+    float begin = -fExtent;
+    float end = begin + 3.0;
+    while (begin < fExtent)
+    {
+        glVertex3f(begin, -fExtent + 42.3, -8.5);
+        glVertex3f(end, -fExtent + 42.3, -8.5);
+        glVertex3f(end, -fExtent + 42.3, -7.5);
+        glVertex3f(begin, -fExtent + 42.3, -7.5);
+        begin = end + 2.0;
+        end += 5.0;
+    }
+
+    glColor3f(1.0, 1.0, 1.0); //TODO: why does everything get gray when we don't use this? someone's not calling this when they should
 
     glEnd();
 
