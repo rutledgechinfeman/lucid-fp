@@ -7,12 +7,15 @@ int main(int argc, char *argv[])
 {
 
     QApplication a(argc, argv);
-
-    Referee ref("../data/grammar/first.gmr");
-
-    MainWindow w(&ref);
+    MainWindow w;
     w.show();
 
+    Referee ref("../data/grammar/first.gmr");
+    Feature* root = ref.blowWhistle();
+
+    w.setRoot(root);
+    root->draw();
 
     return a.exec();
 }
+

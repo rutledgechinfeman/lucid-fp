@@ -3,7 +3,6 @@
 
 #include <QMainWindow>
 #include "feature.h"
-#include "referee.h"
 
 class GLWidget;
 
@@ -16,15 +15,13 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(Referee* ref, QWidget *parent = 0);
+    explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     void setRoot(Feature* root);
 
 
 private:
     Ui::MainWindow *ui;
-
-    Referee* m_ref;
 
 };
 
