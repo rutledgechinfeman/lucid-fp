@@ -4,7 +4,7 @@
 #include <QMainWindow>
 #include "feature.h"
 #include "referee.h"
-
+#include <QKeyEvent>
 class GLWidget;
 
 namespace Ui {
@@ -20,11 +20,14 @@ public:
     ~MainWindow();
     void setRoot(Feature* root);
 
+    void keyPressEvent(QKeyEvent *event);
+
 
 private:
     Ui::MainWindow *ui;
 
     Referee* m_ref;
+    Feature* m_root;
 };
 
 #endif // MAINWINDOW_H

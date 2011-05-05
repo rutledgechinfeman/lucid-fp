@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
 
     w.show();
 
-    Feature* root = ref.blowWhistle();
+    Feature* root = ref.restart();
     w.setRoot(root);
 
     return a.exec();
