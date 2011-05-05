@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
 
     Referee ref("../data/grammar/first.gmr");
 
-    MainWindow w(ref);
+    MainWindow w(&ref);
     w.show();
 
 
