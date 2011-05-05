@@ -77,7 +77,7 @@ Mesh::Mesh(string filename)
 
         else if(tokens.at(0) == "vn") {
             if(tokens.size() != 4) {
-                cerr << "WARNING: Skipping malformed vertex line in mesh file: " << line << endl;
+                cerr << "WARNING: Skipping malformed normal line in mesh file: " << line << endl;
                 continue;
             }
             double3 d = double3(strtod(tokens.at(1).c_str(), NULL), strtod(tokens.at(2).c_str(), NULL), strtod(tokens.at(3).c_str(), NULL));
@@ -85,9 +85,12 @@ Mesh::Mesh(string filename)
         }
         // Parse a vertex texture line
         else if(tokens.at(0) == "vt") {
-            //vertices.at(texNum)->t = double2(atof(tokens.at(1).c_str()), atof(tokens.at(2).c_str()));
-            //texNum ++;
-
+            if(tokens.size() != 3){
+                cerr << "WARNING: Skipping malformed texture line in mesh file: " << line << endl;
+                continue;
+            }
+            double2 d = double2(strtod(tokens.at(1).c_str(), NULL), strtod(tokens.at(2).c_str(), NULL));
+            texcoords.push_back(d); // set coordinates
         }
 
 
@@ -105,38 +108,29 @@ Mesh::~Mesh()
 void Mesh::drawGL()
 {
 
+    glFrontFace(GL_CCW);
     glEnable(GL_LIGHTING);
     //cout << "drawing" << endl;
     glBegin(GL_TRIANGLES);
     for(int i=0; i < triangles.size(); i++)
     {
         //for each element on a face we index into normals, vertices, and maybe texture coords
-        double3 thisNorm = normals.at(triangles.at(i).z - 1 );
-        MeshVertex* thisVert = vertices.at(triangles.at(i).x -1);
-        glNormal3f(thisNorm.x, thisNorm.y, thisNorm.z);
-        glVertex3f(thisVert->p.x, thisVert->p.y, thisVert->p.z);
+        if(normals.size() > 0){
+            double3 thisNorm = normals.at(triangles.at(i).z - 1 );
+            glNormal3f(thisNorm.x, thisNorm.y, thisNorm.z);
+        }
+/*
+        if(texcoords.size() > 0){
+            double2 thisTexCoord = texcoords.at(triangles.at(i).y -1);
+            glTexCoord2d(thisTexCoord.x, thisTexCoord.y);
+        }*/
+
+        if(vertices.size()>0){
+            MeshVertex* thisVert = vertices.at(triangles.at(i).x -1);
+            glVertex3f(thisVert->p.x, thisVert->p.y, thisVert->p.z);
+        }
     }
     glEnd();
     glDisable(GL_LIGHTING);
+    glFrontFace(GL_CW);
 }
-
-/*void Mesh::drawTriangleIDs()
-{
-    glDisable(GL_TEXTURE_2D);
-
-    for(int i=0; i < m_numtriangles; i++)
-    {
-        //convert i to rgb
-        int k1 = i / (255 * 255);
-        int k2 = (i - k1 * (255 * 255)) / (255);
-        int k3 = (i - k2 * 255 - k1 * (255 * 255));
-        glColor3f(k1 / 255.0f, k2 / 255.0f, k3 / 255.0f);
-        glBegin(GL_TRIANGLES);
-        glVertex2f(m_triangles[i].v0->p.x, m_triangles[i].v0->p.y);
-        glVertex2f(m_triangles[i].v1->p.x, m_triangles[i].v1->p.y);
-        glVertex2f(m_triangles[i].v2->p.x, m_triangles[i].v2->p.y);
-        glEnd();
-    }
-
-    glEnable(GL_TEXTURE_2D);
-}*/
