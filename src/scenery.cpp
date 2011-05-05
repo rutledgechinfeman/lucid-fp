@@ -95,8 +95,8 @@ GLuint Scenery::load_cube_map(QList<QFile *> files) {
 
 void Scenery::draw(){
     glPushMatrix();
-
     float fExtent = 50.f;
+    glTranslatef(0, fExtent-42, 0);
 
     glEnable(GL_TEXTURE_CUBE_MAP);
     glBindTexture(GL_TEXTURE_CUBE_MAP,textures_["cube_map_1"]);
@@ -128,10 +128,10 @@ void Scenery::draw(){
     glTexCoord3f(1.0f,1.0f,1.0f);glVertex3f(fExtent,fExtent,fExtent);
     glTexCoord3f(1.0f,1.0f,-1.0f);glVertex3f(fExtent,fExtent,-fExtent);
 
-    glTexCoord3f(-1.0f,-1.0f,-1.0f);glVertex3f(-fExtent, 0, -fExtent);
-    glTexCoord3f(1.0f,-1.0f,-1.0f);glVertex3f(fExtent, 0, -fExtent);
-    glTexCoord3f(1.0f,-1.0f,1.0f); glVertex3f(fExtent, 0, fExtent);
-    glTexCoord3f(-1.0f,-1.0f,1.0f);glVertex3f(-fExtent, 0, fExtent);
+    glTexCoord3f(-1.0f,-1.0f,-1.0f);glVertex3f(-fExtent, -fExtent + 42, -fExtent);
+    glTexCoord3f(1.0f,-1.0f,-1.0f);glVertex3f(fExtent, -fExtent + 42, -fExtent);
+    glTexCoord3f(1.0f,-1.0f,1.0f); glVertex3f(fExtent, -fExtent + 42, fExtent);
+    glTexCoord3f(-1.0f,-1.0f,1.0f);glVertex3f(-fExtent, -fExtent + 42, fExtent);
 
 
 
