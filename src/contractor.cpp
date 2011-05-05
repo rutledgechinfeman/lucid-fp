@@ -22,7 +22,8 @@ void Contractor::expandFeature(Feature* current)
     if(current == NULL || !current->getActive()) { return; }
 
     Rule* r = m_grammar->lookupRule(current);
-    r->apply(current, *m_factory, current->getScope());
+    if (r) { r->apply(current, *m_factory, current->getScope()); }
+    else   { cerr << "WARNING: Skipping evaluation of feature because no rules exist: " << current->getSymbol() << endl; return; }
 
     for(int i = 0; i < current->getNumChildren(); ++ i)
     {
