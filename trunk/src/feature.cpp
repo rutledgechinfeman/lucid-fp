@@ -158,6 +158,8 @@ void Feature::draw()
         }
         glPopMatrix();
 
+        delete [] matrix;
+
     }
     else{
         for(unsigned int i=0; i<m_children.size(); i++){
