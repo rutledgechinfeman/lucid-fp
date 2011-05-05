@@ -3,6 +3,7 @@
 #include <math.h>
 #include "glwidget.h"
 #include <iostream>
+#include <CS123Algebra.h>
 
 using std::cerr;
 using std::cout;
@@ -110,17 +111,34 @@ void GLWidget::normalizeAngle(int *angle)
 
 void GLWidget::mouseMoveEvent(QMouseEvent *event) {
     if(m_rightMouseDown && !m_leftMouseDown) {
+
+
        float dx = event->x() - m_prevMousePos.x;
        float dy = event->y() - m_prevMousePos.y;
-       double x = m_camera.eye.x, y = m_camera.eye.y, z = m_camera.eye.z;
-       double r = m_camera.eye.magnitude();
-       double theta = acos(y / r) - dy / 200.0f;
-       double phi = atan2(z, x) + dx / 200.0f;
-       if (theta > M_PI-.1) theta =M_PI-.1;
-       if (theta < .1) theta = .1;
-       m_camera.eye.x = r * sin(theta) * cos(phi);
-       m_camera.eye.z = r * sin(theta) * sin(phi);
-       m_camera.eye.y = r * cos(theta);
+       double3 look = m_camera.eye - m_camera.center;
+       //look.normalize();
+       double theta = dy / 200.0f;
+       //double phi = atan2(look.z, look.x) + dx / 200.0f;
+       double phi = dx / 200.0f;
+       //cout << phi << endl;
+       /*
+       m_camera.center.x = r * sin(theta) * cos(phi);
+       m_camera.center.z = r * sin(theta) * sin(phi);
+       m_camera.center.y = r * cos(theta);*/
+       Vector4 lookVec = Vector4(look.x, look.y, look.z, 1);
+       Matrix4x4 rotY;
+       rotY = getInvRotYMat(phi);
+       Matrix4x4 rotX;
+       if(m_camera.center.x > m_camera.eye.x){
+            rotX = getInvRotZMat(theta);
+       }
+       else{
+           rotX = getRotZMat(theta);
+       }
+       lookVec = rotY * lookVec;
+       lookVec = rotX * lookVec;
+       m_camera.center = m_camera.eye - double3(lookVec.x, lookVec.y, lookVec.z);
+
        this->perspectiveCamera(this->width(), this->height());
     } else if (m_middleMouseDown) {
     } else if (m_leftMouseDown && !m_rightMouseDown && !m_middleMouseDown) {
@@ -159,6 +177,7 @@ void GLWidget::wheelEvent(QWheelEvent *event) {
     int dx = event->delta();
     double3 look = (m_camera.center - m_camera.eye).getNormalized();
     m_camera.eye += look * 0.01 * dx;
+    m_camera.center += look * 0.01 * dx;
     this->perspectiveCamera(this->width(), this->height());
 
 
@@ -166,7 +185,6 @@ void GLWidget::wheelEvent(QWheelEvent *event) {
 
 void GLWidget::setDefaultCamera() {
     m_camera.center.x = 0.0,m_camera.center.y = 0.0,m_camera.center.z = 0.0;
-
     m_camera.eye.x = -14.61,m_camera.eye.y = 12.81,m_camera.eye.z = -10.74;
     m_camera.up.x = 0.0,m_camera.up.y = 1.0,m_camera.up.z = 0.0;
     m_camera.near = 0.001f,m_camera.far = 200.0;
