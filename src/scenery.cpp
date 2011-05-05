@@ -133,13 +133,26 @@ void Scenery::draw(){
     glTexCoord3f(1.0f,-1.0f,1.0f); glVertex3f(fExtent, -fExtent + 42, fExtent);
     glTexCoord3f(-1.0f,-1.0f,1.0f);glVertex3f(-fExtent, -fExtent + 42, fExtent);
 
-
-
     glEnd();
 
 
     glBindTexture(GL_TEXTURE_2D, 0);
-    glPopMatrix();
     glDisable(GL_TEXTURE_CUBE_MAP);
+
+    glBegin(GL_QUADS);
+    glColor3f(.5, .5, .5);
+
+    glNormal3f(0.0, 1.0, 0.0);
+    glVertex3f(-fExtent, -fExtent + 42.3, -15);
+    glVertex3f(fExtent, -fExtent + 42.3, -15);
+    glVertex3f(fExtent, -fExtent + 42.3, -2);
+    glVertex3f(-fExtent, -fExtent + 42.3, -2);
+
+    glColor3f(1.0, 1.0, 1.0); //TODO ??
+
+    glEnd();
+
+
+    glPopMatrix();
 
 }

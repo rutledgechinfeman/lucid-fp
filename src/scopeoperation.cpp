@@ -72,7 +72,8 @@ Scope ScopeOperation::evaluate(Scope &in)
     Vector4 rando;
 
     if (m_atAllRandom) {
-        rando = Vector4((double)rand() / (double)RAND_MAX, (double)rand() / (double)RAND_MAX, (double)rand() / (double)RAND_MAX, 1.0);
+        rando = Vector4((double)rand(), (double)rand(), (double)rand(), RAND_MAX);
+        rando /= (double) RAND_MAX;
 
         for (int i = 0; i < 3; i ++) {
 
@@ -89,17 +90,17 @@ Scope ScopeOperation::evaluate(Scope &in)
     switch (m_type)
     {
         case SCALE:
-            toReturn = toReturn.setScale(m_hiParams);
+            toReturn = toReturn.setScale(rando);
             break;
 
         case ROTATE:
-            toReturn = toReturn.rotateX(m_hiParams.x);
-            toReturn = toReturn.rotateY(m_hiParams.y);
-            toReturn = toReturn.rotateZ(m_hiParams.z);
+            toReturn = toReturn.rotateX(rando.x);
+            toReturn = toReturn.rotateY(rando.y);
+            toReturn = toReturn.rotateZ(rando.z);
             break;
 
         case TRANSLATE:
-            toReturn = toReturn.translate(m_hiParams);
+            toReturn = toReturn.translate(rando);
             break;
 
         case UNKNOWN: // fall-through
