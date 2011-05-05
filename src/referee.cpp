@@ -33,14 +33,14 @@ Feature* Referee::restart()
 
 
     m_parser->parseFile(m_file, *m_grammar, *m_fac);
-    return m_contractor->build(*m_grammar, *m_fac);
+    return m_contractor->build(m_grammar, m_fac);
 }
 
 
 Feature* Referee::refresh()
 {
     //m_parser->parseFile(m_file, *m_grammar, *m_fac);
-    return m_contractor->build(*m_grammar, *m_fac);
+    return m_contractor->build(m_grammar, m_fac);
 }
 
 
