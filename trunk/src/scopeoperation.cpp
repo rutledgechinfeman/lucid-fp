@@ -58,11 +58,8 @@ ScopeOperation::~ScopeOperation() { }
 Scope ScopeOperation::evaluate(Scope &in)
 {
     Scope toReturn = in.copy();
+
     // Edit the scope of the input feature according to this operation type
-
-
-    printSelf();
-
     switch (m_type)
     {
         case SCALE:
