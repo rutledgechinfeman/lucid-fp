@@ -27,8 +27,11 @@ private:
     /// Kind of operation
     int m_type;
 
-    /// Parameters of the operation (ie, xyz in S(x,y,z))
-    Vector4 m_params;
+    bool m_atAllRandom;
+
+    /// Parameters of the operation (ie, xyz in S(x,y,z)) hi and lo for randomness support
+    Vector4 m_hiParams;
+    Vector4 m_loParams;
 };
 
 #endif // SCOPEOPERATION_H
