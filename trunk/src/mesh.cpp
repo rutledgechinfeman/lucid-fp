@@ -62,7 +62,7 @@ Mesh::Mesh(string filename)
                 face.clear();
                 StringUtil::split(tokens.at(i), "/", face, true);
                 //normal of the ith vertex on this face:
-                if(atoi(face.at(2).c_str())-1 >= normals.size()){
+                if(atoi(face.at(2).c_str())-1 >= (int)normals.size()){
                     cout << atoi(face.at(2).c_str())-1 << endl;
                     cout << normals.size() << endl;
                 }
@@ -112,7 +112,7 @@ void Mesh::drawGL()
     glEnable(GL_LIGHTING);
     //cout << "drawing" << endl;
     glBegin(GL_TRIANGLES);
-    for(int i=0; i < triangles.size(); i++)
+    for(unsigned int i=0; i < triangles.size(); i++)
     {
         //for each element on a face we index into normals, vertices, and maybe texture coords
         if(normals.size() > 0){

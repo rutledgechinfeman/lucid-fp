@@ -40,7 +40,7 @@ Rule* Grammar::lookupRule(Feature* parent)
     // Make sure rules exist for this predecessor
     if(m_ruleMap.find(pred) == m_ruleMap.end())
     {
-        cerr << "ERROR: Rule requested for symbol [" << pred << "] but there are none." << endl;
+        cerr << "WARNING: Rule requested for symbol [" << pred << "] but there are none." << endl;
         return NULL;
     }
 
