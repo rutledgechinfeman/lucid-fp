@@ -18,6 +18,7 @@ class Scenery
 {
 public:
     Scenery();
+    virtual ~Scenery();
     void draw();
     void setIds();
     QHash<QString, GLuint>                      textures_; ///hashmap of all textures

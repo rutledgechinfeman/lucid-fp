@@ -31,8 +31,12 @@ Scenery::Scenery()
     loadtextures();
 }
 
+Scenery::~Scenery() { }
 
 void Scenery::loadtextures(){
+
+    // TODO: this needs to be cleaned up (don't need to new all these files, etc)
+
     QList<QFile *> fileList;
     fileList.append(new QFile("../data/skybox/brightday1_positive_x.png"));
     fileList.append(new QFile("../data/skybox/brightday1_negative_x.png"));
@@ -42,6 +46,11 @@ void Scenery::loadtextures(){
     fileList.append(new QFile("../data/skybox/brightday1_negative_z.png"));
 
     textures_["cube_map_1"] = load_cube_map(fileList);
+    QFile* a;
+    foreach(a, fileList)
+    {
+        delete a;
+    }
 }
 
 
@@ -76,7 +85,7 @@ GLuint Scenery::load_cube_map(QList<QFile *> files) {
     glGenTextures(1,&id);
     glBindTexture(GL_TEXTURE_CUBE_MAP,id);
     for(unsigned i = 0; i < 6; ++i) {
-        QImage image,texture;
+        QImage image,texture; // TODO: clean this up a little too, don't need all these images
         image.load(files[i]->fileName());
         image = image.mirrored(false,true);
         texture = QGLWidget::convertToGLFormat(image);
