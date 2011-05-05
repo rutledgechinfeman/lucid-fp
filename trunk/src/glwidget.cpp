@@ -123,20 +123,32 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event) {
        m_camera.eye.y = r * cos(theta);
        this->perspectiveCamera(this->width(), this->height());
     } else if (m_middleMouseDown) {
-        /*
-        float dy = event->y() - m_prevMousePos.y;
-        m_camera.eye.y += dy / 500.f;
-        m_camera.center.y += dy / 500.f;
-        this->perspectiveCamera(this->width(), this->height());*/
     } else if (m_leftMouseDown && !m_rightMouseDown && !m_middleMouseDown) {
-        float dy = event->y() - m_prevMousePos.y;
-        m_camera.eye.y += dy / 100.f;
-        m_camera.center.y += dy / 100.f;
-        float dx = event->x() - m_prevMousePos.x;
-        m_camera.eye.x += dx / 100.f;
-        m_camera.center.x += dx / 100.f;
-        this->perspectiveCamera(this->width(), this->height());
+        double3 l = m_camera.center - m_camera.eye;
+        Vector3 look = Vector3(l.x, l.y, l.z);
+        look.normalize();
+        Vector3 myup = Vector3(m_camera.up.x, m_camera.up.y, m_camera.up.z);
+        myup.normalize();
 
+        Vector3 myx = myup.cross(look);
+        float dy = event->y() - m_prevMousePos.y;
+        m_camera.eye.y += myup.y*(dy / 50.f);
+        m_camera.center.y += myup.y*(dy / 50.f);
+        m_camera.eye.x += myup.x*(dy / 50.f);
+        m_camera.center.x += myup.x*(dy / 50.f);
+        m_camera.eye.z += myup.z*(dy / 50.f);
+        m_camera.center.z += myup.z*(dy / 50.f);
+        float dx = event->x() - m_prevMousePos.x;
+        m_camera.eye.x += myx.x*(dx / 50.f);
+        m_camera.center.x += myx.x*(dx / 50.f);
+        m_camera.eye.y += myx.y*(dx / 50.f);
+        m_camera.center.y += myx.y*(dx / 50.f);
+        m_camera.eye.z += myx.z*(dx / 50.f);
+        m_camera.center.z += myx.z*(dx / 50.f);
+        this->perspectiveCamera(this->width(), this->height());
+    }
+    if(m_camera.eye.y < .01){
+        m_camera.eye.y = .01;
     }
 
     m_prevMousePos.x = event->x(); m_prevMousePos.y = event->y();
@@ -154,6 +166,7 @@ void GLWidget::wheelEvent(QWheelEvent *event) {
 
 void GLWidget::setDefaultCamera() {
     m_camera.center.x = 0.0,m_camera.center.y = 0.0,m_camera.center.z = 0.0;
+
     m_camera.eye.x = -14.61,m_camera.eye.y = 12.81,m_camera.eye.z = -10.74;
     m_camera.up.x = 0.0,m_camera.up.y = 1.0,m_camera.up.z = 0.0;
     m_camera.near = 0.001f,m_camera.far = 200.0;
