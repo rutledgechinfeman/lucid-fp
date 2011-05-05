@@ -10,13 +10,13 @@ Grammar::Grammar() {
 
 Grammar::~Grammar()
 {
-    for(map<string, vector<Rule*> >::iterator ii = m_ruleMap.begin(); ii != m_ruleMap.end(); ++ ii)
+    /*for(map<string, vector<Rule*> >::iterator ii = m_ruleMap.begin(); ii != m_ruleMap.end(); ++ ii)
     {
         for(vector<Rule*>::iterator jj = ii->second.begin(); jj != ii->second.end(); ++jj)
         {
             delete *jj;
         }
-    }
+    }*/
 }
 
 
