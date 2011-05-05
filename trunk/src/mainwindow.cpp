@@ -10,6 +10,9 @@ MainWindow::MainWindow(Referee* ref, QWidget *parent) :
     ui->setupUi(this);
 
     m_ref = ref;
+    Feature* root = m_ref->blowWhistle();
+
+    this->setRoot(root);
 }
 
 MainWindow::~MainWindow()

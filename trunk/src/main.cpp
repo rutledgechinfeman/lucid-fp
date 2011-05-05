@@ -14,10 +14,5 @@ int main(int argc, char *argv[])
     w.show();
 
 
-    Feature* root = ref.blowWhistle();
-
-    w.setRoot(root);
-    root->draw();
-
     return a.exec();
 }
