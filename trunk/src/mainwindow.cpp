@@ -3,11 +3,17 @@
 #include "QHBoxLayout"
 #include "glwidget.h"
 
-MainWindow::MainWindow(QWidget *parent) :
+MainWindow::MainWindow(Referee* ref, QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow) {
     system("clear");
     ui->setupUi(this);
+
+    m_ref = ref;
+
+    this->show();
+
+    this->setRoot(ref->blowWhistle());
 }
 
 MainWindow::~MainWindow()
