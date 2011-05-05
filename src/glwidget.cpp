@@ -84,7 +84,7 @@ void GLWidget::paintGL()
 
     if(true){
 
-        scenery->draw();
+       scenery->draw();
     }
 
     if( m_root) { m_root->draw(); }
