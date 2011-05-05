@@ -36,7 +36,13 @@ Feature::Feature(string symbol, string geom, bool isActive, Scope scope, Feature
     setType(geom);
 }
 
-Feature::~Feature() { }
+Feature::~Feature()
+{
+    for (vector<Feature*>::iterator i = m_children.begin(); i != m_children.end(); ++ i)
+    {
+        delete *i;
+    }
+}
 
 Scope Feature::getScope(){
     return m_scope;
