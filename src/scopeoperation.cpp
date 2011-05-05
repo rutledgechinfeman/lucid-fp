@@ -10,10 +10,16 @@ ScopeOperation::ScopeOperation(string arg)
 {
     // Default values
     m_type = UNKNOWN;
-    m_params.data[0] = 0.0;
-    m_params.data[1] = 0.0;
-    m_params.data[2] = 0.0;
-    m_params.data[3] = 1.0;
+    m_hiParams.data[0] = 0.0;
+    m_hiParams.data[1] = 0.0;
+    m_hiParams.data[2] = 0.0;
+    m_hiParams.data[3] = 1.0;
+    m_loParams.data[0] = 0.0;
+    m_loParams.data[1] = 0.0;
+    m_loParams.data[2] = 0.0;
+    m_loParams.data[3] = 1.0;
+
+    m_atAllRandom = false;
 
     // Parse type
     string type = StringUtil::trim(arg.substr(0, arg.find("(")));
@@ -34,22 +40,26 @@ ScopeOperation::ScopeOperation(string arg)
     for (unsigned int i = 0; i < params.size(); ++ i)
     {
         // Straight number param
-        if (params[i].find("[") == string::npos) { m_params.data[i] = strtod(params[i].c_str(), NULL); }
+        double high, low;
+        if (params[i].find("[") == string::npos) {
+            high = strtod(params[i].c_str(), NULL);
+            low = high;
+        }
 
         // Random interval
         else
         {
             vector<string> randParams;
             StringUtil::split(params[i].substr(1, params[i].size() - 2), ",", randParams);
-            double rando = (double)rand() / (double)RAND_MAX;
 
-            double upperBound = strtod(randParams[1].c_str(), NULL);
-            double lowerBound = strtod(randParams[0].c_str(), NULL);
-            rando *= upperBound - lowerBound;
-            rando += lowerBound;
+            high = strtod(randParams[1].c_str(), NULL);
+            low = strtod(randParams[0].c_str(), NULL);
 
-            m_params.data[i] = rando;
+            m_atAllRandom = true; //we have randomness!
         }
+
+        m_hiParams.data[i] = high;
+        m_loParams.data[i] = low;
     }
 }
 
@@ -59,21 +69,37 @@ Scope ScopeOperation::evaluate(Scope &in)
 {
     Scope toReturn = in.copy();
 
+    Vector4 rando;
+
+    if (m_atAllRandom) {
+        rando = Vector4((double)rand() / (double)RAND_MAX, (double)rand() / (double)RAND_MAX, (double)rand() / (double)RAND_MAX, 1.0);
+
+        for (int i = 0; i < 3; i ++) {
+
+            rando.data[i] *= m_hiParams.data[i] - m_loParams.data[i];
+            rando.data[i] += m_loParams.data[i];
+        }
+    }
+    else {
+        rando = m_hiParams;
+    }
+
+
     // Edit the scope of the input feature according to this operation type
     switch (m_type)
     {
         case SCALE:
-            toReturn = toReturn.setScale(m_params);
+            toReturn = toReturn.setScale(m_hiParams);
             break;
 
         case ROTATE:
-            toReturn = toReturn.rotateX(m_params.x);
-            toReturn = toReturn.rotateY(m_params.y);
-            toReturn = toReturn.rotateZ(m_params.z);
+            toReturn = toReturn.rotateX(m_hiParams.x);
+            toReturn = toReturn.rotateY(m_hiParams.y);
+            toReturn = toReturn.rotateZ(m_hiParams.z);
             break;
 
         case TRANSLATE:
-            toReturn = toReturn.translate(m_params);
+            toReturn = toReturn.translate(m_hiParams);
             break;
 
         case UNKNOWN: // fall-through
@@ -108,5 +134,5 @@ void ScopeOperation::printSelf()
             break;
     }
 
-    cout << "(" << m_params.x << ", " << m_params.y << ", " << m_params.z << ")" << endl;
+    cout << "(" << m_hiParams.x << ", " << m_hiParams.y << ", " << m_hiParams.z << ")" << endl;
 }
