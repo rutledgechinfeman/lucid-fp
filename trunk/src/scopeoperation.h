@@ -55,7 +55,8 @@ struct OpVal
             case Z: // All valid dimensions evaluate here
                 return scope.getScale().data[relDim];
 
-            case NODIM:
+            case NODIM: // Fall through
+            default:
                 cerr << "ERROR: Relative scope op requested, but it doesn't have a dimension to pick." << endl;
                 return 0;
         }

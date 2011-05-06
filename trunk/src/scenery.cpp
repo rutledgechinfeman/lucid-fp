@@ -51,6 +51,22 @@ void Scenery::loadtextures(){
     {
         delete a;
     }
+
+    GLuint streetTex;
+    glGenTextures(1, &streetTex);
+    glBindTexture(GL_TEXTURE_2D, streetTex);
+    QImage texture;
+    texture.load("../data/street.png");
+    texture = QGLWidget::convertToGLFormat(texture);
+
+    glTexImage2D(GL_TEXTURE_2D,3,3,texture.width(),texture.height(),0,GL_RGBA,GL_UNSIGNED_BYTE,texture.bits());
+    gluBuild2DMipmaps(GL_TEXTURE_2D, 3, texture.width(), texture.height(), GL_RGBA, GL_UNSIGNED_BYTE, texture.bits());
+
+    glBindTexture(GL_TEXTURE_2D, streetTex);
+    textures_["street_texture"] = streetTex;
+
+
+
 }
 
 
@@ -67,8 +83,9 @@ GLuint Scenery::load_cube_map(QList<QFile *> files) {
     GLuint id;
     glGenTextures(1,&id);
     glBindTexture(GL_TEXTURE_CUBE_MAP,id);
+    QImage texture;
     for(unsigned i = 0; i < 6; ++i) {
-        QImage texture;
+
         texture.load(files[i]->fileName());
         texture = texture.mirrored(false,true);
         texture = QGLWidget::convertToGLFormat(texture);
@@ -80,6 +97,7 @@ GLuint Scenery::load_cube_map(QList<QFile *> files) {
     glTexParameteri(GL_TEXTURE_CUBE_MAP,GL_TEXTURE_MIN_FILTER,GL_NEAREST_MIPMAP_NEAREST);
     glTexParameteri(GL_TEXTURE_CUBE_MAP,GL_TEXTURE_MAG_FILTER,GL_NEAREST_MIPMAP_NEAREST);
     glBindTexture(GL_TEXTURE_CUBE_MAP,0);
+
     return id;
 
 }
@@ -143,17 +161,9 @@ void Scenery::buildSkybox(){
 void Scenery::buildStreet(){
     glEnable(GL_TEXTURE_2D);
 
-    GLuint id;
-    glGenTextures(1,&id);
-    glBindTexture(GL_TEXTURE_2D,id);
+    glBindTexture(GL_TEXTURE_2D,textures_["street_texture"]);
 
-    QImage* img = new QImage(QString("../data/street.png"));
-
-    glBindTexture(GL_TEXTURE_2D, id);
-    gluBuild2DMipmaps(GL_TEXTURE_2D, 4, img->width(), img->height(), GL_BGRA, GL_UNSIGNED_BYTE, img->bits());
-    delete img;
     glBegin(GL_QUADS);
-
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -170,5 +180,7 @@ void Scenery::buildStreet(){
 
 
     glPopMatrix();
+
+    glBindTexture(GL_TEXTURE_2D, 0);
     glDisable(GL_TEXTURE_2D);
 }

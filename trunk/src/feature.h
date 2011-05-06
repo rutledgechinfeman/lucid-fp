@@ -93,6 +93,10 @@ public:
     /// Get Scope basis
     Matrix4x4 getBasis();
 
+    /// set the parent feature of this feature
+    void setParent(Feature* parent) { m_parent = parent; }
+    Feature* getParent() { return m_parent; }
+
 private:
 
     /// Convenience parser

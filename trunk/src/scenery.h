@@ -21,7 +21,6 @@ public:
     virtual ~Scenery();
     void draw();
     void setIds();
-    QHash<QString, GLuint>                      textures_; ///hashmap of all textures
     GLuint load_cube_map(QList<QFile *> files);
     void loadtextures();
     GLuint* m_texMap;
@@ -29,6 +28,9 @@ public:
     void buildStreet();
     float fExtent;
 
+private:
+
+    QHash<QString, GLuint>                      textures_; ///hashmap of all textures
 
 };
 

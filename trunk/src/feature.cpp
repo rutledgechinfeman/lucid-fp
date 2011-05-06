@@ -118,6 +118,7 @@ Feature* Feature::getChild(int index)
 //This is no longer a terminal if it ever was in the past
 void Feature::addChild(Feature* f)
 {
+    f->setParent(this);
     m_children.push_back(f);
 }
 
