@@ -223,7 +223,7 @@ void GLWidget::keyPressEvent(QKeyEvent *event) {
     ((MainWindow*)parent())->keyPressEvent(event);
     if(event->key() == Qt::Key_W) scrollMovement(120);
     else if(event->key() == Qt::Key_S) scrollMovement(-120);
-    else if(event->key() == Qt::Key_A) grapeVine(120, 0);
-    else if(event->key() == Qt::Key_D) grapeVine(-120, 0);
+    else if(event->key() == Qt::Key_A) grapeVine(-120, 0);
+    else if(event->key() == Qt::Key_D) grapeVine(120, 0);
 
 }
