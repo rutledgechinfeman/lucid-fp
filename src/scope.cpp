@@ -93,19 +93,31 @@ Scope Scope::setScaleComponent(REAL v, int i) {
 
 
 Scope Scope::rotateX(REAL angle){
-    return Scope(m_point, m_scale, getRotMat(m_point + .5 * (m_scale*m_basis), m_xbasis, angle) * m_basis);
+    //return Scope(m_point, m_scale, getRotMat(m_point + .5*(m_basis * m_scale), m_xbasis, angle) * m_basis);
+    return Scope(getRotMat(m_point + .5*(m_basis*m_scale), m_xbasis, angle)*m_point, m_scale, getRotMat(m_point + .5*(m_basis*m_scale), m_xbasis, angle)*m_basis);
+    //return Scope(m_point, m_scale, m_basis);
 }
 
 Scope Scope::rotateY(REAL angle){
-    return Scope(m_point, m_scale, getRotMat(m_point + .5 * (m_scale*m_basis), m_ybasis, angle) * m_basis);
+    cout << "first basis: " << m_basis << endl;
+    cout << "second basis: " << getRotMat(m_point + .5*(m_basis*m_scale), m_ybasis, angle)*m_basis << endl;
+
+    return Scope(getRotMat(m_point + .5*(m_basis*m_scale), m_ybasis, angle)*m_point, m_scale, getRotMat(m_point + .5*(m_basis*m_scale), m_ybasis, angle)*m_basis);
+    //return Scope(m_point, m_scale, m_basis);
+    //return Scope(m_point, m_scale, getRotMat(m_point + .5*(m_basis * m_scale), m_ybasis, angle) * m_basis);
+
 }
 
 Scope Scope::rotateZ(REAL angle){
-    return Scope(m_point, m_scale, getRotMat(m_point + .5 * (m_scale*m_basis), m_zbasis, angle) * m_basis);
+    return Scope(getRotMat(m_point + .5*(m_basis*m_scale), m_zbasis, angle)*m_point, m_scale, getRotMat(m_point + .5*(m_basis*m_scale), m_zbasis, angle)*m_basis);
+    //return Scope(m_point, m_scale, m_basis);
+    //return Scope(m_point, m_scale, getRotMat(m_point + .5*(m_basis * m_scale), m_ybasis, angle) * m_basis);
+
 }
 
 Scope Scope::copy(){
     return Scope(m_point, m_scale, m_basis);
+
 }
 
 bool Scope::occludes(Scope other) {
