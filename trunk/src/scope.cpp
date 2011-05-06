@@ -8,6 +8,8 @@ Scope::Scope(Vector4 point, Vector4 scale, Matrix4x4 basis){
     m_xbasis = Vector4(basis.a, basis.e, basis.i, basis.m);
     m_ybasis = Vector4(basis.b, basis.f, basis.j, basis.n);
     m_zbasis = Vector4(basis.c, basis.g, basis.k, basis.o);
+
+    this->findCorners(*this, m_corners);
 }
 
 Scope::Scope(Vector4 point, Vector4 scale, Vector4 xbasis, Vector4 ybasis, Vector4 zbasis){
@@ -20,6 +22,8 @@ Scope::Scope(Vector4 point, Vector4 scale, Vector4 xbasis, Vector4 ybasis, Vecto
     m_ybasis = ybasis;
     m_zbasis = zbasis;
     m_point = point;
+
+    this->findCorners(*this, m_corners);
 }
 
 Vector4 Scope::getPoint(){
@@ -131,6 +135,25 @@ void Scope::findCorners(Scope scope, Vector4* corners) {
     for (int i = 0 ; i < 4; i ++) {
         corners[i+4] = corners[i] + zB * s.z;
     }
+
+}
+
+bool Scope::contains(Vector4 point) {
+
+
+}
+
+int Scope::intersectedBy(Vector4 a, Vector4 b) {
+    int result = 0;
+    /*if (intersectsPlane(a, b, p1, p2, p3)) result ++;
+    if (intersectsPlane(a, b, p1, p2, p3)) result ++;
+    if (intersectsPlane(a, b, p1, p2, p3)) result ++;
+    if (intersectsPlane(a, b, p1, p2, p3)) result ++;
+    if (intersectsPlane(a, b, p1, p2, p3)) result ++;
+    if (intersectsPlane(a, b, p1, p2, p3)) result ++;*/
+}
+
+bool Scope::intersectsPlane(Vector4 a, Vector4, b, Vector4 p1, Vector4 p2, Vector4 p3) {
 
 }
 

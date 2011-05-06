@@ -30,6 +30,10 @@ public:
 
     bool occludes(Scope other);
 
+    bool contains(Vector4 point);
+
+    int intersectedBy(Vector4 a, Vector4 b);
+
     Scope copy();
 
 private:
@@ -39,6 +43,7 @@ private:
     Vector4 m_xbasis;
     Vector4 m_ybasis;
     Vector4 m_zbasis;
+    Vector4 m_corners[8];
 };
 
 #endif // SCOPE_H
