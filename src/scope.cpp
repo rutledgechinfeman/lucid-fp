@@ -120,15 +120,58 @@ Scope Scope::copy(){
 
 }
 
-bool Scope::occludes(Scope other) {
+int Scope::occludes(Scope other) {
 
     Vector4 corners[8];
     this->findCorners(other, corners);
 
+    int cornerContainCount = 0;
+    for (int i = 0; i < 8; i ++) {
+        if (contains(corners[i])) cornerContainCount ++;
+    }
+
+    if (cornerContainCount == 8) { return 2; }
+    else if (cornerContainCount > 0) { return 1; }
+    else { //must check edges
+
+        Vector4 a = corners[0];
+        Vector4 b = corners[1];
+        if (intersectedBy(a, b) > 0) return 1;
+        b = corners[2];
+        if (intersectedBy(a, b) > 0) return 1;
+        b = corners[4];
+        if (intersectedBy(a, b) > 0) return 1;
 
 
+        a = corners[7];
+        b = corners[6];
+        if (intersectedBy(a, b) > 0) return 1;
+        b = corners[3];
+        if (intersectedBy(a, b) > 0) return 1;
+        b = corners[5];
+        if (intersectedBy(a, b) > 0) return 1;
 
-    return false;
+        a = corners[1];
+        b = corners[5];
+        if (intersectedBy(a, b) > 0) return 1;
+        b = corners[3];
+        if (intersectedBy(a, b) > 0) return 1;
+
+        a = corners[2];
+        b = corners[3];
+        if (intersectedBy(a, b) > 0) return 1;
+        b = corners[6];
+        if (intersectedBy(a, b) > 0) return 1;
+
+        a = corners[4];
+        b = corners[5];
+        if (intersectedBy(a, b) > 0) return 1;
+        b = corners[6];
+        if (intersectedBy(a, b) > 0) return 1;
+    }
+
+
+    return 0;
 }
 
 void Scope::findCorners(Scope scope, Vector4* corners) {
@@ -152,25 +195,68 @@ void Scope::findCorners(Scope scope, Vector4* corners) {
 
 bool Scope::contains(Vector4 point) {
 
+    int num = intersectedBy(point, Vector4(100000, 100000, 100000, 1.0));
 
+    if (num % 2 == 1) return true;
+    return false;
 }
 
+//dont ask
 int Scope::intersectedBy(Vector4 a, Vector4 b) {
     int result = 0;
     Vector4 p1 = m_corners[0];
     Vector4 p2 = m_corners[1];
     Vector4 p3 = m_corners[2];
     if (intersectsPlane(a, b, p1, p2, p3)) result ++;
+    p2 = m_corners[4];
     if (intersectsPlane(a, b, p1, p2, p3)) result ++;
+    p3 = m_corners[1];
     if (intersectsPlane(a, b, p1, p2, p3)) result ++;
+
+    p1 = m_corners[7];
+    p2 = m_corners[6];
+    p3 = m_corners[5];
     if (intersectsPlane(a, b, p1, p2, p3)) result ++;
+    p2 = m_corners[3];
     if (intersectsPlane(a, b, p1, p2, p3)) result ++;
+    p3 = m_corners[6];
     if (intersectsPlane(a, b, p1, p2, p3)) result ++;
+
     return result;
 }
 
 bool Scope::intersectsPlane(Vector4 a, Vector4 b, Vector4 p1, Vector4 p2, Vector4 p3) {
 
+    Vector4 d = b-a; //find intersection point with entire plane
+    Vector4 n = (p2-p1).cross(p3 - p1);
+
+
+    //line and plane are||
+    if (fabs(d.dot(n)) < .00001) return false;
+
+    double t = (p1 - a).dot(n) / (d.dot(n));
+
+
+    //if intersection doesn't occur on this line segment
+    if (t < 0 || t > 1) {
+        return false;
+    }
+
+    Vector4 p = a + d*t;
+
+
+    Vector4 p4 = p3 + (p2 - p1); //get fourth corner of the plane
+
+    Vector4 c1 = (p1 - p).cross(p2 - p);
+    Vector4 c = (p2 - p).cross(p3 - p); //make sure that p lies INSIDE the plane bounds
+    if (c1.dot(c) < 0) return false;
+    c = (p3 - p).cross(p4 - p);
+    if (c1.dot(c) < 0) return false;
+    c = (p4 - p).cross(p1 - p);
+    if (c1.dot(c) < 0) return false;
+
+
+    return true;
 }
 
 void Scope::printSelf()
