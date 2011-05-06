@@ -1,5 +1,6 @@
 #A : NULL ~ S([8,20],[6,20],[8,20]) _ T(1,0,0) _ facades : 1.0
-A : NULL ~ S([8,20],[6,20],[8,20]) _ T(1,0,0) _ facades _ T(Scope.X, 0, 0) _ S(20, 6, 20) _ facades : 1.0
+#A : NULL ~ S([8,20],[20,40],[8,20]) _ T(1,0,0) _ facades _ S(20, 6, 20) _ T(-Scope.X, 0, 0) _ facades : 1.0
+A : NULL ~ S([8,20],[20,40],[8,20]) _ T(1,0,0) _ facades _ T(Scope.X, 0, 0) _ S(20, 6, 20) _ facades : 1.0
 facades : NULL ~ Comp(sidefaces){facade} : 1.0
 facade : NULL ~ Subdiv(Y, 2, 1r){ groundfloor | Repeat(Y, 2){floor} } : 1.0
 groundfloor : Shape.visible(street)=full ~ Subdiv(X, 2, 1r){ Subdiv(X, 1r, 1.2r, 1r){wall | Subdiv(Y, 1r, 0.3){ door | wall } | wall } | Repeat(X, 2){ tile } } : 0.3 ~ Subdiv(X, 1r, 2){ Repeat(X, 2){ tile } | Subdiv(X, 1r, 1.2r, 1r){wall | Subdiv(Y, 1r, 0.3){ door | wall } | wall } } : 0.3 ~ Subdiv(X, 1r, 2, 1r){ Repeat(X, 2){ tile } | Subdiv(X, 1r, 1.2r, 1r){wall | Subdiv(Y, 1r, 0.3){ door | wall } | wall } | Repeat(X, 2){ tile } } : 0.4

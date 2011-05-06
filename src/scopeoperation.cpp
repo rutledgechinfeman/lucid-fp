@@ -39,9 +39,10 @@ ScopeOperation::ScopeOperation(string arg)
         // Relative value
         else if (params[i].find("Scope") != string::npos)
         {
-            if (params[i].find("X") != string::npos) { data[i] = OpVal(X); }
-            else if (params[i].find("Y") != string::npos) { data[i] = OpVal(Y); }
-            else if (params[i].find("Z") != string::npos) { data[i] = OpVal(Z); }
+            bool neg = (params[i].find("-") != string::npos);
+            if      (params[i].find("X") != string::npos) { data[i] = OpVal(X, neg); }
+            else if (params[i].find("Y") != string::npos) { data[i] = OpVal(Y, neg); }
+            else if (params[i].find("Z") != string::npos) { data[i] = OpVal(Z, neg); }
             else
             {
                 cerr << "ERROR: Received relative Scope input for a scope operation, but no valid dimension is present, defaulting to X: " << params[i] << endl;

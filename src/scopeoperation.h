@@ -26,14 +26,16 @@ struct OpVal
         else                { hi = upperBound; }
 
         relDim = NODIM;
+        neg = false;
     }
 
-    OpVal (int dimension)
+    OpVal (int dimension, bool negative)
     {
         lo = -1;
         hi = -1;
 
         relDim = dimension;
+        neg = negative;
     }
 
     double getValue(Scope scope)
@@ -53,7 +55,7 @@ struct OpVal
             case X: // Fall through
             case Y: // Fall through
             case Z: // All valid dimensions evaluate here
-                return scope.getScale().data[relDim];
+                return neg ? -scope.getScale().data[relDim] : scope.getScale().data[relDim];
 
             case NODIM: // Fall through
             default:
@@ -65,6 +67,7 @@ struct OpVal
     double lo;
     double hi;
     int    relDim; // If this is not NODIM, this is a relative value
+    bool   neg;
 };
 
 class ScopeOperation
