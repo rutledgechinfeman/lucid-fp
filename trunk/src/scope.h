@@ -27,7 +27,8 @@ public:
 
     void findCorners(Scope scope, Vector4* corners);
 
-    bool occludes(Scope other);
+    //returns 2 for full, 1 for part, or 0
+    int occludes(Scope other);
 
     bool contains(Vector4 point);
 
