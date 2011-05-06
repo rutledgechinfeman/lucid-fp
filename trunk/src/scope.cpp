@@ -89,15 +89,15 @@ Scope Scope::setScaleComponent(REAL v, int i) {
 
 
 Scope Scope::rotateX(REAL angle){
-    return Scope(m_point, m_scale, getRotMat(m_point, m_xbasis, angle) * m_basis);
+    return Scope(m_point, m_scale, getRotMat(m_point + .5 * (m_scale*m_basis), m_xbasis, angle) * m_basis);
 }
 
 Scope Scope::rotateY(REAL angle){
-    return Scope(m_point, m_scale, getRotMat(m_point, m_ybasis, angle) * m_basis);
+    return Scope(m_point, m_scale, getRotMat(m_point + .5 * (m_scale*m_basis), m_ybasis, angle) * m_basis);
 }
 
 Scope Scope::rotateZ(REAL angle){
-    return Scope(m_point, m_scale, getRotMat(m_point, m_zbasis, angle) * m_basis);
+    return Scope(m_point, m_scale, getRotMat(m_point + .5 * (m_scale*m_basis), m_zbasis, angle) * m_basis);
 }
 
 Scope Scope::copy(){
