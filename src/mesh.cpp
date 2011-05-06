@@ -103,6 +103,9 @@ Mesh::Mesh(string filename)
 
 Mesh::~Mesh()
 {
+    for(int i=0; i<vertices.size(); i++){
+        delete vertices.at(i);
+    }
 }
 
 void Mesh::drawGL()

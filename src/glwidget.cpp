@@ -24,6 +24,8 @@ GLWidget::GLWidget(QWidget *parent)
 
 GLWidget::~GLWidget()
 {
+    delete scenery;
+    delete m_timer;
   // Delete anything you have created
 }
 

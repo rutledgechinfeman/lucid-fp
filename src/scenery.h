@@ -25,6 +25,10 @@ public:
     GLuint load_cube_map(QList<QFile *> files);
     void loadtextures();
     GLuint* m_texMap;
+    void buildSkybox();
+    void buildStreet();
+    float fExtent;
+
 
 };
 
