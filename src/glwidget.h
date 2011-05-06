@@ -62,7 +62,10 @@ signals:
    void mousePressEvent(QMouseEvent *event);
    void mouseMoveEvent(QMouseEvent *event);
    void normalizeAngle(int *angle);
+   void scrollMovement(int d);
    GLuint object;
+   void keyPressEvent(QKeyEvent *event);
+   void grapeVine(int x, int y);
    bool m_rightMouseDown, m_leftMouseDown, m_middleMouseDown;
 
    QPoint lastPos;

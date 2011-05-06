@@ -96,7 +96,6 @@ void GLWidget::paintGL()
 
 void GLWidget::resizeGL(int width, int height)
 {
-    //int side = qMin(width, height);
     glViewport(0, 0, width, height);
 }
 
@@ -146,28 +145,8 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event) {
        this->perspectiveCamera(this->width(), this->height());
     } else if (m_middleMouseDown) {
     } else if (m_leftMouseDown && !m_rightMouseDown && !m_middleMouseDown) {
-        double3 l = m_camera.center - m_camera.eye;
-        Vector3 look = Vector3(l.x, l.y, l.z);
-        look.normalize();
-        Vector3 myup = Vector3(m_camera.up.x, m_camera.up.y, m_camera.up.z);
-        myup.normalize();
+            grapeVine(event->x(), event->y());
 
-        Vector3 myx = myup.cross(look);
-        float dy = event->y() - m_prevMousePos.y;
-        m_camera.eye.y += myup.y*(dy / 50.f);
-        m_camera.center.y += myup.y*(dy / 50.f);
-        m_camera.eye.x += myup.x*(dy / 50.f);
-        m_camera.center.x += myup.x*(dy / 50.f);
-        m_camera.eye.z += myup.z*(dy / 50.f);
-        m_camera.center.z += myup.z*(dy / 50.f);
-        float dx = event->x() - m_prevMousePos.x;
-        m_camera.eye.x += myx.x*(dx / 50.f);
-        m_camera.center.x += myx.x*(dx / 50.f);
-        m_camera.eye.y += myx.y*(dx / 50.f);
-        m_camera.center.y += myx.y*(dx / 50.f);
-        m_camera.eye.z += myx.z*(dx / 50.f);
-        m_camera.center.z += myx.z*(dx / 50.f);
-        this->perspectiveCamera(this->width(), this->height());
     }
     if(m_camera.eye.y < .01){
         m_camera.eye.y = .01;
@@ -176,15 +155,43 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event) {
     m_prevMousePos.x = event->x(); m_prevMousePos.y = event->y();
 }
 
-void GLWidget::wheelEvent(QWheelEvent *event) {
+void GLWidget::grapeVine(int x, int y){
+    cout << x << endl;
+    double3 l = m_camera.center - m_camera.eye;
+    Vector3 look = Vector3(l.x, l.y, l.z);
+    look.normalize();
+    Vector3 myup = Vector3(m_camera.up.x, m_camera.up.y, m_camera.up.z);
+    myup.normalize();
 
-    int dx = event->delta();
+    Vector3 myx = myup.cross(look);
+    float dy = y - m_prevMousePos.y;
+    m_camera.eye.y += myup.y*(dy / 50.f);
+    m_camera.center.y += myup.y*(dy / 50.f);
+    m_camera.eye.x += myup.x*(dy / 50.f);
+    m_camera.center.x += myup.x*(dy / 50.f);
+    m_camera.eye.z += myup.z*(dy / 50.f);
+    m_camera.center.z += myup.z*(dy / 50.f);
+    float dx = x - m_prevMousePos.x;
+    m_camera.eye.x += myx.x*(dx / 50.f);
+    m_camera.center.x += myx.x*(dx / 50.f);
+    m_camera.eye.y += myx.y*(dx / 50.f);
+    m_camera.center.y += myx.y*(dx / 50.f);
+    m_camera.eye.z += myx.z*(dx / 50.f);
+    m_camera.center.z += myx.z*(dx / 50.f);
+    this->perspectiveCamera(this->width(), this->height());
+}
+
+void GLWidget::wheelEvent(QWheelEvent *event) {
+    scrollMovement(event->delta());
+
+
+}
+
+void GLWidget::scrollMovement(int dx){
     double3 look = (m_camera.center - m_camera.eye).getNormalized();
     m_camera.eye += look * 0.01 * dx;
     m_camera.center += look * 0.01 * dx;
     this->perspectiveCamera(this->width(), this->height());
-
-
 }
 
 void GLWidget::setDefaultCamera() {
@@ -213,4 +220,12 @@ void GLWidget::mousePressEvent(QMouseEvent *event) {
     }
     if(event->buttons() & Qt::RightButton) m_rightMouseDown = true;
     if(event->buttons() & Qt::MidButton) m_middleMouseDown = true;
+}
+
+void GLWidget::keyPressEvent(QKeyEvent *event) {
+    if(event->key() == Qt::Key_W) scrollMovement(120);
+    else if(event->key() == Qt::Key_S) scrollMovement(-120);
+    else if(event->key() == Qt::Key_A) grapeVine(-120, 0);
+    else if(event->key() == Qt::Key_D) grapeVine(120, 0);
+
 }
