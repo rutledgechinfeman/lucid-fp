@@ -16,7 +16,6 @@ GLWidget::GLWidget(QWidget *parent)
     m_leftMouseDown = m_rightMouseDown = m_middleMouseDown = false;
     this->setFocusPolicy(Qt::StrongFocus);
 
-
     this->setMouseTracking(true);
     m_root = NULL;
     this->setDefaultCamera();
@@ -97,8 +96,8 @@ void GLWidget::paintGL()
 
 void GLWidget::resizeGL(int width, int height)
 {
-    int side = qMin(width, height);
-    glViewport((width - side) / 2, (height - side) / 2, side, side);
+    //int side = qMin(width, height);
+    glViewport(0, 0, width, height);
 }
 
 
