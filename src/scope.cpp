@@ -157,15 +157,19 @@ bool Scope::contains(Vector4 point) {
 
 int Scope::intersectedBy(Vector4 a, Vector4 b) {
     int result = 0;
-    /*if (intersectsPlane(a, b, p1, p2, p3)) result ++;
+    Vector4 p1 = m_corners[0];
+    Vector4 p2 = m_corners[1];
+    Vector4 p3 = m_corners[2];
     if (intersectsPlane(a, b, p1, p2, p3)) result ++;
     if (intersectsPlane(a, b, p1, p2, p3)) result ++;
     if (intersectsPlane(a, b, p1, p2, p3)) result ++;
     if (intersectsPlane(a, b, p1, p2, p3)) result ++;
-    if (intersectsPlane(a, b, p1, p2, p3)) result ++;*/
+    if (intersectsPlane(a, b, p1, p2, p3)) result ++;
+    if (intersectsPlane(a, b, p1, p2, p3)) result ++;
+    return result;
 }
 
-bool Scope::intersectsPlane(Vector4 a, Vector4, b, Vector4 p1, Vector4 p2, Vector4 p3) {
+bool Scope::intersectsPlane(Vector4 a, Vector4 b, Vector4 p1, Vector4 p2, Vector4 p3) {
 
 }
 

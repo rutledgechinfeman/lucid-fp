@@ -44,6 +44,8 @@ private:
     Vector4 m_ybasis;
     Vector4 m_zbasis;
     Vector4 m_corners[8];
+
+    bool intersectsPlane(Vector4 a, Vector4 b, Vector4 p1, Vector4 p2, Vector4 p3);
 };
 
 #endif // SCOPE_H
