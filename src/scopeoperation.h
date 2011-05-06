@@ -2,11 +2,69 @@
 #define SCOPEOPERATION_H
 
 #include "grammarnode.h"
+#include "scope.h"
+#include <stdlib.h>
 
-#define SCALE     100
-#define ROTATE    101
-#define TRANSLATE 102
+// Scope Operation Types
+#define SCALE      100
+#define ROTATE     101
+#define TRANSLATE  102
 #define UNKNOWN   -1
+
+// Dimensions
+#define NODIM   -1
+#define X        0
+#define Y        1
+#define Z        2
+
+struct OpVal
+{
+    OpVal (double lowerBound = -1, double upperBound = -1)
+    {
+        lo = lowerBound;
+        if (upperBound < 0) { hi = lowerBound; }
+        else                { hi = upperBound; }
+
+        relDim = NODIM;
+    }
+
+    OpVal (int dimension)
+    {
+        lo = -1;
+        hi = -1;
+
+        relDim = dimension;
+    }
+
+    double getValue(Scope scope)
+    {
+        // Definite value, or random value
+        if (relDim == NODIM)
+        {
+            double rando = (double)rand();
+            rando /= (double) RAND_MAX;
+
+            return rando * (hi - lo) + lo;
+        }
+
+        // Relative value
+        switch (relDim)
+        {
+            case X: // Fall through
+            case Y: // Fall through
+            case Z: // All valid dimensions evaluate here
+                return scope.getScale().data[relDim];
+
+            case NODIM:
+                cerr << "ERROR: Relative scope op requested, but it doesn't have a dimension to pick." << endl;
+                return 0;
+        }
+    }
+
+    double lo;
+    double hi;
+    int    relDim; // If this is not NODIM, this is a relative value
+};
 
 class ScopeOperation
 {
@@ -27,11 +85,8 @@ private:
     /// Kind of operation
     int m_type;
 
-    bool m_atAllRandom;
-
-    /// Parameters of the operation (ie, xyz in S(x,y,z)) hi and lo for randomness support
-    Vector4 m_hiParams;
-    Vector4 m_loParams;
+    /// Data
+    OpVal data[3];
 };
 
 #endif // SCOPEOPERATION_H
