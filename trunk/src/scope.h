@@ -23,7 +23,6 @@ public:
     Vector4 getZBasis();
     Vector4 getBasisComponent(int i);
     Scope setBasisComponent(int i, Vector4 vec);
-
     void printSelf();
 
     void findCorners(Scope scope, Vector4* corners);
