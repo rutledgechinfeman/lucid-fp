@@ -57,6 +57,7 @@ void OperationNode::evaluate(Feature* feat, Factory &fac, Scope scope)
     {
         if(m_stringArg != "sidefaces") { cerr << "ERROR: We only support the comp operation on 'sidefaces', not: " << m_stringArg << endl; return; }
 
+        // Flatten side faces
         scope = scope.setScaleComponent(0.0, 2);
 
         for (int i = 0 ; i < 4 ; ++i)
