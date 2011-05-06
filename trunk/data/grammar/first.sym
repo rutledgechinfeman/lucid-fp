@@ -5,6 +5,6 @@ tile n
 groundfloor n
 floor n
 wombat n
-wall t plane brick.png tile
+wall t plane stucco.jpg tile
 door t plane door.png stretch
-window t plane busted_window.png stretch
+window t plane window.jpg stretch
