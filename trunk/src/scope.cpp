@@ -104,6 +104,36 @@ Scope Scope::copy(){
     return Scope(m_point, m_scale, m_basis);
 }
 
+bool Scope::occludes(Scope other) {
+
+    Vector4 corners[8];
+    this->findCorners(other, corners);
+
+
+
+
+    return false;
+}
+
+void Scope::findCorners(Scope scope, Vector4* corners) {
+
+    Vector4 p = scope.getPoint();
+    Vector4 xB = scope.getXBasis();
+    Vector4 yB = scope.getYBasis();
+    Vector4 zB = scope.getZBasis();
+    Vector4 s = scope.getScale();
+
+    corners[0] = p;
+    corners[1] = p + xB * s.x;
+    corners[2] = p + yB * s.y;
+    corners[3] = p + xB * s.x + yB * s.y;
+
+    for (int i = 0 ; i < 4; i ++) {
+        corners[i+4] = corners[i] + zB * s.z;
+    }
+
+}
+
 void Scope::printSelf()
 {
     cout << "============" << endl;
@@ -113,3 +143,5 @@ void Scope::printSelf()
     cout << "Point:" << endl << m_point << endl;
     cout << "============" << endl;
 }
+
+

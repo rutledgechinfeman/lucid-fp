@@ -52,6 +52,7 @@ Condition::~Condition()
 bool Condition::evaluate(Feature &f)
 {
     bool output = false;
+    Feature* root;
     switch (m_type)
     {
         case EMPTY:
@@ -65,13 +66,22 @@ bool Condition::evaluate(Feature &f)
 
         case OCCLUDED:
 
+            root = &f;
+            while (root->getParent() != NULL) {
+                root = root->getParent();
+            }
+
+            if (root == NULL) {
+                output = false;
+                cerr << "Unable to find root of feature tree in occlusion test!" << endl;
+                break;
+            }
 
 
 
 
 
-            output = false;
-            break;
+
 
         default:
             cerr << "ERROR: Unknown condition type: " << m_type << endl;
