@@ -26,6 +26,10 @@ public:
 
     void printSelf();
 
+    void findCorners(Scope scope, Vector4* corners);
+
+    bool occludes(Scope other);
+
     Scope copy();
 
 private:
