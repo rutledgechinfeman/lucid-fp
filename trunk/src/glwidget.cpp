@@ -118,27 +118,30 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event) {
        float dx = event->x() - m_prevMousePos.x;
        float dy = event->y() - m_prevMousePos.y;
        double3 look = m_camera.eye - m_camera.center;
-       //look.normalize();
        double theta = dy / 200.0f;
-       //double phi = atan2(look.z, look.x) + dx / 200.0f;
        double phi = dx / 200.0f;
-       //cout << phi << endl;
-       /*
-       m_camera.center.x = r * sin(theta) * cos(phi);
-       m_camera.center.z = r * sin(theta) * sin(phi);
-       m_camera.center.y = r * cos(theta);*/
+
        Vector4 lookVec = Vector4(look.x, look.y, look.z, 1);
        Matrix4x4 rotY;
        rotY = getInvRotYMat(phi);
+       Matrix4x4 rotZ;
        Matrix4x4 rotX;
        if(m_camera.center.x > m_camera.eye.x){
-            rotX = getInvRotZMat(theta);
+            rotZ = getInvRotZMat(theta);
        }
        else{
-           rotX = getRotZMat(theta);
+            rotZ = getRotZMat(theta);
        }
+       if(m_camera.center.z > m_camera.eye.z){
+            rotX = getRotXMat(theta);
+       }
+       else{
+            rotX = getInvRotXMat(theta);
+       }
+
+
        lookVec = rotY * lookVec;
-       lookVec = rotX * lookVec;
+       lookVec = rotZ * rotX * lookVec;
        m_camera.center = m_camera.eye - double3(lookVec.x, lookVec.y, lookVec.z);
 
        this->perspectiveCamera(this->width(), this->height());
