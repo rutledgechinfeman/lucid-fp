@@ -4,7 +4,7 @@
 #include "glwidget.h"
 #include <iostream>
 #include <CS123Algebra.h>
-
+#include "mainwindow.h"
 using std::cerr;
 using std::cout;
 using std::endl;
@@ -223,6 +223,7 @@ void GLWidget::mousePressEvent(QMouseEvent *event) {
 }
 
 void GLWidget::keyPressEvent(QKeyEvent *event) {
+    ((MainWindow*)parent())->keyPressEvent(event);
     if(event->key() == Qt::Key_W) scrollMovement(120);
     else if(event->key() == Qt::Key_S) scrollMovement(-120);
     else if(event->key() == Qt::Key_A) grapeVine(-120, 0);
