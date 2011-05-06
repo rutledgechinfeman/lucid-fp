@@ -149,6 +149,14 @@ void OperationNode::parseOp(string line, int index)
     /*
      * Pick the child-type based on which characters are present
      */
+    // Nested scope operations < between angle brackets >
+    if (line.find("<") != string::npos)
+    {
+        m_children.push_back(new OperationNode(line.substr(1, line.size()-2)));
+        m_childIndices.insert(index);
+        return;
+    }
+
     // Symbol: has no parens
     if (line.find("(") == string::npos)
     {
@@ -157,7 +165,7 @@ void OperationNode::parseOp(string line, int index)
         return;
     }
 
-    // Operation: has parens but no braces
+    // ScopeOperation: has parens but no braces
     if (line.find("{") == string::npos)
     {
         m_operations.push_back(new ScopeOperation(line));
