@@ -64,6 +64,12 @@ bool Condition::evaluate(Feature &f)
             break;
 
         case OCCLUDED:
+
+
+
+
+
+
             output = false;
             break;
 
