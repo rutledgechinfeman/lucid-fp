@@ -46,6 +46,7 @@ void Scenery::loadtextures(){
     fileList.append(new QFile("../data/skybox/brightday1_negative_z.png"));
 
     textures_["cube_map_1"] = load_cube_map(fileList);
+
     QFile* a;
     foreach(a, fileList)
     {
@@ -91,7 +92,6 @@ GLuint Scenery::load_cube_map(QList<QFile *> files) {
         texture = QGLWidget::convertToGLFormat(texture);
         texture = texture.scaledToWidth(1024,Qt::SmoothTransformation);
 
-        glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,3,3,texture.width(),texture.height(),0,GL_RGBA,GL_UNSIGNED_BYTE,texture.bits());
         gluBuild2DMipmaps(GL_TEXTURE_CUBE_MAP_POSITIVE_X +i, 3, texture.width(), texture.height(), GL_RGBA, GL_UNSIGNED_BYTE, texture.bits());
     }
     glTexParameteri(GL_TEXTURE_CUBE_MAP,GL_TEXTURE_MIN_FILTER,GL_NEAREST_MIPMAP_NEAREST);
