@@ -12,7 +12,7 @@ OperationNode::OperationNode(string arg)
 
     // Split this operation into several subtypes
     vector<string> ops;
-    StringUtil::split(arg, "_", ops);
+    StringUtil::split(arg, "_", ops, false, "<", ">");
 
     // Parse each one
     string op;
@@ -57,33 +57,24 @@ void OperationNode::evaluate(Feature* feat, Factory &fac, Scope scope)
     {
         if(m_stringArg != "sidefaces") { cerr << "ERROR: We only support the comp operation on 'sidefaces', not: " << m_stringArg << endl; return; }
 
-        Scope one = scope.setScaleComponent(0.0, 2);
-        m_children[0]->evaluate(feat, fac, one);
+        scope = scope.setScaleComponent(0.0, 2);
 
-        Scope two = scope.copy();
-        Vector4 temp = two.getBasisComponent(0);
-        two = two.setBasisComponent(0, two.getBasisComponent(2));
-        two = two.setBasisComponent(2, temp);
-        two = two.setScale(Vector4(two.getScale().z, two.getScale().y, two.getScale().x, 1.0));
+        for (int i = 0 ; i < 4 ; ++i)
+        {
+            // Move it along X basis
+            scope = scope.translate(scope.getXBasis() * scope.getScale().x);
 
-        two = two.setScaleComponent(0.0, 2);
-        m_children[0]->evaluate(feat, fac, two);
+            // Negate the X basis
+            scope = scope.setBasisComponent(0,-scope.getXBasis());
 
-        Scope three = scope.translate(Vector4(scope.getScale().x, 0.0, scope.getScale().z, 0.0));
-        three = three.setBasisComponent(0, -three.getBasisComponent(0));
-        three = three.setBasisComponent(2, -three.getBasisComponent(2));
-        Scope four = three.copy();
-        temp = three.getBasisComponent(0);
-        three = three.setBasisComponent(0, three.getBasisComponent(2));
-        three = three.setBasisComponent(2, temp);
-        three = three.setScale(Vector4(three.getScale().z, three.getScale().y, three.getScale().x, 1.0));
+            // Swap X and Z basis
+            Vector4 temp = scope.getBasisComponent(0);
+            scope = scope.setBasisComponent(0, scope.getBasisComponent(2));
+            scope = scope.setBasisComponent(2, temp);
 
-        three = three.setScaleComponent(0.0, 2);
-        m_children[0]->evaluate(feat, fac, three);
-
-        four = four.setScaleComponent(0.0, 2);
-        m_children[0]->evaluate(feat, fac, four);
-
+            // Evaluate
+            m_children[0]->evaluate(feat, fac, scope);
+        }
     }
     else if (m_type == SUBDIV)
     {
