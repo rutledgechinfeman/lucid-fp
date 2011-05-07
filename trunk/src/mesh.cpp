@@ -103,7 +103,7 @@ Mesh::Mesh(string filename)
 
 Mesh::~Mesh()
 {
-    for(int i=0; i<vertices.size(); i++){
+    for(unsigned int i=0; i<vertices.size(); i++){
         delete vertices.at(i);
     }
 }

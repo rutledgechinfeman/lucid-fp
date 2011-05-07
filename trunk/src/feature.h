@@ -9,6 +9,7 @@
 #include <QFile>
 #include <qgl.h>
 #include <QGLFramebufferObject>
+#include "massmodel.h"
 
 using std::string;
 using std::vector;
@@ -17,7 +18,6 @@ using std::vector;
 #define UNKNOWN -1
 #define PLANE 100
 #define MESH 101
-
 
 class Feature
 {
@@ -50,8 +50,8 @@ public:
     /// Set the mesh pointer
     void setMesh(Mesh* m);
 
-
-    GLuint loadTexture();
+    /// Set up a mass model
+    void setMassModel(int numfaces, string type);
 
     /// Set the texture pointer
     void setTextureID(GLuint i);
@@ -64,6 +64,9 @@ public:
 
     /// Set whether to tile the texture
     void setTileTex(bool tileTex);
+
+    /// Set the parent feature of this feature
+    void setParent(Feature* parent) { m_parent = parent; }
 
     /**
      * Getters
@@ -93,9 +96,11 @@ public:
     /// Get Scope basis
     Matrix4x4 getBasis();
 
-    /// set the parent feature of this feature
-    void setParent(Feature* parent) { m_parent = parent; }
+    /// Get the parent of this feature
     Feature* getParent() { return m_parent; }
+
+    /// Get the mass model
+    MassModel* getMassModel() { return m_mass; }
 
 private:
 
@@ -128,6 +133,9 @@ private:
 
     /// Whether to tile the texture
     bool m_tileTex;
+
+    /// For solid-mass modeling. This can be a roof, or just a block, or whatever. The point is that it knows how to break itself up.
+    MassModel* m_mass;
 };
 
 #endif // FEATURE_H

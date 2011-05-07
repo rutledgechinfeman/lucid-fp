@@ -11,6 +11,7 @@ Feature::Feature()
 {
     m_active = false;
     m_mesh = NULL;
+    m_mass = NULL;
 }
 
 Feature::Feature(string symbol, string geom, bool isActive, Scope scope, Feature* parent)
@@ -34,6 +35,7 @@ Feature::Feature(string symbol, string geom, bool isActive, Scope scope, Feature
     m_tileTex = false;
 
     setType(geom);
+    m_mass = NULL;
 }
 
 Feature::~Feature()
@@ -42,6 +44,8 @@ Feature::~Feature()
     {
         delete *i;
     }
+
+    delete m_mass;
 }
 
 Scope Feature::getScope(){
@@ -169,6 +173,12 @@ void Feature::draw()
     }
     glFlush();
 
+}
+
+void Feature::setMassModel(int numfaces, string type)
+{
+    delete m_mass;
+    m_mass = new MassModel(numfaces, type);
 }
 
 void Feature::drawTiledSelf()

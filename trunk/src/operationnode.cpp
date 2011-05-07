@@ -55,27 +55,7 @@ void OperationNode::evaluate(Feature* feat, Factory &fac, Scope scope)
     // Otherwise, this is an operation in and of itself, and we have to evaluate it
     if (m_type == COMP)
     {
-        if(m_stringArg != "sidefaces") { cerr << "ERROR: We only support the comp operation on 'sidefaces', not: " << m_stringArg << endl; return; }
-
-        // Flatten side faces
-        scope = scope.setScaleComponent(0.0, 2);
-
-        for (int i = 0 ; i < 4 ; ++i)
-        {
-            // Move it along X basis
-            scope = scope.translate(scope.getXBasis() * scope.getScale().x);
-
-            // Negate the X basis
-            scope = scope.setBasisComponent(0,-scope.getXBasis());
-
-            // Swap X and Z basis
-            Vector4 temp = scope.getBasisComponent(0);
-            scope = scope.setBasisComponent(0, scope.getBasisComponent(2));
-            scope = scope.setBasisComponent(2, temp);
-
-            // Evaluate
-            m_children[0]->evaluate(feat, fac, scope);
-        }
+        feat->getMassModel()->decompose(m_stringArg, m_children[0], feat, &fac, scope);
     }
     else if (m_type == SUBDIV)
     {
@@ -173,13 +153,19 @@ void OperationNode::parseOp(string line, int index)
         return;
     }
 
-    // OperationNode: has parens and braces
+    // OperationNode: has parens and braces --or---
+    // InstanceOf operator: I(type){ name }
 
     /*
      * Parse type
      */
+    bool isInstanceOf = false;
     string opType = line.substr(0, line.find("("));
-    if      (opType == "Comp")   { m_type = COMP;   }
+    if      (opType == "I") // Special case: instance-of operator
+    {
+        isInstanceOf = true;
+    }
+    else if (opType == "Comp")   { m_type = COMP;   }
     else if (opType == "Subdiv") { m_type = SUBDIV; }
     else if (opType == "Repeat") { m_type = REPEAT; }
     else { cerr << "ERROR: Ignoring unrecognized operation: " << line << endl; return; }
@@ -214,7 +200,16 @@ void OperationNode::parseOp(string line, int index)
         target = StringUtil::trim(targets[i]);
 
         if (target.find("(") != string::npos) { m_children.push_back(new OperationNode(target)); }
-        else { m_children.push_back(new Symbol(target)); }
+        else
+        {
+            if (!isInstanceOf) { m_children.push_back(new Symbol(target)); }
+            else
+            {
+                m_children.push_back(new Symbol(target, m_stringArg));
+                m_childIndices.insert(index);
+                return;
+            }
+        }
     }
 }
 

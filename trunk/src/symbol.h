@@ -8,7 +8,7 @@
 class Symbol : public GrammarNode
 {
 public:
-    Symbol(string arg = "");
+    Symbol(string arg = "", string type = "");
     virtual ~Symbol();
 
     void evaluate(Feature* feat, Factory &fac, Scope scope);
@@ -16,6 +16,8 @@ public:
 
 private:
     string m_symbol;
+    int m_faces;
+    string m_type;
 };
 
 #endif // SYMBOL_H
