@@ -23,12 +23,12 @@ GLWidget::GLWidget(QWidget *parent)
     for(int i=0; i<1000; i++){
         cout << "here1" << endl;
     }
-    shader->addShaderFromSourceFile(QGLShader::Vertex, "../data/blinnphong.vert");
+    shader->addShaderFromSourceFile(QGLShader::Vertex, "/home/rutledge/Documents/lucid-fp/data/blinnphong.vert");
     for(int i=0; i<1000; i++){
         cout << "here2" << endl;
     }
-    shader->addShaderFromSourceFile(QGLShader::Fragment, "../data/blinnphong.frag");
-    shader->link();
+    shader->addShaderFromSourceFile(QGLShader::Fragment, "/home/rutledge/Documents/lucid-fp/data/blinnphong.frag");
+    //shader->link();
 }
 
 GLWidget::~GLWidget()
@@ -97,12 +97,17 @@ void GLWidget::paintGL()
     this->perspectiveCamera(this->width(), this->height());
     //TODO: make some scenery variable
 
+
+
+
+
     if(true){
 
        scenery->draw();
     }
 
     shader->bind();
+
     if( m_root) { m_root->draw(); }
     shader->release();
 
