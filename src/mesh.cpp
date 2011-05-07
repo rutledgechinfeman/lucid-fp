@@ -5,6 +5,7 @@
 #include <vector>
 #include <qgl.h>
 #include <stringutil.h>
+#include <QGLShaderProgram>
 using std::vector;
 using namespace std;
 
@@ -24,10 +25,10 @@ Mesh::Mesh(string filename)
     vector<string> tokens;
     int currVertex = 0;
     int currFace = 0;
+    int currQuadFace = 0;
     while (myfile.good())
     {
         getline(myfile, line);
-
 
         // Tokenize line
         tokens.clear();
@@ -53,25 +54,46 @@ Mesh::Mesh(string filename)
         // Parse a face line
         else if(tokens.at(0) == "f")
         {
-            if(tokens.size() != 4) { cerr << "WARNING: Skipping malformed vertex line in mesh file: " << line << endl; }
+            if(tokens.size() == 5) {
 
-            // Parse the vertices, of the form "vertex/normal/texture"
-            vector<string> face;
-            for(unsigned int i=1; i<tokens.size(); i++)
-            {
-                face.clear();
-                StringUtil::split(tokens.at(i), "/", face, true);
-                //normal of the ith vertex on this face:
-                if(atoi(face.at(2).c_str())-1 >= (int)normals.size()){
-                    cout << atoi(face.at(2).c_str())-1 << endl;
-                    cout << normals.size() << endl;
+                // Parse the vertices, of the form "vertex/normal/texture"
+                vector<string> face;
+                for(unsigned int i=1; i<tokens.size(); i++)
+                {
+                    face.clear();
+                    StringUtil::split(tokens.at(i), "/", face, true);
+                    if(face.size() == 3){
+                        Vector4 v = Vector4(strtod(face.at(0).c_str(), NULL), strtod(face.at(1).c_str(), NULL), strtod(face.at(2).c_str(), NULL), 0);
+                        quads.push_back(v);
+                    }
+                    if(face.size() == 1){
+                        Vector4 v = Vector4(strtod(face.at(0).c_str(), NULL), 0, 0, 0);
+                        quads.push_back(v);
+                    }
+
                 }
-                Vector4 v = Vector4(strtod(face.at(0).c_str(), NULL), strtod(face.at(1).c_str(), NULL), strtod(face.at(2).c_str(), NULL), 0);
-                triangles.push_back(v); // Currently, we're only supporting the vertex numbers, not normals or texture
-                // TODO: if we ever implement this feature
-
+                currFace++;
             }
-            currFace++;
+
+            else{
+                    // Parse the vertices, of the form "vertex/normal/texture"
+                vector<string> face;
+                for(unsigned int i=1; i<tokens.size(); i++)
+                {
+                    face.clear();
+                    StringUtil::split(tokens.at(i), "/", face, true);
+                    if(face.size() == 3){
+                        Vector4 v = Vector4(strtod(face.at(0).c_str(), NULL), strtod(face.at(1).c_str(), NULL), strtod(face.at(2).c_str(), NULL), 0);
+                        triangles.push_back(v);
+                    }
+                    if(face.size() == 1){
+                        Vector4 v = Vector4(strtod(face.at(0).c_str(), NULL), 0, 0, 0);
+                        triangles.push_back(v);
+                    }
+
+                }
+                currFace++;
+            }
         }
         // Parse a vertex normal line
 
@@ -92,7 +114,9 @@ Mesh::Mesh(string filename)
             double2 d = double2(strtod(tokens.at(1).c_str(), NULL), strtod(tokens.at(2).c_str(), NULL));
             texcoords.push_back(d); // set coordinates
         }
+        else{
 
+        }
 
     }
     // Wrap up
@@ -111,17 +135,14 @@ Mesh::~Mesh()
 void Mesh::drawGL()
 {
 
+    glPushMatrix();
     glFrontFace(GL_CCW);
-    glEnable(GL_LIGHTING);
-    //cout << "drawing" << endl;
     glBegin(GL_TRIANGLES);
     for(unsigned int i=0; i < triangles.size(); i++)
     {
         //for each element on a face we index into normals, vertices, and maybe texture coords
-        if(normals.size() > 0){
-            double3 thisNorm = normals.at(triangles.at(i).z - 1 );
-            glNormal3f(thisNorm.x, thisNorm.y, thisNorm.z);
-        }
+        //double3 thisNorm = normals.at(triangles.at(i).z - 1 );
+        //glNormal3f(thisNorm.x, thisNorm.y, thisNorm.z);
 /*
         if(texcoords.size() > 0){
             double2 thisTexCoord = texcoords.at(triangles.at(i).y -1);
@@ -134,6 +155,26 @@ void Mesh::drawGL()
         }
     }
     glEnd();
-    glDisable(GL_LIGHTING);
+    glBegin(GL_QUADS);
+    for(unsigned int i=0; i < quads.size(); i++)
+    {
+        //for each element on a face we index into normals, vertices, and maybe texture coords
+        /*if(normals.size() > 0){
+            double3 thisNorm = normals.at(quads.at(i).z - 1 );
+            glNormal3f(thisNorm.x, thisNorm.y, thisNorm.z);
+        }*/
+/*
+        if(texcoords.size() > 0){
+            double2 thisTexCoord = texcoords.at(triangles.at(i).y -1);
+            glTexCoord2d(thisTexCoord.x, thisTexCoord.y);
+        }*/
+
+        if(vertices.size()>0){
+            MeshVertex* thisVert = vertices.at(quads.at(i).x -1);
+            glVertex3f(thisVert->p.x, thisVert->p.y, thisVert->p.z);
+        }
+    }
+    glEnd();
     glFrontFace(GL_CW);
+    glPopMatrix();
 }

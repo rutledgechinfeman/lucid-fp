@@ -19,6 +19,16 @@ GLWidget::GLWidget(QWidget *parent)
     this->setMouseTracking(true);
     m_root = NULL;
     this->setDefaultCamera();
+    shader = new QGLShaderProgram(this->context());
+    for(int i=0; i<1000; i++){
+        cout << "here1" << endl;
+    }
+    shader->addShaderFromSourceFile(QGLShader::Vertex, "../data/blinnphong.vert");
+    for(int i=0; i<1000; i++){
+        cout << "here2" << endl;
+    }
+    shader->addShaderFromSourceFile(QGLShader::Fragment, "../data/blinnphong.frag");
+    shader->link();
 }
 
 GLWidget::~GLWidget()
@@ -77,6 +87,9 @@ void GLWidget::initializeGL()
     m_timer->start(1000.0f / 30.0f);
 }
 
+extern "C" void APIENTRY glActiveTexture(unsigned int);
+
+
 void GLWidget::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -89,7 +102,9 @@ void GLWidget::paintGL()
        scenery->draw();
     }
 
+    shader->bind();
     if( m_root) { m_root->draw(); }
+    shader->release();
 
 }
 

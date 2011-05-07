@@ -11,7 +11,11 @@ int main(int argc, char *argv[])
     MainWindow w(&ref);
     w.show();
 
-    Feature* root = ref.restart();
+    //Feature* root = ref.restart();
+
+    Feature* root = new Feature("window", "mesh", true, Scope(Vector4(0,0,0,0), Vector4(1, 1, 1, 1)));
+    Mesh* m = new Mesh("../data/ring.obj");
+    root->setMesh(m);
     w.setRoot(root);
 
     return a.exec();

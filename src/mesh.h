@@ -41,6 +41,7 @@ public:
 protected:
     vector<MeshVertex*> vertices;
     vector<Vector4> triangles;
+    vector<Vector4> quads;
     vector<double3> normals;
     vector<double2> texcoords;
     //MeshVertex *m_vertices;
