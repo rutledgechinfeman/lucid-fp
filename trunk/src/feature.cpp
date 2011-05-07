@@ -128,6 +128,7 @@ void Feature::addChild(Feature* f)
 
 void Feature::draw()
 {
+    glEnable(GL_LIGHTING);
     if(m_children.size()==0){
 
         glMatrixMode(GL_MODELVIEW);
@@ -172,6 +173,8 @@ void Feature::draw()
         }
     }
     glFlush();
+    glDisable(GL_LIGHTING);
+
 
 }
 
