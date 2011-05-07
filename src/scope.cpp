@@ -99,8 +99,6 @@ Scope Scope::rotateX(REAL angle){
 }
 
 Scope Scope::rotateY(REAL angle){
-    cout << "first basis: " << m_basis << endl;
-    cout << "second basis: " << getRotMat(m_point + .5*(m_basis*m_scale), m_ybasis, angle)*m_basis << endl;
 
     return Scope(getRotMat(m_point + .5*(m_basis*m_scale), m_ybasis, angle)*m_point, m_scale, getRotMat(m_point + .5*(m_basis*m_scale), m_ybasis, angle)*m_basis);
     //return Scope(m_point, m_scale, m_basis);

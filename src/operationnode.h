@@ -55,8 +55,10 @@ private:
     /// Child operations that apply only to the scope, ie S, T, R
     vector<ScopeOperation*> m_operations;
 
-
+    /// Helper for keeping track of in what order we perform operations
     set<int> m_opIndices;
+
+    /// Helper for keeping track of in what order we perform operations
     set<int> m_childIndices;
 };
 

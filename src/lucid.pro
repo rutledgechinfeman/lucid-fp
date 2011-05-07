@@ -32,7 +32,8 @@ SOURCES += main.cpp\
     CS123Matrix.cpp \
     scope.cpp \
     operationnode.cpp \
-    scenery.cpp
+    scenery.cpp \
+    massmodel.cpp
 
 HEADERS  += mainwindow.h \
     glwidget.h \
@@ -57,6 +58,7 @@ HEADERS  += mainwindow.h \
     scope.h \
     CS123Common.h \
     operationnode.h \
-    scenery.h
+    scenery.h \
+    massmodel.h
 
 FORMS    += mainwindow.ui
