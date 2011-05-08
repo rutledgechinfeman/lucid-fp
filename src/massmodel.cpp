@@ -63,7 +63,6 @@ void MassModel::topfaces(GrammarNode* op, Feature* feat, Factory* fac, Scope sco
 {
     if (m_type == ROOF_FLAT)
     {
-        scope.printSelf();
         // Flatten Y scope
         scope = scope.setScaleComponent(0.0, 1);
         op->evaluate(feat, *fac, scope);
