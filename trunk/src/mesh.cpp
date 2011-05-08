@@ -22,6 +22,12 @@ extern "C" void glMultiTexCoord3f (GLenum, GLfloat, GLfloat, GLfloat);
 
 Mesh::Mesh(string filename)
 {
+    currMinX = 0;
+    currMaxX = 0;
+    currMinY = 0;
+    currMaxY = 0;
+    currMinZ = 0;
+    currMaxZ = 0;
     ifstream myfile(filename.c_str());
     if(!myfile.is_open() || !myfile.good())
     {
@@ -160,6 +166,8 @@ Mesh::Mesh(string filename)
     }
 
     Vector3 scaleFac = Vector3(currMaxX - currMinX, currMaxY - currMinY, currMaxZ - currMinZ);
+    cout << currMaxX << ", " << currMaxY << ", " << currMaxZ << endl;
+    cout << currMinX << ", " << currMinY << ", " << currMinZ << endl;
     for(unsigned int i=0; i<vertices.size(); i++){
         MeshVertex* m = vertices.at(i);
         m->p.x = (m->p.x - currMinX)/scaleFac.x;
@@ -182,7 +190,7 @@ Mesh::~Mesh()
 void Mesh::drawGL()
 {
 
-    //glPushMatrix();
+    glPushMatrix();
     glFrontFace(GL_CCW);
     if(normals.size() > 0){
         glBegin(GL_TRIANGLES);
@@ -265,5 +273,5 @@ void Mesh::drawGL()
 
     glColor3f(1.0, 1.0, 1.0);
     glFrontFace(GL_CW);
-    //glPopMatrix();
+    glPopMatrix();
 }
