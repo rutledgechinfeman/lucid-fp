@@ -56,7 +56,19 @@ void MassModel::sidefaces(GrammarNode* op, Feature* feat, Factory* fac, Scope sc
     }
     else if (m_type == ROOF_GABLED)
     {
+        // First wall
         Scope original = scope;
+        scope = scope.translate(scope.getScale().x * scope.getBasisComponent(0));
+        scope = scope.setScaleComponent(0.0, 0);
+        op->evaluate(feat, *fac, scope);
+
+        // Go to opposite corner
+        scope = original.translate(original.getScale().x * original.getBasisComponent(0));
+        scope = scope.translate(original.getScale().z * original.getBasisComponent(2));
+        scope = scope.setBasisComponent(0, -scope.getBasisComponent(0));
+        scope = scope.setBasisComponent(2, -scope.getBasisComponent(2));
+
+        // Second wall
         scope = scope.translate(scope.getScale().x * scope.getBasisComponent(0));
         scope = scope.setScaleComponent(0.0, 0);
         op->evaluate(feat, *fac, scope);
