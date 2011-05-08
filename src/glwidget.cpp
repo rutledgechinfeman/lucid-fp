@@ -77,20 +77,11 @@ void GLWidget::initializeGL()
     connect(m_timer, SIGNAL(timeout()), this, SLOT(repaint()));
     m_timer->start(1000.0f / 30.0f);
 
-
     shader = new QGLShaderProgram();
-
-    cout << "here1" << endl;
-
     shader->addShaderFromSourceFile(QGLShader::Vertex, "../data/blinnphong.vert");
-
-    cout << "here2" << endl;
-
     shader->addShaderFromSourceFile(QGLShader::Fragment, "../data/blinnphong.frag");
-
-    if (shader->link()) cout << "dfsad" << endl;
-
-
+    int status = shader->link();
+    if (!status) { cerr << "ERROR: Shader didn't link!" << endl; }
 }
 
 extern "C" void APIENTRY glActiveTexture(unsigned int);
