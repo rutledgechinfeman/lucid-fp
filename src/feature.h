@@ -10,6 +10,7 @@
 #include <qgl.h>
 #include <QGLFramebufferObject>
 #include "massmodel.h"
+#include <QGLShaderProgram>
 
 using std::string;
 using std::vector;
@@ -32,7 +33,7 @@ public:
     virtual ~Feature();
 
     /// Draw self with OpenGL
-    virtual void draw();
+    virtual void draw(QGLShaderProgram *shader);
 
     /// Push back a child for this feature (used by grammarnodes)
     void addChild(Feature* f);
@@ -103,6 +104,8 @@ public:
     MassModel* getMassModel() { return m_mass; }
 
 private:
+
+    QGLShaderProgram* m_shader;
 
     /// Convenience parser
     void setType(string geom);

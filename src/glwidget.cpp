@@ -111,11 +111,7 @@ void GLWidget::paintGL()
 
        scenery->draw();
     }
-
-    shader->bind();
-
-    if( m_root) { m_root->draw(); }
-    shader->release();
+    if( m_root) { m_root->draw(shader); }
 
 }
 
