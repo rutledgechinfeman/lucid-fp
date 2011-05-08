@@ -10,6 +10,7 @@ MassModel::MassModel(int numFaces, string type)
 
     // Pick m_type based on the input string
     if (m_faces != -1)               { m_type = NGON;         }
+    else if (type == "Roof.flat")    { m_type = ROOF_FLAT;    }
     else if (type == "Roof.gambrel") { m_type = ROOF_GAMBREL; }
     else if (type == "Roof.cone")    { m_type = ROOF_CONE;    }
     else if (type == "Roof.gabled")  { m_type = ROOF_GABLED;  }
@@ -22,8 +23,17 @@ MassModel::~MassModel() { }
 
 void MassModel::decompose(string arg, GrammarNode* op, Feature* feat, Factory* fac, Scope scope)
 {
-    if (arg != "sidefaces") { cerr << "ERROR: We only support the comp operation on 'sidefaces', not: " << arg << endl; return; }
-    if (m_faces < 3)        { cerr << "ERROR: Cannot decompose something with less than 3 faces. Has: " << m_faces << endl; return; }
+    if (arg == "sidefaces") { sidefaces(op, feat, fac, scope); }
+    else if (arg == "topfaces") { topfaces(op, feat, fac, scope); }
+    else {cerr << "ERROR: Composition operation of type[" << arg << "] not supported." << endl; }
+}
+
+void MassModel::sidefaces(GrammarNode* op, Feature* feat, Factory* fac, Scope scope)
+{
+    if (m_faces < 3)
+    {
+        cerr << "ERROR: Cannot decompose something with less than 3 faces. Has: " << m_faces << endl; return;
+    }
 
     // Flatten side faces
     scope = scope.setScaleComponent(0.0, 2);
@@ -47,3 +57,8 @@ void MassModel::decompose(string arg, GrammarNode* op, Feature* feat, Factory* f
 
     feat->setActive(false);
 }
+
+void MassModel::topfaces(GrammarNode* op, Feature* feat, Factory* fac, Scope scope)
+{
+}
+
