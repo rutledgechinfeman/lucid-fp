@@ -19,16 +19,7 @@ GLWidget::GLWidget(QWidget *parent)
     this->setMouseTracking(true);
     m_root = NULL;
     this->setDefaultCamera();
-    shader = new QGLShaderProgram(this->context());
-    for(int i=0; i<1000; i++){
-        cout << "here1" << endl;
-    }
-    shader->addShaderFromSourceFile(QGLShader::Vertex, "/home/rutledge/Documents/lucid-fp/data/blinnphong.vert");
-    for(int i=0; i<1000; i++){
-        cout << "here2" << endl;
-    }
-    shader->addShaderFromSourceFile(QGLShader::Fragment, "/home/rutledge/Documents/lucid-fp/data/blinnphong.frag");
-    //shader->link();
+
 }
 
 GLWidget::~GLWidget()
@@ -85,6 +76,21 @@ void GLWidget::initializeGL()
     m_timer = new QTimer(this);
     connect(m_timer, SIGNAL(timeout()), this, SLOT(repaint()));
     m_timer->start(1000.0f / 30.0f);
+
+
+    shader = new QGLShaderProgram();
+
+    cout << "here1" << endl;
+
+    shader->addShaderFromSourceFile(QGLShader::Vertex, "../data/blinnphong.vert");
+
+    cout << "here2" << endl;
+
+    shader->addShaderFromSourceFile(QGLShader::Fragment, "../data/blinnphong.frag");
+
+    if (shader->link()) cout << "dfsad" << endl;
+
+
 }
 
 extern "C" void APIENTRY glActiveTexture(unsigned int);
