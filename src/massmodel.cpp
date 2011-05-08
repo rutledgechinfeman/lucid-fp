@@ -30,29 +30,35 @@ void MassModel::decompose(string arg, GrammarNode* op, Feature* feat, Factory* f
 
 void MassModel::sidefaces(GrammarNode* op, Feature* feat, Factory* fac, Scope scope)
 {
-    if (m_faces < 3)
+    if (m_faces == 4 && m_type == NGON)
     {
-        cerr << "ERROR: Cannot decompose something with less than 3 faces. Has: " << m_faces << endl;
-        return;
+        // Flatten side faces
+        scope = scope.setScaleComponent(0.0, 2);
+
+        for (int i = 0 ; i < m_faces ; ++i)
+        {
+            // TODO; figure out a way to subdivide a rectangle into an ngon nicely
+
+            // Move it along X basis
+            scope = scope.translate(scope.getXBasis() * scope.getScale().x);
+
+            // Negate the X basis
+            scope = scope.setBasisComponent(0,-scope.getXBasis());
+
+            // Swap X and Z basis
+            Vector4 temp = scope.getBasisComponent(0);
+            scope = scope.setBasisComponent(0, scope.getBasisComponent(2));
+            scope = scope.setBasisComponent(2, temp);
+
+            // Evaluate
+            op->evaluate(feat, *fac, scope);
+        }
     }
-
-    // Flatten side faces
-    scope = scope.setScaleComponent(0.0, 2);
-
-    for (int i = 0 ; i < m_faces ; ++i)
+    else if (m_type == ROOF_GABLED)
     {
-        // Move it along X basis
-        scope = scope.translate(scope.getXBasis() * scope.getScale().x);
-
-        // Negate the X basis
-        scope = scope.setBasisComponent(0,-scope.getXBasis());
-
-        // Swap X and Z basis
-        Vector4 temp = scope.getBasisComponent(0);
-        scope = scope.setBasisComponent(0, scope.getBasisComponent(2));
-        scope = scope.setBasisComponent(2, temp);
-
-        // Evaluate
+        Scope original = scope;
+        scope = scope.translate(scope.getScale().x * scope.getBasisComponent(0));
+        scope = scope.setScaleComponent(0.0, 0);
         op->evaluate(feat, *fac, scope);
     }
 
@@ -63,13 +69,43 @@ void MassModel::topfaces(GrammarNode* op, Feature* feat, Factory* fac, Scope sco
 {
     if (m_type == ROOF_FLAT)
     {
-        // Flatten Y scope
-        scope = scope.setScaleComponent(0.0, 1);
+        if (m_faces > 0 && m_faces != 4)
+        {
+            // TODO; figure out a way to subdivide a rectangle into an ngon nicely
+        }
+        else // Default to four sides
+        {
+            // Flatten Y scope
+            scope = scope.setScaleComponent(0.0, 1);
+            op->evaluate(feat, *fac, scope);
+        }
+    }
+    else if (m_type == ROOF_GABLED)
+    {
+        Scope original = scope;
+
+        // First slanty thing
+        scope = scope.setScaleComponent(0.0, 2);
+        double len = sqrt((scope.getScale().x / 2.0) * (scope.getScale().x / 2.0) + scope.getScale().y * scope.getScale().y);
+        scope = scope.rotateX(atan2(scope.getScale().x / 2.0, scope.getScale().y) * 180.0 / M_PI, false);
+        scope = scope.setScaleComponent(len, 1);
+        op->evaluate(feat, *fac, scope);
+
+        // Second slanty thing
+        // Go to the other corner
+        scope = original.translate(original.getScale().x * original.getBasisComponent(0));
+        scope = scope.translate(original.getScale().z * original.getBasisComponent(2));
+        scope = scope.setBasisComponent(0, -scope.getBasisComponent(0));
+        scope = scope.setBasisComponent(2, -scope.getBasisComponent(2));
+
+        // Do the same thing again
+        scope = scope.setScaleComponent(0.0, 2);
+        scope = scope.rotateX(atan2(scope.getScale().x / 2.0, scope.getScale().y) * 180.0 / M_PI, false);
+        scope = scope.setScaleComponent(len, 1);
         op->evaluate(feat, *fac, scope);
     }
-    else if (m_type == ROOF_GAMBREL);
     else if (m_type == ROOF_CONE);
-    else if (m_type == ROOF_GABLED);
+    else if (m_type == ROOF_GAMBREL);
     else if (m_type == ROOF_HIPPED);
     else if (m_type == ROOF_MANSARD);
     else { cerr << "ERROR: Topface composition called but this is not a known roof type." << endl; }

@@ -15,9 +15,9 @@ public:
     Scope translate(Vector4 v);
     Scope setScale(Vector4 v);
     Scope setScaleComponent(REAL v, int i);
-    Scope rotateX(REAL angle);
-    Scope rotateY(REAL angle);
-    Scope rotateZ(REAL angle);
+    Scope rotateX(REAL angle, bool aboutCenter = true);
+    Scope rotateY(REAL angle, bool aboutCenter = true);
+    Scope rotateZ(REAL angle, bool aboutCenter = true);
     Vector4 getXBasis();
     Vector4 getYBasis();
     Vector4 getZBasis();
