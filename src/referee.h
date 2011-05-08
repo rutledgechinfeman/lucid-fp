@@ -20,6 +20,9 @@ public:
     Feature* refresh();
 
 private:
+    void init();
+    void cleanup();
+
     string m_file;
     Parser* m_parser;
     Grammar* m_grammar;
