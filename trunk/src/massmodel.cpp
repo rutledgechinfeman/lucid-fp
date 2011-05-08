@@ -61,6 +61,7 @@ void MassModel::sidefaces(GrammarNode* op, Feature* feat, Factory* fac, Scope sc
         scope = scope.translate(scope.getScale().x * scope.getBasisComponent(0));
         scope = scope.setScaleComponent(0.0, 0);
         op->evaluate(feat, *fac, scope);
+        feat->getChild(feat->getNumChildren()-1)->setTriangle(true);
 
         // Go to opposite corner
         scope = original.translate(original.getScale().x * original.getBasisComponent(0));
@@ -72,6 +73,7 @@ void MassModel::sidefaces(GrammarNode* op, Feature* feat, Factory* fac, Scope sc
         scope = scope.translate(scope.getScale().x * scope.getBasisComponent(0));
         scope = scope.setScaleComponent(0.0, 0);
         op->evaluate(feat, *fac, scope);
+        feat->getChild(feat->getNumChildren()-1)->setTriangle(true);
     }
 
     feat->setActive(false);
@@ -103,14 +105,13 @@ void MassModel::topfaces(GrammarNode* op, Feature* feat, Factory* fac, Scope sco
         scope = scope.setScaleComponent(len, 1);
         op->evaluate(feat, *fac, scope);
 
-        // Second slanty thing
         // Go to the other corner
         scope = original.translate(original.getScale().x * original.getBasisComponent(0));
         scope = scope.translate(original.getScale().z * original.getBasisComponent(2));
         scope = scope.setBasisComponent(0, -scope.getBasisComponent(0));
         scope = scope.setBasisComponent(2, -scope.getBasisComponent(2));
 
-        // Do the same thing again
+        // Second slanty thing
         scope = scope.setScaleComponent(0.0, 2);
         scope = scope.rotateX(atan2(scope.getScale().x / 2.0, scope.getScale().y) * 180.0 / M_PI, false);
         scope = scope.setScaleComponent(len, 1);

@@ -69,6 +69,9 @@ public:
     /// Set the parent feature of this feature
     void setParent(Feature* parent) { m_parent = parent; }
 
+    /// Set whether this draws as a triangle
+    void setTriangle(bool newState) { m_isTriangle = newState; }
+
     /**
      * Getters
      */
@@ -139,6 +142,9 @@ private:
 
     /// For solid-mass modeling. This can be a roof, or just a block, or whatever. The point is that it knows how to break itself up.
     MassModel* m_mass;
+
+    /// Whether to draw as a rectangle or a triangle
+    bool m_isTriangle;
 };
 
 #endif // FEATURE_H
