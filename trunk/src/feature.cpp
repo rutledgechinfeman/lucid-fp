@@ -216,7 +216,7 @@ void Feature::drawTiledSelf()
 
 
     //xy
-    glNormal3f(0.0, 0.0, -1.0);
+    glNormal3f(0.0, 0.0, 1.0);
     glTexCoord2f(0.0, 0.0);
     glVertex3f(0.0, 0.0, 0.0);
     glTexCoord2f(0.0, y);
@@ -227,7 +227,6 @@ void Feature::drawTiledSelf()
     glVertex3f(1.0, 0.0, 0.0);
 
     //xz
-    glNormal3f(0.0, 0.0, 1.0);
     glTexCoord2f(0.0, 0.0);
     glVertex3f(0.0, 0.0, 0.0);
     glTexCoord2f(x, 0.0);
@@ -238,7 +237,6 @@ void Feature::drawTiledSelf()
     glVertex3f(0.0, 0.0, 1.0);
 
     //yz
-    glNormal3f(-1.0, 0.0, 0.0);
     glTexCoord2f(0.0, 0.0);
     glVertex3f(0.0, 0.0, 0.0);
     glTexCoord2f(0.0, y);
@@ -249,7 +247,6 @@ void Feature::drawTiledSelf()
     glVertex3f(0.0, 1.0, 0.0);
 
     //xy
-    glNormal3f(0.0, 0.0, 1.0);
     glTexCoord2f(0.0, 0.0);
     glVertex3f(0.0, 0.0, 1.0);
     glTexCoord2f(x, 0.0);
@@ -260,7 +257,6 @@ void Feature::drawTiledSelf()
     glVertex3f(0.0, 1.0, 1.0);
 
     //xz
-    glNormal3f(0.0, -1.0, 0.0);
     glTexCoord2f(0.0, 0.0);
     glVertex3f(0.0, 1.0, 0.0);
     glTexCoord2f(0.0, y);
@@ -271,7 +267,6 @@ void Feature::drawTiledSelf()
     glVertex3f(1.0, 1.0, 0.0);
 
     //yz
-    glNormal3f(1.0, 0.0, 0.0);
     glTexCoord2f(0.0, 0.0);
     glVertex3f(1.0, 0.0, 0.0);
     glTexCoord2f(x, 0.0);
@@ -284,41 +279,38 @@ void Feature::drawTiledSelf()
 
 void Feature::drawStretchedSelf()
 {
-    //xy
-    glNormal3f(0.0, 0.0, -1.0);
-    glTexCoord2f(0.0, 0.0);
-    glVertex3f(0.0, 0.0, 0.0);
-    glTexCoord2f(0.0, 1.0);
-    glVertex3f(0.0, 1.0, 0.0);
-    glTexCoord2f(1.0, 1.0);
-    glVertex3f(1.0, 1.0, 0.0);
-    glTexCoord2f(1.0, 0.0);
-    glVertex3f(1.0, 0.0, 0.0);
-
-    //xz
-    glNormal3f(0.0, 1.0, 0.0);
-    glTexCoord2f(0.0, 0.0);
-    glVertex3f(0.0, 0.0, 0.0);
-    glTexCoord2f(1.0, 0.0);
-    glVertex3f(1.0, 0.0, 0.0);
-    glTexCoord2f(1.0, 1.0);
-    glVertex3f(1.0, 0.0, 1.0);
-    glTexCoord2f(0.0, 1.0);
-    glVertex3f(0.0, 0.0, 1.0);
-
-    //yz
-    glNormal3f(-1.0, 0.0, 0.0);
-    glTexCoord2f(0.0, 0.0);
-    glVertex3f(0.0, 0.0, 0.0);
-    glTexCoord2f(0.0, 1.0);
-    glVertex3f(0.0, 0.0, 1.0);
-    glTexCoord2f(1.0, 1.0);
-    glVertex3f(0.0, 1.0, 1.0);
-    glTexCoord2f(1.0, 0.0);
-    glVertex3f(0.0, 1.0, 0.0);
-
-    //xy
     glNormal3f(0.0, 0.0, 1.0);
+    //xy
+    glTexCoord2f(0.0, 0.0);
+    glVertex3f(0.0, 0.0, 0.0);
+    glTexCoord2f(0.0, 1.0);
+    glVertex3f(0.0, 1.0, 0.0);
+    glTexCoord2f(1.0, 1.0);
+    glVertex3f(1.0, 1.0, 0.0);
+    glTexCoord2f(1.0, 0.0);
+    glVertex3f(1.0, 0.0, 0.0);
+
+    //xz
+    glTexCoord2f(0.0, 0.0);
+    glVertex3f(0.0, 0.0, 0.0);
+    glTexCoord2f(1.0, 0.0);
+    glVertex3f(1.0, 0.0, 0.0);
+    glTexCoord2f(1.0, 1.0);
+    glVertex3f(1.0, 0.0, 1.0);
+    glTexCoord2f(0.0, 1.0);
+    glVertex3f(0.0, 0.0, 1.0);
+
+    //yz
+    glTexCoord2f(0.0, 0.0);
+    glVertex3f(0.0, 0.0, 0.0);
+    glTexCoord2f(0.0, 1.0);
+    glVertex3f(0.0, 0.0, 1.0);
+    glTexCoord2f(1.0, 1.0);
+    glVertex3f(0.0, 1.0, 1.0);
+    glTexCoord2f(1.0, 0.0);
+    glVertex3f(0.0, 1.0, 0.0);
+
+    //xy
     glTexCoord2f(0.0, 0.0);
     glVertex3f(0.0, 0.0, 1.0);
     glTexCoord2f(1.0, 0.0);
@@ -329,7 +321,6 @@ void Feature::drawStretchedSelf()
     glVertex3f(0.0, 1.0, 1.0);
 
     //xz
-    glNormal3f(0.0, 0.0, -1.0);
     glTexCoord2f(0.0, 0.0);
     glVertex3f(0.0, 1.0, 0.0);
     glTexCoord2f(0.0, 1.0);
@@ -340,7 +331,6 @@ void Feature::drawStretchedSelf()
     glVertex3f(1.0, 1.0, 0.0);
 
     //yz
-    glNormal3f(1.0, 0.0, 0.0);
     glTexCoord2f(0.0, 0.0);
     glVertex3f(1.0, 0.0, 0.0);
     glTexCoord2f(1.0, 0.0);
