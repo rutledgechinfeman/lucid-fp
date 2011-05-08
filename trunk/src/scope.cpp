@@ -93,18 +93,21 @@ Scope Scope::setScaleComponent(REAL v, int i) {
 
 
 Scope Scope::rotateX(REAL angle){
+    angle *= M_PI / 180.0;
     Matrix4x4 rotMatP = getRotMat(m_point + .5*(m_basis*m_scale), m_xbasis, angle);
     Matrix4x4 rotMatB = getRotMat(Vector4::zero(), m_xbasis, angle);
     return Scope(rotMatP * m_point, m_scale, rotMatB *m_basis);
 }
 
 Scope Scope::rotateY(REAL angle){
+    angle *= M_PI / 180.0;
     Matrix4x4 rotMatP = getRotMat(m_point + .5*(m_basis*m_scale), m_ybasis, angle);
     Matrix4x4 rotMatB = getRotMat(Vector4::zero(), m_ybasis, angle);
     return Scope(rotMatP * m_point, m_scale, rotMatB * m_basis);
 }
 
 Scope Scope::rotateZ(REAL angle){
+    angle *= M_PI / 180.0;
     Matrix4x4 rotMatP = getRotMat(m_point + .5*(m_basis*m_scale), m_zbasis, angle);
     Matrix4x4 rotMatB = getRotMat(Vector4::zero(), m_zbasis, angle);
     return Scope(rotMatP * m_point, m_scale, rotMatB * m_basis);
