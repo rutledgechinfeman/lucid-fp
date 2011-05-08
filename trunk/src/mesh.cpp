@@ -30,7 +30,6 @@ Mesh::Mesh(string filename)
     {
         getline(myfile, line);
 
-        // Tokenize line
         tokens.clear();
         StringUtil::split(line, " ", tokens);
         if(tokens.size() == 0) continue;
@@ -54,6 +53,7 @@ Mesh::Mesh(string filename)
         // Parse a face line
         else if(tokens.at(0) == "f")
         {
+            //quads
             if(tokens.size() == 5) {
 
                 // Parse the vertices, of the form "vertex/normal/texture"
@@ -68,6 +68,10 @@ Mesh::Mesh(string filename)
                     }
                     if(face.size() == 1){
                         Vector4 v = Vector4(strtod(face.at(0).c_str(), NULL), 0, 0, 0);
+                        quads.push_back(v);
+                    }
+                    else if(face.size() == 2){
+                        Vector4 v = Vector4(strtod(face.at(0).c_str(), NULL), strtod(face.at(1).c_str(), NULL), 0, 0);
                         quads.push_back(v);
                     }
 
@@ -88,6 +92,10 @@ Mesh::Mesh(string filename)
                     }
                     if(face.size() == 1){
                         Vector4 v = Vector4(strtod(face.at(0).c_str(), NULL), 0, 0, 0);
+                        triangles.push_back(v);
+                    }
+                    else if(face.size() == 2){
+                        Vector4 v = Vector4(strtod(face.at(0).c_str(), NULL), strtod(face.at(1).c_str(), NULL), 0, 0);
                         triangles.push_back(v);
                     }
 
@@ -199,10 +207,10 @@ void Mesh::drawGL()
         glBegin(GL_QUADS);
         for(unsigned int i=0; i<quads.size() / 4; i++){
             MeshVertex *vert1, *vert2, *vert3, *vert4;
-            vert1 = vertices.at(triangles.at(i*3).x -1);
-            vert2 = vertices.at(triangles.at(i*3 + 1).x -1);
-            vert3 = vertices.at(triangles.at(i*3 + 2).x -1);
-            vert4 = vertices.at(triangles.at(i*3 + 3).x -1);
+            vert1 = vertices.at(quads.at(i*4).x -1);
+            vert2 = vertices.at(quads.at(i*4 + 1).x -1);
+            vert3 = vertices.at(quads.at(i*4 + 2).x -1);
+            vert4 = vertices.at(quads.at(i*4 + 3).x -1);
             double3 v1 = vert2->p - vert1->p;
             double3 v2 = vert3->p - vert1->p;
             Vector3 vec1 = Vector3(v1.data);

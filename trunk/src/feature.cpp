@@ -88,6 +88,7 @@ void Feature::setTileTex(bool tileTex)
     m_tileTex = tileTex;
 }
 
+
 void Feature::setTextureID(GLuint i)
 {
     m_textureId = i;
@@ -126,7 +127,7 @@ void Feature::addChild(Feature* f)
     m_children.push_back(f);
 }
 
-void Feature::draw()
+void Feature::draw(QGLShaderProgram* shader)
 {
     glEnable(GL_LIGHTING);
     if(m_children.size()==0){
@@ -159,7 +160,11 @@ void Feature::draw()
                 break;
 
             case MESH:
-                if(m_mesh) { m_mesh->drawGL(); }
+                if(m_mesh) {
+                    shader->bind();
+                    m_mesh->drawGL();
+                    shader->release();
+                }
                 break;
         }
         glPopMatrix();
@@ -169,7 +174,7 @@ void Feature::draw()
     }
     else{
         for(unsigned int i=0; i<m_children.size(); i++){
-            m_children.at(i)->draw();
+            m_children.at(i)->draw(shader);
         }
     }
     glFlush();
