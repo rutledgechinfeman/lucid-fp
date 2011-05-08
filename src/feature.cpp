@@ -12,6 +12,7 @@ Feature::Feature()
     m_active = false;
     m_mesh = NULL;
     m_mass = NULL;
+    m_isTriangle = false;
 }
 
 Feature::Feature(string symbol, string geom, bool isActive, Scope scope, Feature* parent)
@@ -36,6 +37,7 @@ Feature::Feature(string symbol, string geom, bool isActive, Scope scope, Feature
 
     setType(geom);
     m_mass = NULL;
+    m_isTriangle = false;
 }
 
 Feature::~Feature()
@@ -155,12 +157,9 @@ void Feature::draw(QGLShaderProgram* shader)
                 glBindTexture(GL_TEXTURE_2D, m_textureId);
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
                 glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-                glBegin(GL_QUADS);
 
                 if (m_tileTex) { drawTiledSelf();     }
                 else           { drawStretchedSelf(); }
-
-                glEnd();
 
                 glDisable(GL_LIGHTING);
                 glBindTexture(GL_TEXTURE_2D, 0);
@@ -215,8 +214,49 @@ void Feature::drawTiledSelf()
     }
 
 
-    //xy
+    if (m_isTriangle)
+    {
+        glBegin(GL_TRIANGLES);
+        glNormal3f(0.0, 0.0, 1.0);
+
+
+        glTexCoord2f(0.0, 0.0);
+        glVertex3f(0.0, 0.0, 0.0);
+        glTexCoord2f(x, 0.0);
+        glVertex3f(1.0, 0.0, 0.0);
+        glTexCoord2f(.5*x, y);
+        glVertex3f(0.5, 1.0, 0.0);
+
+
+        glTexCoord2f(0.0, 0.0);
+        glVertex3f(0.0, 0.0, 1.0);
+        glTexCoord2f(x, 0.0);
+        glVertex3f(1.0, 0.0, 1.0);
+        glTexCoord2f(.5*x, y);
+        glVertex3f(0.5, 1.0, 1.0);
+
+        glTexCoord2f(0.0, 0.0);
+        glVertex3f(0.0, 0.0, 1.0);
+        glTexCoord2f(x, .5*y);
+        glVertex3f(0.0, 1.0, 0.5);
+        glTexCoord2f(0.0, y);
+        glVertex3f(0.0, 0.0, 0.0);
+
+        glTexCoord2f(0.0, y);
+        glVertex3f(1.0, 0.0, 1.0);
+        glTexCoord2f(0.0, 0.0);
+        glVertex3f(1.0, 0.0, 0.0);
+        glTexCoord2f(x, .5 * y);
+        glVertex3f(1.0, 1.0, 0.5);
+
+        glEnd();
+        return;
+    }
+
+    // Not triangle:
+    glBegin(GL_QUADS);
     glNormal3f(0.0, 0.0, 1.0);
+    //xy
     glTexCoord2f(0.0, 0.0);
     glVertex3f(0.0, 0.0, 0.0);
     glTexCoord2f(0.0, y);
@@ -275,10 +315,52 @@ void Feature::drawTiledSelf()
     glVertex3f(1.0, 1.0, 1.0);
     glTexCoord2f(0.0, y);
     glVertex3f(1.0, 0.0, 1.0);
+    glEnd();
 }
 
 void Feature::drawStretchedSelf()
 {
+
+
+    if (m_isTriangle)
+    {
+        glBegin(GL_TRIANGLES);
+        glNormal3f(0.0, 0.0, 1.0);
+
+
+        glTexCoord2f(0.0, 0.0);
+        glVertex3f(0.0, 0.0, 0.0);
+        glTexCoord2f(1.0, 0.0);
+        glVertex3f(1.0, 0.0, 0.0);
+        glTexCoord2f(.5, 1.0);
+        glVertex3f(0.5, 1.0, 0.0);
+
+
+        glTexCoord2f(0.0, 0.0);
+        glVertex3f(0.0, 0.0, 1.0);
+        glTexCoord2f(1.0, 0.0);
+        glVertex3f(1.0, 0.0, 1.0);
+        glTexCoord2f(.5, 1.0);
+        glVertex3f(0.5, 1.0, 1.0);
+
+        glTexCoord2f(0.0, 0.0);
+        glVertex3f(0.0, 0.0, 1.0);
+        glTexCoord2f(1.0, .5);
+        glVertex3f(0.0, 1.0, 0.5);
+        glTexCoord2f(0.0, 1.0);
+        glVertex3f(0.0, 0.0, 0.0);
+
+        glTexCoord2f(0.0, 1.0);
+        glVertex3f(1.0, 0.0, 1.0);
+        glTexCoord2f(0.0, 0.0);
+        glVertex3f(1.0, 0.0, 0.0);
+        glTexCoord2f(1.0, .5);
+        glVertex3f(1.0, 1.0, 0.5);
+
+        glEnd();
+        return;
+    }
+    glBegin(GL_QUADS);
     glNormal3f(0.0, 0.0, 1.0);
     //xy
     glTexCoord2f(0.0, 0.0);
@@ -339,4 +421,5 @@ void Feature::drawStretchedSelf()
     glVertex3f(1.0, 1.0, 1.0);
     glTexCoord2f(0.0, 1.0);
     glVertex3f(1.0, 0.0, 1.0);
+    glEnd();
 }
