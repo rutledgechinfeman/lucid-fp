@@ -29,11 +29,6 @@ public:
     ~Mesh();
 
     void drawGL();
-    //void drawTriangleIDs();
-    //MeshTriangle *triangles() { return m_triangles; }
-    //MeshVertex *vertices() { return m_vertices; }
-    //int numTriangles() { return m_numtriangles; }
-    //int numVertices() { return m_numvertices; }
 
 
 
@@ -44,10 +39,7 @@ protected:
     vector<Vector4> quads;
     vector<double3> normals;
     vector<double2> texcoords;
-    //MeshVertex *m_vertices;
-    //MeshTriangle *m_triangles;
-    //double *m_texcoords;
-    //int m_numvertices, m_numtriangles;
+    double currMaxX, currMaxY, currMaxZ, currMinX, currMinY, currMinZ;
 };
 
 #endif // MESH_H

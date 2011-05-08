@@ -8,7 +8,17 @@
 #include <QGLShaderProgram>
 using std::vector;
 using namespace std;
+extern "C"{
 
+    extern void APIENTRY glActiveTexture(GLenum);
+
+    extern void APIENTRY glMultiTexCoord3f(GLenum, GLfloat, GLfloat, GLfloat);
+    extern void APIENTRY glMultiTexCoord3i(GLenum, GLint, GLint, GLint);
+
+    extern void APIENTRY glMultiTexCoord4f(GLenum, GLfloat, GLfloat, GLfloat, GLfloat);
+
+}
+extern "C" void glMultiTexCoord3f (GLenum, GLfloat, GLfloat, GLfloat);
 
 Mesh::Mesh(string filename)
 {
@@ -25,7 +35,6 @@ Mesh::Mesh(string filename)
     vector<string> tokens;
     int currVertex = 0;
     int currFace = 0;
-    int currQuadFace = 0;
     while (myfile.good())
     {
         getline(myfile, line);
@@ -45,7 +54,29 @@ Mesh::Mesh(string filename)
             // Make a new vertex for this line
             MeshVertex* vert = new MeshVertex();
             vert->idx = currVertex; // set ID
-            vert->p = double3(strtod(tokens.at(1).c_str(), NULL), strtod(tokens.at(2).c_str(), NULL), strtod(tokens.at(3).c_str(), NULL)); // set coordinates
+            double x, y, z;
+            x = strtod(tokens.at(1).c_str(), NULL);
+            y = strtod(tokens.at(2).c_str(), NULL);
+            z = strtod(tokens.at(3).c_str(), NULL);
+            if(x>currMaxX){
+                currMaxX = x;
+            }
+            if(x<currMinX){
+                currMinX = x;
+            }
+            if(y>currMaxY){
+                currMaxY = y;
+            }
+            if(y<currMinY){
+                currMinY = y;
+            }
+            if(z>currMaxZ){
+                currMaxZ = z;
+            }
+            if(z<currMinZ){
+                currMinZ = z;
+            }
+            vert->p = double3(x,y,z); // set coordinates
             vertices.push_back(vert); // add to the list
             currVertex++;
         }
@@ -127,6 +158,14 @@ Mesh::Mesh(string filename)
         }
 
     }
+
+    Vector3 scaleFac = Vector3(currMaxX - currMinX, currMaxY - currMinY, currMaxZ - currMinZ);
+    for(unsigned int i=0; i<vertices.size(); i++){
+        MeshVertex* m = vertices.at(i);
+        m->p.x = (m->p.x - currMinX)/scaleFac.x;
+        m->p.y = (m->p.y - currMinY)/scaleFac.y;
+        m->p.z = (m->p.z - currMinZ)/scaleFac.z;
+    }
     // Wrap up
     myfile.close();
 
@@ -143,7 +182,7 @@ Mesh::~Mesh()
 void Mesh::drawGL()
 {
 
-    glPushMatrix();
+    //glPushMatrix();
     glFrontFace(GL_CCW);
     if(normals.size() > 0){
         glBegin(GL_TRIANGLES);
@@ -152,11 +191,8 @@ void Mesh::drawGL()
             //for each element on a face we index into normals, vertices, and maybe texture coords
             double3 thisNorm = normals.at(triangles.at(i).z - 1 );
             glNormal3f(thisNorm.x, thisNorm.y, thisNorm.z);
-    /*
-            if(texcoords.size() > 0){
-                double2 thisTexCoord = texcoords.at(triangles.at(i).y -1);
-                glTexCoord2d(thisTexCoord.x, thisTexCoord.y);
-            }*/
+            glMultiTexCoord3f(GL_TEXTURE0, 1.0, 1.0, 1.0);
+
 
             if(vertices.size()>0){
                 MeshVertex* thisVert = vertices.at(triangles.at(i).x -1);
@@ -170,11 +206,7 @@ void Mesh::drawGL()
             //for each element on a face we index into normals, vertices, and maybe texture coords
             double3 thisNorm = normals.at(quads.at(i).z - 1 );
             glNormal3f(thisNorm.x, thisNorm.y, thisNorm.z);
-    /*
-            if(texcoords.size() > 0){
-                double2 thisTexCoord = texcoords.at(triangles.at(i).y -1);
-                glTexCoord2d(thisTexCoord.x, thisTexCoord.y);
-            }*/
+            glMultiTexCoord3f(GL_TEXTURE0, 1.0, 1.0, 1.0);
 
             if(vertices.size()>0){
                 MeshVertex* thisVert = vertices.at(quads.at(i).x -1);
@@ -184,10 +216,11 @@ void Mesh::drawGL()
         glEnd();
     }
     else{
+
+
         glBegin(GL_TRIANGLES);
         for(unsigned int i=0; i < triangles.size()/3; i++)
         {
-
             MeshVertex *vert1, *vert2, *vert3;
             vert1 = vertices.at(triangles.at(i*3).x -1);
             vert2 = vertices.at(triangles.at(i*3 + 1).x -1);
@@ -198,6 +231,8 @@ void Mesh::drawGL()
             Vector3 vec2 = Vector3(v2.data);
             Vector3 normal = vec1.cross(vec2);
             normal.normalize();
+            glMultiTexCoord3f(GL_TEXTURE0, 1.0, 1.0, 1.0);
+
             glNormal3f(normal.x, normal.y, normal.z);
             glVertex3f(vert1->p.x, vert1->p.y, vert1->p.z);
             glVertex3f(vert2->p.x, vert2->p.y, vert2->p.z);
@@ -217,6 +252,8 @@ void Mesh::drawGL()
             Vector3 vec2 = Vector3(v2.data);
             Vector3 normal = vec1.cross(vec2);
             normal.normalize();
+            glMultiTexCoord3f(GL_TEXTURE0, 1.0, 1.0, 1.0);
+
             glNormal3f(normal.x, normal.y, normal.z);
             glVertex3f(vert1->p.x, vert1->p.y, vert1->p.z);
             glVertex3f(vert2->p.x, vert2->p.y, vert2->p.z);
@@ -226,6 +263,7 @@ void Mesh::drawGL()
         glEnd();
     }
 
+    glColor3f(1.0, 1.0, 1.0);
     glFrontFace(GL_CW);
-    glPopMatrix();
+    //glPopMatrix();
 }
