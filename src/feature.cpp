@@ -216,6 +216,7 @@ void Feature::drawTiledSelf()
 
     if (m_isTriangle)
     {
+        cout << "here" << endl;
         glBegin(GL_TRIANGLES);
         glNormal3f(0.0, 0.0, 1.0);
 
