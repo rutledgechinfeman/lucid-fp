@@ -1,5 +1,13 @@
-void main(void){
+varying vec3 N;
+varying vec3 v;
+varying float lightIntensity;
 
-gl_Position = ftransform();
+void main()
+{
+
+	gl_Position = ftransform();
+        normalize(gl_Normal);
+        vec4 lightoff = gl_LightSource[0].position - gl_ModelViewMatrix*gl_Vertex ;
+        lightIntensity = dot(normalize(lightoff),gl_Normal) + 0.5;
 
 }
