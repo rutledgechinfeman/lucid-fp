@@ -1,5 +1,6 @@
 varying vec3 N;
-varying vec3 v;    
+varying vec3 v;
+varying vec4 myColor;
 
 void main (void)  
 {  
@@ -20,5 +21,5 @@ void main (void)
    Ispec = clamp(Ispec, 0.0, 1.0);
 
    // write Total Color:  
-   gl_FragColor = gl_FrontLightModelProduct.sceneColor + Iamb + Idiff + Ispec;
+   gl_FragColor = (gl_FrontLightModelProduct.sceneColor + Iamb + Idiff + Ispec) * myColor;
 }
