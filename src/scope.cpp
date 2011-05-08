@@ -93,24 +93,21 @@ Scope Scope::setScaleComponent(REAL v, int i) {
 
 
 Scope Scope::rotateX(REAL angle){
-    //return Scope(m_point, m_scale, getRotMat(m_point + .5*(m_basis * m_scale), m_xbasis, angle) * m_basis);
-    return Scope(getRotMat(m_point + .5*(m_basis*m_scale), m_xbasis, angle)*m_point, m_scale, getRotMat(m_point + .5*(m_basis*m_scale), m_xbasis, angle)*m_basis);
-    //return Scope(m_point, m_scale, m_basis);
+    Matrix4x4 rotMatP = getRotMat(m_point + .5*(m_basis*m_scale), m_xbasis, angle);
+    Matrix4x4 rotMatB = getRotMat(Vector4::zero(), m_xbasis, angle);
+    return Scope(rotMatP * m_point, m_scale, rotMatB *m_basis);
 }
 
 Scope Scope::rotateY(REAL angle){
-
-    return Scope(getRotMat(m_point + .5*(m_basis*m_scale), m_ybasis, angle)*m_point, m_scale, getRotMat(m_point + .5*(m_basis*m_scale), m_ybasis, angle)*m_basis);
-    //return Scope(m_point, m_scale, m_basis);
-    //return Scope(m_point, m_scale, getRotMat(m_point + .5*(m_basis * m_scale), m_ybasis, angle) * m_basis);
-
+    Matrix4x4 rotMatP = getRotMat(m_point + .5*(m_basis*m_scale), m_ybasis, angle);
+    Matrix4x4 rotMatB = getRotMat(Vector4::zero(), m_ybasis, angle);
+    return Scope(rotMatP * m_point, m_scale, rotMatB * m_basis);
 }
 
 Scope Scope::rotateZ(REAL angle){
-    return Scope(getRotMat(m_point + .5*(m_basis*m_scale), m_zbasis, angle)*m_point, m_scale, getRotMat(m_point + .5*(m_basis*m_scale), m_zbasis, angle)*m_basis);
-    //return Scope(m_point, m_scale, m_basis);
-    //return Scope(m_point, m_scale, getRotMat(m_point + .5*(m_basis * m_scale), m_ybasis, angle) * m_basis);
-
+    Matrix4x4 rotMatP = getRotMat(m_point + .5*(m_basis*m_scale), m_zbasis, angle);
+    Matrix4x4 rotMatB = getRotMat(Vector4::zero(), m_zbasis, angle);
+    return Scope(rotMatP * m_point, m_scale, rotMatB * m_basis);
 }
 
 Scope Scope::copy(){
