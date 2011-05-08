@@ -9,7 +9,7 @@ MassModel::MassModel(int numFaces, string type)
     m_faces = numFaces;
 
     // Pick m_type based on the input string
-    if (m_faces != -1)               { m_type = NGON;         }
+    if      (m_faces > 0)            { m_type = NGON;         }
     else if (type == "Roof.flat")    { m_type = ROOF_FLAT;    }
     else if (type == "Roof.gambrel") { m_type = ROOF_GAMBREL; }
     else if (type == "Roof.cone")    { m_type = ROOF_CONE;    }
@@ -32,7 +32,8 @@ void MassModel::sidefaces(GrammarNode* op, Feature* feat, Factory* fac, Scope sc
 {
     if (m_faces < 3)
     {
-        cerr << "ERROR: Cannot decompose something with less than 3 faces. Has: " << m_faces << endl; return;
+        cerr << "ERROR: Cannot decompose something with less than 3 faces. Has: " << m_faces << endl;
+        return;
     }
 
     // Flatten side faces
@@ -60,5 +61,18 @@ void MassModel::sidefaces(GrammarNode* op, Feature* feat, Factory* fac, Scope sc
 
 void MassModel::topfaces(GrammarNode* op, Feature* feat, Factory* fac, Scope scope)
 {
+    if (m_type == ROOF_FLAT)
+    {
+        scope.printSelf();
+        // Flatten Y scope
+        scope = scope.setScaleComponent(0.0, 1);
+        op->evaluate(feat, *fac, scope);
+    }
+    else if (m_type == ROOF_GAMBREL);
+    else if (m_type == ROOF_CONE);
+    else if (m_type == ROOF_GABLED);
+    else if (m_type == ROOF_HIPPED);
+    else if (m_type == ROOF_MANSARD);
+    else { cerr << "ERROR: Topface composition called but this is not a known roof type." << endl; }
 }
 
