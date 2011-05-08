@@ -136,7 +136,7 @@ void Feature::draw(QGLShaderProgram* shader)
         glPushMatrix();
         if(m_geom_type == MESH){
             Vector4 scope = this->getScope().getScale();
-            this->setScope(this->getScope().setScale(Vector4(scope.x, scope.y, 1.0, scope.w)));
+            this->setScope(this->getScope().setScale(Vector4(scope.x, scope.y, .2, scope.w)));
         }
 
         Matrix4x4 mat = getTransMat(m_scope.getPoint())* m_scope.getBasis() *getScaleMat(m_scope.getScale());

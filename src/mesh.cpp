@@ -170,7 +170,7 @@ Mesh::Mesh(string filename)
         MeshVertex* m = vertices.at(i);
         m->p.x = (m->p.x - currMinX)/scaleFac.x;
         m->p.y = (m->p.y - currMinY)/scaleFac.y;
-        m->p.z = (m->p.z - currMinZ)/scaleFac.z;
+        m->p.z = (currMinZ - m->p.z)/scaleFac.z;
     }
     // Wrap up
     myfile.close();
