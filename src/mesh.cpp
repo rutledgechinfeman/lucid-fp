@@ -137,44 +137,87 @@ void Mesh::drawGL()
 
     glPushMatrix();
     glFrontFace(GL_CCW);
-    glBegin(GL_TRIANGLES);
-    for(unsigned int i=0; i < triangles.size(); i++)
-    {
-        //for each element on a face we index into normals, vertices, and maybe texture coords
-        //double3 thisNorm = normals.at(triangles.at(i).z - 1 );
-        //glNormal3f(thisNorm.x, thisNorm.y, thisNorm.z);
-/*
-        if(texcoords.size() > 0){
-            double2 thisTexCoord = texcoords.at(triangles.at(i).y -1);
-            glTexCoord2d(thisTexCoord.x, thisTexCoord.y);
-        }*/
+    if(normals.size() > 0){
+        glBegin(GL_TRIANGLES);
+        for(unsigned int i=0; i < triangles.size(); i++)
+        {
+            //for each element on a face we index into normals, vertices, and maybe texture coords
+            double3 thisNorm = normals.at(triangles.at(i).z - 1 );
+            glNormal3f(thisNorm.x, thisNorm.y, thisNorm.z);
+    /*
+            if(texcoords.size() > 0){
+                double2 thisTexCoord = texcoords.at(triangles.at(i).y -1);
+                glTexCoord2d(thisTexCoord.x, thisTexCoord.y);
+            }*/
 
-        if(vertices.size()>0){
-            MeshVertex* thisVert = vertices.at(triangles.at(i).x -1);
-            glVertex3f(thisVert->p.x, thisVert->p.y, thisVert->p.z);
+            if(vertices.size()>0){
+                MeshVertex* thisVert = vertices.at(triangles.at(i).x -1);
+                glVertex3f(thisVert->p.x, thisVert->p.y, thisVert->p.z);
+            }
         }
-    }
-    glEnd();
-    glBegin(GL_QUADS);
-    for(unsigned int i=0; i < quads.size(); i++)
-    {
-        //for each element on a face we index into normals, vertices, and maybe texture coords
-        /*if(normals.size() > 0){
+        glEnd();
+        glBegin(GL_QUADS);
+        for(unsigned int i=0; i < quads.size(); i++)
+        {
+            //for each element on a face we index into normals, vertices, and maybe texture coords
             double3 thisNorm = normals.at(quads.at(i).z - 1 );
             glNormal3f(thisNorm.x, thisNorm.y, thisNorm.z);
-        }*/
-/*
-        if(texcoords.size() > 0){
-            double2 thisTexCoord = texcoords.at(triangles.at(i).y -1);
-            glTexCoord2d(thisTexCoord.x, thisTexCoord.y);
-        }*/
+    /*
+            if(texcoords.size() > 0){
+                double2 thisTexCoord = texcoords.at(triangles.at(i).y -1);
+                glTexCoord2d(thisTexCoord.x, thisTexCoord.y);
+            }*/
 
-        if(vertices.size()>0){
-            MeshVertex* thisVert = vertices.at(quads.at(i).x -1);
-            glVertex3f(thisVert->p.x, thisVert->p.y, thisVert->p.z);
+            if(vertices.size()>0){
+                MeshVertex* thisVert = vertices.at(quads.at(i).x -1);
+                glVertex3f(thisVert->p.x, thisVert->p.y, thisVert->p.z);
+            }
         }
+        glEnd();
     }
-    glEnd();
+    else{
+        glBegin(GL_TRIANGLES);
+        for(unsigned int i=0; i < triangles.size()/3; i++)
+        {
+
+            MeshVertex *vert1, *vert2, *vert3;
+            vert1 = vertices.at(triangles.at(i*3).x -1);
+            vert2 = vertices.at(triangles.at(i*3 + 1).x -1);
+            vert3 = vertices.at(triangles.at(i*3 + 2).x -1);
+            double3 v1 = vert2->p - vert1->p;
+            double3 v2 = vert3->p - vert1->p;
+            Vector3 vec1 = Vector3(v1.data);
+            Vector3 vec2 = Vector3(v2.data);
+            Vector3 normal = vec1.cross(vec2);
+            normal.normalize();
+            glNormal3f(normal.x, normal.y, normal.z);
+            glVertex3f(vert1->p.x, vert1->p.y, vert1->p.z);
+            glVertex3f(vert2->p.x, vert2->p.y, vert2->p.z);
+            glVertex3f(vert3->p.x, vert3->p.y, vert3->p.z);
+        }
+        glEnd();
+        glBegin(GL_QUADS);
+        for(unsigned int i=0; i<quads.size() / 4; i++){
+            MeshVertex *vert1, *vert2, *vert3, *vert4;
+            vert1 = vertices.at(triangles.at(i*3).x -1);
+            vert2 = vertices.at(triangles.at(i*3 + 1).x -1);
+            vert3 = vertices.at(triangles.at(i*3 + 2).x -1);
+            vert4 = vertices.at(triangles.at(i*3 + 3).x -1);
+            double3 v1 = vert2->p - vert1->p;
+            double3 v2 = vert3->p - vert1->p;
+            Vector3 vec1 = Vector3(v1.data);
+            Vector3 vec2 = Vector3(v2.data);
+            Vector3 normal = vec1.cross(vec2);
+            normal.normalize();
+            glNormal3f(normal.x, normal.y, normal.z);
+            glVertex3f(vert1->p.x, vert1->p.y, vert1->p.z);
+            glVertex3f(vert2->p.x, vert2->p.y, vert2->p.z);
+            glVertex3f(vert3->p.x, vert3->p.y, vert3->p.z);
+            glVertex3f(vert4->p.x, vert4->p.y, vert4->p.z);
+        }
+        glEnd();
+    }
+
     glFrontFace(GL_CW);
     glPopMatrix();
 }
