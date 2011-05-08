@@ -120,6 +120,12 @@ Scope Scope::copy(){
 
 int Scope::occludes(Scope other) {
 
+    cout << "OCCLUSION TEST:" << endl;
+    cout << "THIS: ";
+    printSelf();
+    cout << "OTHER: ";
+    other.printSelf();
+
     Vector4 corners[8];
     this->findCorners(other, corners);
 
@@ -259,12 +265,10 @@ bool Scope::intersectsPlane(Vector4 a, Vector4 b, Vector4 p1, Vector4 p2, Vector
 
 void Scope::printSelf()
 {
-    cout << "============" << endl;
     cout << "Scope:" << endl;
     cout << "Basis:" << endl << m_basis << endl;
     cout << "Scale:" << endl << m_scale << endl;
     cout << "Point:" << endl << m_point << endl;
-    cout << "============" << endl;
 }
 
 
