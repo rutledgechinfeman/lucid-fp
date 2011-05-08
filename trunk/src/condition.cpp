@@ -1,6 +1,7 @@
 #include "condition.h"
 #include "stringutil.h"
 #include <iostream>
+#include <queue>
 
 using namespace std;
 
@@ -51,8 +52,12 @@ Condition::~Condition()
 
 bool Condition::evaluate(Feature &f)
 {
-    bool output = false;
-    Feature* root;
+    bool output = true;
+    Feature *root, *feat, *parent;
+    queue<Feature*> q;
+    bool parentOccluded, otherOccluded;
+    int occTest;
+
     switch (m_type)
     {
         case EMPTY:
@@ -66,21 +71,59 @@ bool Condition::evaluate(Feature &f)
 
         case OCCLUDED:
 
-            root = &f;
+            root = &f; //get the root of the feature tree
+            parent = f.getParent();
             while (root->getParent() != NULL) {
                 root = root->getParent();
             }
 
-            if (root == NULL) {
-                output = false;
-                cerr << "Unable to find root of feature tree in occlusion test!" << endl;
-                break;
+            occTest = parent->getScope().occludes(f.getScope());
+            cout << "RESULT: " << occTest << endl;
+            if (occTest > 0) {
+
+
+                if (m_param == ALL) {
+                    output = false;
+                }
+
+                parentOccluded = true;
+            }
+
+            if (output) {
+                q.push(root);
+                while (!q.empty()) {
+
+                    feat = q.front();
+                    q.pop();
+
+                    if (feat->getActive() && feat!= &f) {
+
+                        occTest = feat->getScope().occludes(f.getScope());
+                        cout << "RESULT: " << occTest << endl;
+                        if (occTest > 0) {
+
+                            otherOccluded = true;
+                            break;
+                        }
+                    }
+
+                    if (feat != &f && feat != parent) {
+                        for (int i = 0; i < feat->getNumChildren(); i ++) {
+                            q.push(feat->getChild(i));
+                        }
+                    }
+
+                }
             }
 
 
 
+            if (m_param == NOPARENT && (otherOccluded)) {
+                output = false;
+            }
 
 
+            break;
 
 
         default:
