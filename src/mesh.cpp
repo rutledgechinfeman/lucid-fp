@@ -166,8 +166,6 @@ Mesh::Mesh(string filename)
     }
 
     Vector3 scaleFac = Vector3(currMaxX - currMinX, currMaxY - currMinY, currMaxZ - currMinZ);
-    cout << currMaxX << ", " << currMaxY << ", " << currMaxZ << endl;
-    cout << currMinX << ", " << currMinY << ", " << currMinZ << endl;
     for(unsigned int i=0; i<vertices.size(); i++){
         MeshVertex* m = vertices.at(i);
         m->p.x = (m->p.x - currMinX)/scaleFac.x;
