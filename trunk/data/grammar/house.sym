@@ -1,0 +1,20 @@
+A            n
+
+home         n
+garage       n
+gfacades     n
+roof         n   
+facades      n
+groundfloor  n 
+floor        n
+tile         n
+facades2     n
+groundfloor2 n
+sidehome     n
+
+rooftile    t   plane   roof2.jpg       tile
+wall        t   plane   stucco.jpg      tile
+window      t   mesh    window4.obj     stretch
+gdoor       t   mesh    garage.obj      stretch
+door        t   plane   door.png        stretch
+backdoor    t   plane   backdoor.jpg    stretch
