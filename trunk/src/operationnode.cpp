@@ -201,14 +201,13 @@ void OperationNode::parseOp(string line, int index)
     for (unsigned int i = 0; i < targets.size(); i ++)
     {
         target = StringUtil::trim(targets[i]);
-
         if (target.find("(") != string::npos) { m_children.push_back(new OperationNode(target)); }
         else
         {
             if (!isInstanceOf) { m_children.push_back(new Symbol(target)); }
             else
             {
-                m_children.push_back(new Symbol(target, m_stringArg[0]));
+                m_children.push_back(new Symbol(target, m_stringArg[m_stringArg.size()-1]));
                 m_childIndices.insert(index);
                 return;
             }
