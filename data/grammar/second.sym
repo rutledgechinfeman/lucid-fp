@@ -8,8 +8,9 @@ tile2 n
 groundfloor n
 floor n
 wombat n
+entrance n
 roof n
-door t plane entrance.jpg stretch
+door t mesh entrance.obj stretch
 wall t plane lobby.jpg tile
 rooftiles t plane off.jpg tile
 lobby t plane lobby.jpg tile
