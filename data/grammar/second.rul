@@ -1,12 +1,18 @@
-A : NULL ~ S(6,[50,70],8) _ T(0, 0, 2) _ I(4){facades} _ < T(0, Scope.Y, 0) _ S(Scope.X, 2, Scope.Z) _ I(Roof.flat){roof} > _ < S(6, 2, 2) _ T(0, 0, -Scope.Z) _ I(4){facades2} _ < T(0, Scope.Y, 0) _ S(Scope.X, 2, Scope.Z) _ I(Roof.flat){roof} > > : 1.0
+A : NULL ~ S([10,39,10], 6, 16) _ I(4){facades2} _ T(0, Scope.Y, 0) _ I(Roof.flat){ roof } _ T(0, 0, Scope.Z) _ scrapers : 1.0
+scrapers : NULL ~ Repeat(X, 10){ scraper } : 1.0
+scraper : NULL ~ S(Scope.X, [10,70], [4,8]) _ T(0, 0, -Scope.Z) _ I(4){ facades } _ < T(0, Scope.Y, 0) _ I(Roof.flat){roof} > _ bulk : 1.0
+bulk : NULL ~ S(Scope.X, [10,70], [4,8]) _ T(0, 0, -Scope.Z) _ I(4){ facades} _ T(0, Scope.Y, 0) _ I(Roof.flat){ roof } : 0.5 ~ T(0, 0, 0) : 0.5
+
 facades : NULL ~ Comp(sidefaces){facade} : 1.0
-facade : NULL ~ Repeat(Y, 1){floor} : 1.0
-facades2 : NULL ~ Comp(sidefaces){facade2} : 1.0
-facade2 : NULL ~ Subdiv(Y, 2, 1r){ groundfloor | Repeat(Y, 2){floor2} } : 1.0
-groundfloor : Shape.visible(street)=full ~ T(0, 0, 1.5) _ entrance : 1.0
-entrance : NULL ~ Subdiv(X, 1r, 1r, 1r){ door | door | door } : 1.0
-groundfloor : NULL ~ Repeat(X, 2){tile} : 1.0
-floor : NULL ~ Repeat(X, 1){tile} : 1.0
+facade : NULL ~ Repeat(Y, 3){floor} : 1.0
+facades2 : NULL ~ Comp(sidefaces){groundfloor} : 1.0
+groundfloor : Shape.visible(street)=full ~ T(0, 0, 1.5) _ entrances : 1.0
+entrances : NULL ~ Repeat(X, 10){ entrance } : 1.0
+entrance : NULL ~ Subdiv(X, 2, 1r, 1r, 1r, 2){ flank | dtile | dtile | dtile | flank } : 1.0
+dtile : NULL ~ Subdiv(Y, 3, 1r) { door | flank } : 1.0
+flank : NULL ~ T(0, 0, -1.5) _ on5 : 1.0
+groundfloor : NULL ~ Repeat(X, 2){on5} : 1.0
+floor : NULL ~ Repeat(X, 2){tile} : 1.0
 floor2 : NULL ~ Repeat(X, 1){tile2} : 1.0
 tile : NULL ~ on1 : 0.11 ~ on2 : 0.11 ~ on3 : 0.11 ~ on4 : .11 ~ on5 : .11  ~ on6 : .11  ~ on7 : .11  ~ on8 : .11  ~ on9 : .12
 tile2 : NULL ~ lobby : 1.0
