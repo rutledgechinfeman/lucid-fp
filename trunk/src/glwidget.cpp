@@ -5,6 +5,7 @@
 #include <iostream>
 #include <CS123Algebra.h>
 #include "mainwindow.h"
+#include <string>
 using std::cerr;
 using std::cout;
 using std::endl;
@@ -31,11 +32,16 @@ GLWidget::~GLWidget()
   // Delete anything you have created
 }
 
-void GLWidget::setRoot(Feature* root)
+void GLWidget::setRoot(Feature* root, string s)
 {
     m_root = root; // TODO, delete the old one?
-
-    scenery = new Scenery();
+    int f = s.find("second");
+    if(f < s.length()){
+        scenery = new Scenery("night");
+    }
+    else{
+        scenery = new Scenery("day");
+    }
 }
 
 QSize GLWidget::minimumSizeHint() const

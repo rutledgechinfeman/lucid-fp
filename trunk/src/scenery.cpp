@@ -23,13 +23,16 @@ extern "C"{
 }
 
 
-Scenery::Scenery()
+Scenery::Scenery(string type)
 {
+    m_type = type;
+
     fExtent = 50.f;
     glEnable(GL_TEXTURE_2D);
     glFrontFace(GL_CW);
     loadtextures();
 }
+
 
 Scenery::~Scenery() { }
 
@@ -38,12 +41,23 @@ void Scenery::loadtextures(){
     // TODO: this needs to be cleaned up (don't need to new all these files, etc)
 
     QList<QFile *> fileList;
-    fileList.append(new QFile("../data/skybox/brightday1_positive_x.png"));
-    fileList.append(new QFile("../data/skybox/brightday1_negative_x.png"));
-    fileList.append(new QFile("../data/skybox/brightday1_positive_y.png"));
-    fileList.append(new QFile("../data/skybox/brightday1_negative_y.png"));
-    fileList.append(new QFile("../data/skybox/brightday1_positive_z.png"));
-    fileList.append(new QFile("../data/skybox/brightday1_negative_z.png"));
+    if(m_type == "night"){
+        fileList.append(new QFile("../data/skybox/city/city_right.jpg"));
+        fileList.append(new QFile("../data/skybox/city/city_left.jpg"));
+        fileList.append(new QFile("../data/skybox/city/city_top.jpg"));
+        fileList.append(new QFile("../data/skybox/city/city_bottom.jpg"));
+        fileList.append(new QFile("../data/skybox/city/city_front.jpg"));
+        fileList.append(new QFile("../data/skybox/city/city_back.jpg"));
+    }
+
+    else{
+        fileList.append(new QFile("../data/skybox/brightday1_positive_x.png"));
+        fileList.append(new QFile("../data/skybox/brightday1_negative_x.png"));
+        fileList.append(new QFile("../data/skybox/brightday1_positive_y.png"));
+        fileList.append(new QFile("../data/skybox/brightday1_negative_y.png"));
+        fileList.append(new QFile("../data/skybox/brightday1_positive_z.png"));
+        fileList.append(new QFile("../data/skybox/brightday1_negative_z.png"));
+    }
 
     textures_["cube_map_1"] = load_cube_map(fileList);
 

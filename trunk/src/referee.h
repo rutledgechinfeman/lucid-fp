@@ -19,11 +19,11 @@ public:
     Feature* restart(string file);
     Feature* restart();
     Feature* refresh();
+    string getString(){ return m_file; }
 
 private:
     void init();
     void cleanup();
-
     string m_file;
     Parser* m_parser;
     Grammar* m_grammar;

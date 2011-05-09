@@ -29,7 +29,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::setRoot(Feature* root){
 
-    ui->glWidget->setRoot(root);
+    ui->glWidget->setRoot(root, m_ref->getString());
     delete m_root;
     m_root = root;
 }
