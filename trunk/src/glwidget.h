@@ -7,6 +7,7 @@
 #include "feature.h"
 #include "scenery.h"
 #include <QGLShaderProgram>
+#include "floorplanner.h"
 class QTimer;
 
 
@@ -47,6 +48,12 @@ public:
    void mouseReleaseEvent(QMouseEvent *event);
    Scenery* scenery;
    QGLShaderProgram* shader;
+
+   FloorPlanner* m_planner;
+
+   void setPlanner(FloorPlanner* planner) { m_planner = planner; }
+
+   void parallelCamera(int width, int height);
 
 // Not really C++ but these are the handler functions
 // for the events

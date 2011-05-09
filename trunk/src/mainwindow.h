@@ -5,6 +5,8 @@
 #include "feature.h"
 #include "referee.h"
 #include <QKeyEvent>
+#include "floorplanner.h"
+
 class GLWidget;
 
 namespace Ui {
@@ -28,6 +30,7 @@ private:
 
     Referee* m_ref;
     Feature* m_root;
+    FloorPlanner* m_planner;
 };
 
 #endif // MAINWINDOW_H

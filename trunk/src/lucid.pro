@@ -33,7 +33,8 @@ SOURCES += main.cpp\
     scope.cpp \
     operationnode.cpp \
     scenery.cpp \
-    massmodel.cpp
+    massmodel.cpp \
+    floorplanner.cpp
 
 HEADERS  += mainwindow.h \
     glwidget.h \
@@ -59,7 +60,8 @@ HEADERS  += mainwindow.h \
     CS123Common.h \
     operationnode.h \
     scenery.h \
-    massmodel.h
+    massmodel.h \
+    floorplanner.h
 
 
 FORMS    += mainwindow.ui
