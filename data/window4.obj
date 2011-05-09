@@ -1,6 +1,7 @@
 # Blender v2.57 (sub 0) OBJ File: ''
 # www.blender.org
 mtllib window3.mtl
+color .6 .6 .6
 o Mesh_ID2
 v 3.937008 64.960625 -1.968507
 v 3.149606 5.905512 -1.968504
