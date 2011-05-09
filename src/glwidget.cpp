@@ -20,6 +20,8 @@ GLWidget::GLWidget(QWidget *parent)
     m_root = NULL;
     this->setDefaultCamera();
 
+    m_planner = NULL;
+
 }
 
 GLWidget::~GLWidget()
@@ -59,6 +61,16 @@ void GLWidget::perspectiveCamera(int width, int height) {
               m_camera.up.x,m_camera.up.y,m_camera.up.z);
 }
 
+void GLWidget::parallelCamera(int width, int height) {
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(0,static_cast<float>(width),static_cast<float>(height),0.f,-1.f,1.f);
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+}
+
 void GLWidget::initializeGL()
 {
     this->setDefaultCamera();
@@ -91,15 +103,26 @@ void GLWidget::paintGL()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    this->perspectiveCamera(this->width(), this->height());
 
+    if (m_planner == NULL) {
 
-    if(true){
+        this->perspectiveCamera(this->width(), this->height());
 
-       scenery->draw();
+        if(true){
+
+           scenery->draw();
+        }
+
+        if( m_root) { m_root->draw(shader); }
+
     }
+    else {
 
-    if( m_root) { m_root->draw(shader); }
+        this->parallelCamera(1, 1);
+
+        m_planner->drawSelf();
+
+    }
 
 }
 
