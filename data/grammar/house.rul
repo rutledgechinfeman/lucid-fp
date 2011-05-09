@@ -1,0 +1,26 @@
+# TODO: Add balcony
+
+A : NULL ~ S([6,11], [6,11,3], 9) _ I(4){ home } _ < T(0, Scope.Y, 0) _ S(Scope.X, 1, Scope.Z) _ I(Roof.gabled){ roof } > _ < T(Scope.X, 0, 3) _ S([6,9], 3, 6) _ I(4){ sidehome } _ < T(0, Scope.Y, 0) _ S(Scope.X, 1, Scope.Z) _ I(Roof.gabled){ roof} > > _ S([3,9],3,3) _ T(-Scope.X, 0, 8) _ T([-3,0], 0, 0) _ I(4){ garage } _ < T(0, Scope.Y, 0) _ I(Roof.flat){ roof } > : 1.0
+
+home        : NULL ~ Comp(sidefaces){ facades } : 1.0
+sidehome    : NULL ~ Comp(sidefaces){ facades2 } : 1.0
+facades     : NULL ~ Subdiv(Y, 3, 1r){ groundfloor | Repeat(Y, 3){ floor } } : 1.0
+facades2    : NULL ~ Subdiv(Y, 3, 1r){ groundfloor2 | Repeat(Y, 3){ floor } } : 1.0
+groundfloor : Shape.visible(street)=full ~ Subdiv(X, 2, 1r){ Subdiv(X, 1r, 3r, 1r){wall | Subdiv(Y, 1r, 0.3){ door | wall } | wall } | Repeat(X, 2){ tile } } : 0.3 ~ Subdiv(X, 1r, 2){ Repeat(X, 2){ tile } | Subdiv(X, 1r, 3r, 1r){wall | Subdiv(Y, 1r, 0.3){ door | wall } | wall } } : 0.3 ~ Subdiv(X, 1r, 2, 1r){ Repeat(X, 2){ tile } | Subdiv(X, 1r, 3r, 1r){wall | Subdiv(Y, 1r, 0.3){ door | wall } | wall } | Repeat(X, 2){ tile } } : 0.4
+groundfloor : NULL ~ Repeat(X, 2){tile} : 1.0
+
+groundfloor2 : Shape.visible(street)=full ~ Subdiv(X, 1r, 2){ Repeat(X, 2){ tile } | Subdiv(X, 1r, 2r, 1r){wall | Subdiv(Y, 1r, 0.3){ backdoor | wall } | wall } } : 1.0
+groundfloor2 : NULL ~ Repeat(X, 2){tile} : 1.0
+
+floor : NULL ~ Repeat(X, 4){tile} : 1.0
+
+tile : NULL ~ Subdiv(X, 1r, 1.5r, 1r){wall | Subdiv(Y, 1r, 2r, 0.5r){wall | window | wall} | wall} : 1.0
+
+
+
+garage : NULL ~ Comp(sidefaces){ gfacades } : 1.0
+gfacades : NULL ~ wall : 1.0
+
+
+
+roof : NULL ~ Comp(sidefaces){ wall } _ Comp(topfaces){ rooftile } : 1.0
