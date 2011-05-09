@@ -1,6 +1,5 @@
 varying vec3 N;
 varying vec3 v;
-varying vec4 myColor;
 
 void main (void)  
 {  
