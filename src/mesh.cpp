@@ -39,8 +39,6 @@ Mesh::Mesh(string filename)
     // Iterate over each line in the file
     string line;
     vector<string> tokens;
-    int currVertex = 0;
-    int currFace = 0;
     while (myfile.good())
     {
         getline(myfile, line);
@@ -59,7 +57,6 @@ Mesh::Mesh(string filename)
 
             // Make a new vertex for this line
             MeshVertex* vert = new MeshVertex();
-            vert->idx = currVertex; // set ID
             double x, y, z;
             x = strtod(tokens.at(1).c_str(), NULL);
             y = strtod(tokens.at(2).c_str(), NULL);
@@ -84,7 +81,6 @@ Mesh::Mesh(string filename)
             }
             vert->p = double3(x,y,z); // set coordinates
             vertices.push_back(vert); // add to the list
-            currVertex++;
         }
 
         // Parse a face line
@@ -113,7 +109,6 @@ Mesh::Mesh(string filename)
                     }
 
                 }
-                currFace++;
             }
 
             else{
@@ -137,7 +132,6 @@ Mesh::Mesh(string filename)
                     }
 
                 }
-                currFace++;
             }
         }
         // Parse a vertex normal line
@@ -170,7 +164,7 @@ Mesh::Mesh(string filename)
         MeshVertex* m = vertices.at(i);
         m->p.x = (m->p.x - currMinX)/scaleFac.x;
         m->p.y = (m->p.y - currMinY)/scaleFac.y;
-        m->p.z = (currMinZ - m->p.z)/scaleFac.z;
+        m->p.z = (m->p.z - currMinZ)/scaleFac.z;
     }
     // Wrap up
     myfile.close();
