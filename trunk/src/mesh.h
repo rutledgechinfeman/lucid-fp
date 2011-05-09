@@ -6,6 +6,8 @@
 #include "common.h"
 #include <string>
 #include "CS123Algebra.h"
+#include <map>
+#include <qgl.h>
 using std::vector;
 using namespace std;
 
@@ -39,7 +41,8 @@ protected:
     vector<Vector4> quads;
     vector<double3> normals;
     vector<double2> texcoords;
-    double currMaxX, currMaxY, currMaxZ, currMinX, currMinY, currMinZ;
+    map<string, GLuint> m_texMap;
+    Vector3 myColor;
 };
 
 #endif // MESH_H

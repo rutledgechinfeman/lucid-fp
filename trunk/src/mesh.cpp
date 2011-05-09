@@ -6,6 +6,7 @@
 #include <qgl.h>
 #include <stringutil.h>
 #include <QGLShaderProgram>
+
 using std::vector;
 using namespace std;
 extern "C"{
@@ -22,13 +23,15 @@ extern "C" void glMultiTexCoord3f (GLenum, GLfloat, GLfloat, GLfloat);
 
 Mesh::Mesh(string filename)
 {
-    currMinX = 0;
-    currMaxX = 0;
-    currMinY = 0;
-    currMaxY = 0;
-    currMinZ = 0;
-    currMaxZ = 0;
+    double currMinX = 0;
+    double currMaxX = 0;
+    double currMinY = 0;
+    double currMaxY = 0;
+    double currMinZ = 0;
+    double currMaxZ = 0;
+
     ifstream myfile(filename.c_str());
+    cout << filename.c_str() << endl;
     if(!myfile.is_open() || !myfile.good())
     {
         cerr << "ERROR: Could not open mesh file: " << filename << endl;
@@ -39,6 +42,8 @@ Mesh::Mesh(string filename)
     // Iterate over each line in the file
     string line;
     vector<string> tokens;
+    GLuint currInt = -1;
+    myColor = Vector3(1.0, 1.0, 1.0);
     while (myfile.good())
     {
         getline(myfile, line);
@@ -47,8 +52,9 @@ Mesh::Mesh(string filename)
         StringUtil::split(line, " ", tokens);
         if(tokens.size() == 0) continue;
 
-        // Skip over commented lines
-        if(tokens.at(0) == "#") { continue; }
+        if(tokens.at(0) == "color"){
+            myColor = Vector3(strtod(tokens.at(1).c_str(), NULL), strtod(tokens.at(2).c_str(), NULL), strtod(tokens.at(3).c_str(), NULL));
+        }
 
         // Parse a vertex line
         if(tokens.at(0) == "v")
@@ -96,15 +102,15 @@ Mesh::Mesh(string filename)
                     face.clear();
                     StringUtil::split(tokens.at(i), "/", face, true);
                     if(face.size() == 3){
-                        Vector4 v = Vector4(strtod(face.at(0).c_str(), NULL), strtod(face.at(1).c_str(), NULL), strtod(face.at(2).c_str(), NULL), 0);
+                        Vector4 v = Vector4(strtod(face.at(0).c_str(), NULL), strtod(face.at(1).c_str(), NULL), strtod(face.at(2).c_str(), NULL), currInt);
                         quads.push_back(v);
                     }
                     if(face.size() == 1){
-                        Vector4 v = Vector4(strtod(face.at(0).c_str(), NULL), 0, 0, 0);
+                        Vector4 v = Vector4(strtod(face.at(0).c_str(), NULL), 0, 0, currInt);
                         quads.push_back(v);
                     }
                     else if(face.size() == 2){
-                        Vector4 v = Vector4(strtod(face.at(0).c_str(), NULL), strtod(face.at(1).c_str(), NULL), 0, 0);
+                        Vector4 v = Vector4(strtod(face.at(0).c_str(), NULL), strtod(face.at(1).c_str(), NULL), 0, currInt);
                         quads.push_back(v);
                     }
 
@@ -119,15 +125,15 @@ Mesh::Mesh(string filename)
                     face.clear();
                     StringUtil::split(tokens.at(i), "/", face, true);
                     if(face.size() == 3){
-                        Vector4 v = Vector4(strtod(face.at(0).c_str(), NULL), strtod(face.at(1).c_str(), NULL), strtod(face.at(2).c_str(), NULL), 0);
+                        Vector4 v = Vector4(strtod(face.at(0).c_str(), NULL), strtod(face.at(1).c_str(), NULL), strtod(face.at(2).c_str(), NULL), currInt);
                         triangles.push_back(v);
                     }
                     if(face.size() == 1){
-                        Vector4 v = Vector4(strtod(face.at(0).c_str(), NULL), 0, 0, 0);
+                        Vector4 v = Vector4(strtod(face.at(0).c_str(), NULL), 0, 0, currInt);
                         triangles.push_back(v);
                     }
                     else if(face.size() == 2){
-                        Vector4 v = Vector4(strtod(face.at(0).c_str(), NULL), strtod(face.at(1).c_str(), NULL), 0, 0);
+                        Vector4 v = Vector4(strtod(face.at(0).c_str(), NULL), strtod(face.at(1).c_str(), NULL), 0, currInt);
                         triangles.push_back(v);
                     }
 
@@ -181,7 +187,7 @@ Mesh::~Mesh()
 
 void Mesh::drawGL()
 {
-
+    glColor3f(myColor.x, myColor.y, myColor.z);
     glPushMatrix();
     if(normals.size() > 0){
         glBegin(GL_TRIANGLES);
@@ -190,8 +196,6 @@ void Mesh::drawGL()
             //for each element on a face we index into normals, vertices, and maybe texture coords
             double3 thisNorm = normals.at(triangles.at(i).z - 1 );
             glNormal3f(thisNorm.x, thisNorm.y, thisNorm.z);
-            glMultiTexCoord3f(GL_TEXTURE0, 1.0, 1.0, 1.0);
-
 
             if(vertices.size()>0){
                 MeshVertex* thisVert = vertices.at(triangles.at(i).x -1);
@@ -205,7 +209,6 @@ void Mesh::drawGL()
             //for each element on a face we index into normals, vertices, and maybe texture coords
             double3 thisNorm = normals.at(quads.at(i).z - 1 );
             glNormal3f(thisNorm.x, thisNorm.y, thisNorm.z);
-            glMultiTexCoord3f(GL_TEXTURE0, 1.0, 1.0, 1.0);
 
             if(vertices.size()>0){
                 MeshVertex* thisVert = vertices.at(quads.at(i).x -1);
@@ -230,7 +233,6 @@ void Mesh::drawGL()
             Vector3 vec2 = Vector3(v2.data);
             Vector3 normal = vec2.cross(vec1);
             normal.normalize();
-            glMultiTexCoord3f(GL_TEXTURE0, 1.0, 1.0, 1.0);
 
             glNormal3f(normal.x, normal.y, normal.z);
             glVertex3f(vert1->p.x, vert1->p.y, vert1->p.z);
@@ -251,8 +253,6 @@ void Mesh::drawGL()
             Vector3 vec2 = Vector3(v2.data);
             Vector3 normal = vec2.cross(vec1);
             normal.normalize();
-            glMultiTexCoord3f(GL_TEXTURE0, 1.0, 1.0, 1.0);
-
             glNormal3f(normal.x, normal.y, normal.z);
             glVertex3f(vert1->p.x, vert1->p.y, vert1->p.z);
             glVertex3f(vert2->p.x, vert2->p.y, vert2->p.z);
