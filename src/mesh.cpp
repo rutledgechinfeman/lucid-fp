@@ -32,7 +32,6 @@ Mesh::Mesh(string filename)
     m_z = .2;
 
     ifstream myfile(filename.c_str());
-    cout << filename.c_str() << endl;
     if(!myfile.is_open() || !myfile.good())
     {
         cerr << "ERROR: Could not open mesh file: " << filename << endl;
