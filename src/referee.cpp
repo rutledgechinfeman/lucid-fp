@@ -24,6 +24,15 @@ Feature* Referee::restart()
     return m_contractor->build(m_grammar, m_fac);
 }
 
+Feature* Referee::restart(string file)
+{
+    cleanup();
+    init();
+
+    m_parser->parseFile(file, *m_grammar, *m_fac);
+    return m_contractor->build(m_grammar, m_fac);
+}
+
 Feature* Referee::refresh()
 {
     if (m_parser == NULL && m_grammar == NULL && m_fac == NULL && m_contractor == NULL)

@@ -59,4 +59,19 @@ void MainWindow::keyPressEvent(QKeyEvent* event){
         ui->glWidget->setPlanner(NULL);
     }
 
+    if (event->key() == Qt::Key_F12){
+        this->setRoot(m_ref->restart("../data/grammar/nd.gmr"));
+    }
+
+    if (event->key() == Qt::Key_F11){
+        this->setRoot(m_ref->restart("../data/grammar/second.gmr"));
+    }
+
+    if (event->key() == Qt::Key_F10){
+        this->setRoot(m_ref->restart("../data/grammar/first.gmr"));
+    }
+    if (event->key() == Qt::Key_F9){
+        this->setRoot(m_ref->restart("../data/grammar/house.gmr"));
+    }
+
 }
