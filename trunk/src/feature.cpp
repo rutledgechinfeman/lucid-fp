@@ -138,7 +138,7 @@ void Feature::draw(QGLShaderProgram* shader)
         glPushMatrix();
         if(m_geom_type == MESH){
             Vector4 scope = this->getScope().getScale();
-            this->setScope(this->getScope().setScale(Vector4(scope.x, scope.y, .2, scope.w)));
+            this->setScope(this->getScope().setScale(Vector4(scope.x, scope.y, m_mesh->m_z, scope.w)));
         }
 
         Matrix4x4 mat = getTransMat(m_scope.getPoint())* m_scope.getBasis() *getScaleMat(m_scope.getScale());
@@ -222,10 +222,10 @@ void Feature::drawTiledSelf()
 
         glTexCoord2f(0.0, 0.0);
         glVertex3f(0.0, 0.0, 0.0);
-        glTexCoord2f(x, 0.0);
-        glVertex3f(1.0, 0.0, 0.0);
         glTexCoord2f(.5*x, y);
         glVertex3f(0.5, 1.0, 0.0);
+        glTexCoord2f(x, 0.0);
+        glVertex3f(1.0, 0.0, 0.0);
 
 
         glTexCoord2f(0.0, 0.0);
@@ -237,10 +237,10 @@ void Feature::drawTiledSelf()
 
         glTexCoord2f(0.0, 0.0);
         glVertex3f(0.0, 0.0, 1.0);
-        glTexCoord2f(x, .5*y);
-        glVertex3f(0.0, 1.0, 0.5);
         glTexCoord2f(0.0, y);
         glVertex3f(0.0, 0.0, 0.0);
+        glTexCoord2f(x, .5*y);
+        glVertex3f(0.0, 1.0, 0.5);
 
         glTexCoord2f(0.0, y);
         glVertex3f(1.0, 0.0, 1.0);

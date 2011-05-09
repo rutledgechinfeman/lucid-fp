@@ -29,6 +29,7 @@ Mesh::Mesh(string filename)
     double currMaxY = 0;
     double currMinZ = 0;
     double currMaxZ = 0;
+    m_z = .2;
 
     ifstream myfile(filename.c_str());
     cout << filename.c_str() << endl;
@@ -54,6 +55,11 @@ Mesh::Mesh(string filename)
 
         if(tokens.at(0) == "color"){
             myColor = Vector3(strtod(tokens.at(1).c_str(), NULL), strtod(tokens.at(2).c_str(), NULL), strtod(tokens.at(3).c_str(), NULL));
+        }
+
+
+        if(tokens.at(0) == "z"){
+            m_z = strtod(tokens.at(1).c_str(), NULL);
         }
 
         // Parse a vertex line

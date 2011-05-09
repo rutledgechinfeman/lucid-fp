@@ -13,8 +13,8 @@ groundfloor2 n
 sidehome     n
 garagetiles  n
 
-rooftile    t   plane   roof2.jpg       tile
-wall        t   plane   stucco.jpg      tile
+rooftile    t   plane   slats.jpg       tile
+wall        t   plane   brick.jpg      tile
 window      t   mesh    window4.obj     stretch
 gdoor       t   mesh    garage.obj      stretch
 door        t   plane   door.png        stretch

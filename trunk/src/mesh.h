@@ -32,6 +32,8 @@ public:
 
     void drawGL();
 
+    float m_z;
+
 
 
 

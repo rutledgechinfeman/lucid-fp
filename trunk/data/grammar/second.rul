@@ -7,7 +7,8 @@ facades : NULL ~ Comp(sidefaces){facade} : 1.0
 facade : NULL ~ Repeat(Y, 1){floor} : 1.0
 facades2 : NULL ~ Comp(sidefaces){facade2} : 1.0
 facade2 : NULL ~ Subdiv(Y, 2, 1r){ groundfloor | Repeat(Y, 2){floor2} } : 1.0
-groundfloor : Shape.visible(street)=full ~ Subdiv(X, 1r){ door } : 1.0
+groundfloor : Shape.visible(street)=full ~ T(0, 0, 1.5) _ entrance : 1.0
+entrance : NULL ~ Subdiv(X, 1r, 1r, 1r){ door | door | door } : 1.0
 groundfloor : NULL ~ Repeat(X, 2){tile} : 1.0
 floor : NULL ~ Repeat(X, 1){tile} : 1.0
 floor2 : NULL ~ Repeat(X, 1){tile2} : 1.0
