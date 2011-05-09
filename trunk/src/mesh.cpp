@@ -164,7 +164,7 @@ Mesh::Mesh(string filename)
         MeshVertex* m = vertices.at(i);
         m->p.x = (m->p.x - currMinX)/scaleFac.x;
         m->p.y = (m->p.y - currMinY)/scaleFac.y;
-        m->p.z = (m->p.z - currMinZ)/scaleFac.z;
+        m->p.z = (currMinZ - m->p.z)/scaleFac.z;
     }
     // Wrap up
     myfile.close();
@@ -183,7 +183,6 @@ void Mesh::drawGL()
 {
 
     glPushMatrix();
-    glFrontFace(GL_CCW);
     if(normals.size() > 0){
         glBegin(GL_TRIANGLES);
         for(unsigned int i=0; i < triangles.size(); i++)
@@ -229,7 +228,7 @@ void Mesh::drawGL()
             double3 v2 = vert3->p - vert1->p;
             Vector3 vec1 = Vector3(v1.data);
             Vector3 vec2 = Vector3(v2.data);
-            Vector3 normal = vec1.cross(vec2);
+            Vector3 normal = vec2.cross(vec1);
             normal.normalize();
             glMultiTexCoord3f(GL_TEXTURE0, 1.0, 1.0, 1.0);
 
@@ -250,7 +249,7 @@ void Mesh::drawGL()
             double3 v2 = vert3->p - vert1->p;
             Vector3 vec1 = Vector3(v1.data);
             Vector3 vec2 = Vector3(v2.data);
-            Vector3 normal = vec1.cross(vec2);
+            Vector3 normal = vec2.cross(vec1);
             normal.normalize();
             glMultiTexCoord3f(GL_TEXTURE0, 1.0, 1.0, 1.0);
 
@@ -264,6 +263,5 @@ void Mesh::drawGL()
     }
 
     glColor3f(1.0, 1.0, 1.0);
-    glFrontFace(GL_CW);
     glPopMatrix();
 }
