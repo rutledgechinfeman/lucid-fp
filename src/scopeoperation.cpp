@@ -31,29 +31,35 @@ ScopeOperation::ScopeOperation(string arg)
         // Random interval
         if (params[i].find("[") != string::npos)
         {
+            params[i] = StringUtil::trim(params[i]);
             vector<string> randParams;
             StringUtil::split(params[i].substr(1, params[i].size() - 2), ",", randParams);
-            data[i] = OpVal(strtod(randParams[0].c_str(), NULL), strtod(randParams[1].c_str(), NULL));
+            m_data[i] = OpVal(strtod(randParams[0].c_str(), NULL), strtod(randParams[1].c_str(), NULL));
+
+            if (randParams.size() > 2)
+            {
+                m_data[i].modulus = strtod(randParams[2].c_str(), NULL);
+            }
         }
 
         // Relative value
         else if (params[i].find("Scope") != string::npos)
         {
             bool neg = (params[i].find("-") != string::npos);
-            if      (params[i].find("X") != string::npos) { data[i] = OpVal(X, neg); }
-            else if (params[i].find("Y") != string::npos) { data[i] = OpVal(Y, neg); }
-            else if (params[i].find("Z") != string::npos) { data[i] = OpVal(Z, neg); }
+            if      (params[i].find("X") != string::npos) { m_data[i] = OpVal(X, neg); }
+            else if (params[i].find("Y") != string::npos) { m_data[i] = OpVal(Y, neg); }
+            else if (params[i].find("Z") != string::npos) { m_data[i] = OpVal(Z, neg); }
             else
             {
                 cerr << "ERROR: Received relative Scope input for a scope operation, but no valid dimension is present, defaulting to X: " << params[i] << endl;
-                data[i] = OpVal(X);
+                m_data[i] = OpVal(X);
             }
         }
 
         // Normal single number param
         else
         {
-            data[i] = OpVal(strtod(params[i].c_str(), NULL));
+            m_data[i] = OpVal(strtod(params[i].c_str(), NULL));
         }
     }
 }
@@ -65,9 +71,9 @@ Scope ScopeOperation::evaluate(Scope &in)
     Scope toReturn = in.copy();
 
     Vector4 rando;
-    rando.x = data[X].getValue(toReturn);
-    rando.y = data[Y].getValue(toReturn);
-    rando.z = data[Z].getValue(toReturn);
+    rando.x = m_data[X].getValue(toReturn);
+    rando.y = m_data[Y].getValue(toReturn);
+    rando.z = m_data[Z].getValue(toReturn);
     rando.w = 1.0;
 
     // Edit the scope of the input feature according to this operation type

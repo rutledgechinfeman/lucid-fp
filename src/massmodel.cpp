@@ -32,9 +32,6 @@ void MassModel::sidefaces(GrammarNode* op, Feature* feat, Factory* fac, Scope sc
 {
     if (m_faces == 4 && m_type == NGON)
     {
-        // Flatten side faces
-        scope = scope.setScaleComponent(0.0, 2);
-
         for (int i = 0 ; i < m_faces ; ++i)
         {
             // TODO; figure out a way to subdivide a rectangle into an ngon nicely
@@ -47,32 +44,26 @@ void MassModel::sidefaces(GrammarNode* op, Feature* feat, Factory* fac, Scope sc
 
             // Swap X and Z basis
             Vector4 temp = scope.getBasisComponent(0);
-            scope = scope.setBasisComponent(0, scope.getBasisComponent(2));
-            scope = scope.setBasisComponent(2, temp);
+            scope = scope.setBasisComponent(0, scope.getBasisComponent(2)).setBasisComponent(2, temp);
+            double temp2 = scope.getScale().x;
+            scope = scope.setScaleComponent(scope.getScale().z, 0).setScaleComponent(temp2, 2);
 
             // Evaluate
-            op->evaluate(feat, *fac, scope);
+            op->evaluate(feat, *fac, scope.setScaleComponent(0.0, 2));
         }
     }
     else if (m_type == ROOF_GABLED)
     {
-        // First wall
+        double temp = scope.getScale().z;
         Scope original = scope;
-        scope = scope.translate(scope.getScale().x * scope.getBasisComponent(0));
-        scope = scope.setScaleComponent(0.0, 0);
-        op->evaluate(feat, *fac, scope);
+
+        // Front facing is a roof; go to the first sidefacing by translating by X and then rotating 90 degrees to keep bases consistent
+        scope = original.translate(original.getScale().x * original.getBasisComponent(0)).rotateY(-90.0, false).setScaleComponent(0.0, 2);
+        op->evaluate(feat, *fac, scope.setScaleComponent(temp, 0));
         feat->getChild(feat->getNumChildren()-1)->setTriangle(true);
 
-        // Go to opposite corner
-        scope = original.translate(original.getScale().x * original.getBasisComponent(0));
-        scope = scope.translate(original.getScale().z * original.getBasisComponent(2));
-        scope = scope.setBasisComponent(0, -scope.getBasisComponent(0));
-        scope = scope.setBasisComponent(2, -scope.getBasisComponent(2));
-
-        // Second wall
-        scope = scope.translate(scope.getScale().x * scope.getBasisComponent(0));
-        scope = scope.setScaleComponent(0.0, 0);
-        op->evaluate(feat, *fac, scope);
+        scope = original.translate(original.getScale().z * original.getBasisComponent(2)).rotateY(90.0, false).setScaleComponent(0.0, 2);
+        op->evaluate(feat, *fac, scope.setScaleComponent(temp, 0));
         feat->getChild(feat->getNumChildren()-1)->setTriangle(true);
     }
 
@@ -99,11 +90,10 @@ void MassModel::topfaces(GrammarNode* op, Feature* feat, Factory* fac, Scope sco
         Scope original = scope;
 
         // First slanty thing
-        scope = scope.setScaleComponent(0.0, 2);
-        double len = sqrt((scope.getScale().x / 2.0) * (scope.getScale().x / 2.0) + scope.getScale().y * scope.getScale().y);
-        scope = scope.rotateX(atan2(scope.getScale().x / 2.0, scope.getScale().y) * 180.0 / M_PI, false);
+        double len = sqrt((scope.getScale().z / 2.0) * (scope.getScale().z / 2.0) + scope.getScale().y * scope.getScale().y);
+        scope = scope.rotateX(atan2(scope.getScale().z / 2.0, scope.getScale().y) * 180.0 / M_PI, false);
         scope = scope.setScaleComponent(len, 1);
-        op->evaluate(feat, *fac, scope);
+        op->evaluate(feat, *fac, scope.setScaleComponent(0.0, 2));
 
         // Go to the other corner
         scope = original.translate(original.getScale().x * original.getBasisComponent(0));
@@ -112,10 +102,9 @@ void MassModel::topfaces(GrammarNode* op, Feature* feat, Factory* fac, Scope sco
         scope = scope.setBasisComponent(2, -scope.getBasisComponent(2));
 
         // Second slanty thing
-        scope = scope.setScaleComponent(0.0, 2);
-        scope = scope.rotateX(atan2(scope.getScale().x / 2.0, scope.getScale().y) * 180.0 / M_PI, false);
+        scope = scope.rotateX(atan2(scope.getScale().z / 2.0, scope.getScale().y) * 180.0 / M_PI, false);
         scope = scope.setScaleComponent(len, 1);
-        op->evaluate(feat, *fac, scope);
+        op->evaluate(feat, *fac, scope.setScaleComponent(0.0, 2));
     }
     else if (m_type == ROOF_CONE);
     else if (m_type == ROOF_GAMBREL);
