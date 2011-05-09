@@ -2,15 +2,14 @@
 #A : NULL ~ S([8,20],[20,40],[8,20]) _ T(1,0,0) _ I(4){facades} _ S(20, 6, 20) _ T(-Scope.X, 0, 0) _ I(4){facades} : 1.0
 #A : NULL ~ S([8,20],[20,40],[8,20]) _ T(1,0,0) _ I(4){facades} _ T(Scope.X, 0, 0) _ S(20, 6, 20) _ I(4){facades} : 1.0
 #A : NULL ~ S(8,[20,40],8) _ T(1,0,0) _ I(4){facades} _ < T(0, Scope.Y, 0) _ I(Roof.flat){roof} > _ R(0, 45, 0) _ I(4){facades} _ T(0, Scope.Y, 0) _ I(Roof.flat){roof} : 1.0
-A : NULL ~ S(8,[20,40],8) _ T(1,0,0) _ I(4){facades} _ < T(0, Scope.Y, 0) _ S(Scope.X, 2, Scope.Z) _ I(Roof.flat){roof} _ I(Roof.flat){roof2} > : 1.0
+A : NULL ~ S(8, 3, 10) _ I(4){facades} _ T(0, Scope.Y, 0) _ I(Roof.flat){roof} _ S(8,[50,70],8) _ T(0, 0, 2) _ I(4){facades} _ < T(0, Scope.Y, 0) _ S(Scope.X, 2, Scope.Z) _ I(Roof.flat){roof} > : 1.0
 facades : NULL ~ Comp(sidefaces){facade} : 1.0
-facade : NULL ~ Subdiv(Y, 2, 1r){ groundfloor | Repeat(Y, 2){floor} } : 1.0
-
+facade : NULL ~ Repeat(Y, 1){floor} : 1.0
 groundfloor : Shape.visible(street)=full ~ Subdiv(X, 2, 1r){ Subdiv(X, 1r, 1.2r, 1r){wall | Subdiv(Y, 1r, 0.3){ door | wall } | wall } | Repeat(X, 2){ tile } } : 0.3 ~ Subdiv(X, 1r, 2){ Repeat(X, 2){ tile } | Subdiv(X, 1r, 1.2r, 1r){wall | Subdiv(Y, 1r, 0.3){ door | wall } | wall } } : 0.3 ~ Subdiv(X, 1r, 2, 1r){ Repeat(X, 2){ tile } | Subdiv(X, 1r, 1.2r, 1r){wall | Subdiv(Y, 1r, 0.3){ door | wall } | wall } | Repeat(X, 2){ tile } } : 0.4
-
 groundfloor : NULL ~ Repeat(X, 2){tile} : 1.0
-floor : NULL ~ Repeat(X, 4){tile} : 1.0
-tile : NULL ~ Subdiv(X, 1r, 1.5r, 1r){wall | Subdiv(Y, 2r, 0.5r){wall | wall} | wall} : 1.0
-tile : NULL ~ wall : 1.0
+floor : NULL ~ Repeat(X, 1){tile} : 1.0
+#tile : NULL ~ Subdiv(X, 1r, 1.5r, 1r){wall | Subdiv(Y, 2r, 0.5r){wall | wall} | wall} : 1.0
+#tile : NULL ~ wall : 1.0
+tile : NULL ~ on1 : 0.11 ~ on2 : 0.11 ~ on3 : 0.11 ~ on4 : .11 ~ on5 : .11  ~ on6 : .11  ~ on7 : .11  ~ on8 : .11  ~ on9 : .12
 roof : NULL ~ Comp(topfaces){rooftiles} : 1.0
 roof2 : NULL ~ Comp(sidefaces){wall} : 1.0

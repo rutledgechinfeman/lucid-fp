@@ -8,5 +8,13 @@ wombat n
 roof n
 roof2 n
 wall t plane highrise.jpeg tile
-door t plane door.png stretch
-rooftiles t plane roof1.jpg tile
+rooftiles t plane off.jpg tile
+on1 t plane on1.jpg stretch
+on2 t plane on2.jpg stretch
+on3 t plane on3.jpg stretch
+on4 t plane on4.jpg stretch
+on5 t plane on5.jpg stretch
+on6 t plane on6.jpg stretch
+on7 t plane on7.jpg stretch
+on8 t plane on8.jpg stretch
+on9 t plane on9.jpg stretch
