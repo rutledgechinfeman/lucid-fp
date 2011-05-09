@@ -47,7 +47,7 @@ private:
     int m_type;
 
     /// First parameter: always a string
-    string m_stringArg;
+    vector<string> m_stringArg;
 
     /// 2nd+ parameters: numbers, possibly relative
     vector<argument> m_otherArgs;

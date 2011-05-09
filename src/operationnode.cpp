@@ -55,16 +55,19 @@ void OperationNode::evaluate(Feature* feat, Factory &fac, Scope scope)
     // Otherwise, this is an operation in and of itself, and we have to evaluate it
     if (m_type == COMP)
     {
-        feat->getMassModel()->decompose(m_stringArg, m_children[0], feat, &fac, scope);
+        for (unsigned int i = 0 ; i < m_children.size(); ++ i)
+        {
+            feat->getMassModel()->decompose(m_stringArg[i], m_children[i], feat, &fac, scope);
+        }
     }
     else if (m_type == SUBDIV)
     {
         // Figure out what axis we're repeating on
         int index = -1;
-        if      (m_stringArg == "X") { index = 0; }
-        else if (m_stringArg == "Y") { index = 1; }
-        else if (m_stringArg == "Z") { index = 2; }
-        else { cerr << "ERROR: Unrecognized string argument in Subdiv operation: " << m_stringArg << endl; return; }
+        if      (m_stringArg[0] == "X") { index = 0; }
+        else if (m_stringArg[0] == "Y") { index = 1; }
+        else if (m_stringArg[0] == "Z") { index = 2; }
+        else { cerr << "ERROR: Unrecognized string argument in Subdiv operation: " << m_stringArg[0] << endl; return; }
 
         // Sum (non-)relative repeat lengths
         double rel = 0.0;
@@ -101,10 +104,10 @@ void OperationNode::evaluate(Feature* feat, Factory &fac, Scope scope)
     {
         // Figure out what axis we're repeating on
         int index = -1;
-        if      (m_stringArg == "X") { index = 0; }
-        else if (m_stringArg == "Y") { index = 1; }
-        else if (m_stringArg == "Z") { index = 2; }
-        else { cerr << "ERROR: Unrecognized string argument in Repeat operation: " << m_stringArg << endl; return; }
+        if      (m_stringArg[0] == "X") { index = 0; }
+        else if (m_stringArg[0] == "Y") { index = 1; }
+        else if (m_stringArg[0] == "Z") { index = 2; }
+        else { cerr << "ERROR: Unrecognized string argument in Repeat operation: " << m_stringArg[0] << endl; return; }
 
         // Calculate repeat specifications
         double dimLen = scope.getScale().data[index];
@@ -179,7 +182,7 @@ void OperationNode::parseOp(string line, int index)
     if (paramList.size() <= 0) { cerr << "ERROR: No parameters specified for operation: " << line << endl; return; }
 
     // The first parameter is always a string
-    m_stringArg = StringUtil::trim(paramList[0]);
+    m_stringArg.push_back(StringUtil::trim(paramList[0]));
 
     // The rest are doubles or doubles followed by an r
     for (unsigned int i = 1; i < paramList.size(); i ++)
@@ -205,7 +208,7 @@ void OperationNode::parseOp(string line, int index)
             if (!isInstanceOf) { m_children.push_back(new Symbol(target)); }
             else
             {
-                m_children.push_back(new Symbol(target, m_stringArg));
+                m_children.push_back(new Symbol(target, m_stringArg[0]));
                 m_childIndices.insert(index);
                 return;
             }
@@ -245,7 +248,7 @@ void OperationNode::printSelf()
             cout << "notype";
     }
 
-    cout << "(" << m_stringArg;
+    cout << "(" << m_stringArg[0];
     for (unsigned int i = 0; i < m_otherArgs.size(); i ++) { cout << ", " << m_otherArgs[i].value; }
 
     cout << ")[ <Operations: (";

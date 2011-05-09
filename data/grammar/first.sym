@@ -6,7 +6,6 @@ groundfloor n
 floor n
 wombat n
 roof n
-roof2 n
 wall t plane stucco.jpg tile
 door t plane door.png stretch
 window t mesh window4.obj stretch
