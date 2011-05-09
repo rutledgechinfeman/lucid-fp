@@ -27,6 +27,7 @@ struct OpVal
 
         relDim = NODIM;
         neg = false;
+        modulus = 0;
     }
 
     OpVal (int dimension, bool negative)
@@ -36,6 +37,7 @@ struct OpVal
 
         relDim = dimension;
         neg = negative;
+        modulus = 0;
     }
 
     double getValue(Scope scope)
@@ -45,8 +47,11 @@ struct OpVal
         {
             double rando = (double)rand();
             rando /= (double) RAND_MAX;
+            rando = rando * (hi - lo) + lo;
 
-            return rando * (hi - lo) + lo;
+            if (modulus != 0) { return (int)(rando/modulus) * modulus; }
+
+            return rando;
         }
 
         // Relative value
@@ -68,6 +73,7 @@ struct OpVal
     double hi;
     int    relDim; // If this is not NODIM, this is a relative value
     bool   neg;
+    int    modulus;
 };
 
 class ScopeOperation
@@ -90,7 +96,7 @@ private:
     int m_type;
 
     /// Data
-    OpVal data[3];
+    OpVal m_data[3];
 };
 
 #endif // SCOPEOPERATION_H

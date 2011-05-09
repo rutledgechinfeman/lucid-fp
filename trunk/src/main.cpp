@@ -7,7 +7,7 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    Referee ref("../data/grammar/first.gmr");
+    Referee ref("../data/grammar/house.gmr");
     MainWindow w(&ref);
     w.show();
 

@@ -111,7 +111,7 @@ void OperationNode::evaluate(Feature* feat, Factory &fac, Scope scope)
 
         // Calculate repeat specifications
         double dimLen = scope.getScale().data[index];
-        int numRepeats = dimLen / m_otherArgs[0].value;
+        int numRepeats = ceil(dimLen / m_otherArgs[0].value);
         double repeatLength = dimLen / ((double) numRepeats);
 
         // Get a new scope to translate for each child
