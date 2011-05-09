@@ -20,7 +20,7 @@ public:
    GLWidget(QWidget *parent = 0);
    ~GLWidget();
 
-   void setRoot(Feature* root);
+   void setRoot(Feature* root, string s);
    REAL m_r;
    REAL m_phi;
    REAL m_theta;

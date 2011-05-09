@@ -17,7 +17,7 @@ using std::map;
 class Scenery
 {
 public:
-    Scenery();
+    Scenery(string type);
     virtual ~Scenery();
     void draw();
     void setIds();
@@ -27,6 +27,7 @@ public:
     void buildSkybox();
     void buildStreet();
     float fExtent;
+    string m_type;
 
 private:
 

@@ -28,7 +28,7 @@ Feature* Referee::restart(string file)
 {
     cleanup();
     init();
-
+    m_file = file;
     m_parser->parseFile(file, *m_grammar, *m_fac);
     return m_contractor->build(m_grammar, m_fac);
 }
