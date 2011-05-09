@@ -3,6 +3,7 @@
 #include "CS123Algebra.h"
 #include <string>
 
+
 FloorPlanner::FloorPlanner()
 {
     m_mins = double2(1000000, 1000000);
@@ -28,15 +29,8 @@ void FloorPlanner::plan(Feature* root)
 
     buildFirstRepresentation(root);
 
-//    for (int i = 0; i < m_scopeList.size() ; ++ i)
-//    {m_scopeList[i].printSelf();}
-//    cout << "********" << endl;
-
 
     normalizeTo2D();
-
-//    for (int i = 0; i < m_2DscopeList.size() ; ++ i)
-//    {cout << m_2DscopeList[i].a << " :: " << m_2DscopeList[i].b << endl;}
 
 }
 
@@ -52,15 +46,15 @@ void FloorPlanner::drawSelf()
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 
-    for (int i = 0; i < m_2DscopeList.size(); i ++) {
+    for (unsigned int i = 0; i < m_2DscopeList.size(); i ++) {
         drawQuad(m_2DscopeList[i]);
     }
 
-    for (int i = 0; i < m_2Dwindows.size(); i ++) {
+    for (unsigned int i = 0; i < m_2Dwindows.size(); i ++) {
         drawDot(m_2Dwindows[i], 0.5, double3(0, 1, 0));
     }
 
-    for (int i = 0; i < m_2Ddoors.size(); i ++) {
+    for (unsigned int i = 0; i < m_2Ddoors.size(); i ++) {
         drawDot(m_2Ddoors[i], 1.0, double3(0, 0, 1));
     }
 
@@ -94,6 +88,7 @@ void FloorPlanner::drawLine(double2 a, double2 b, float width, double3 color)
     glEnd();
 
 }
+
 void FloorPlanner::drawQuad(rectangle r, double3 color)
 {
     double big = m_maxs.x - m_mins.x;
@@ -163,12 +158,27 @@ void FloorPlanner::buildFirstRepresentation(Feature* root) {
     }
 }
 
+void FloorPlanner::initializeIntersectionsToZero(){
+    for(unsigned int i=0; i<m_scopeList.size() * 4; i++){
+        vector<bool> v = vector<bool>(m_scopeList.size() * 4);
+        intersections.push_back(v);
+    }
+}
+
 
 void FloorPlanner::normalizeTo2D(){
 
+    initializeIntersectionsToZero();
 
     for (vector<Scope>::iterator it = m_scopeList.begin(); it != m_scopeList.end(); it ++) {
         double2* corners = getScopeCorners(*it);
+
+
+        m_vertices.push_back(corners[0]);
+        m_vertices.push_back(corners[1]);
+        m_vertices.push_back(corners[2]);
+        m_vertices.push_back(corners[3]);
+
 
         m_2DscopeList.push_back(rectangle(corners[0], corners[2]));
 
@@ -180,6 +190,21 @@ void FloorPlanner::normalizeTo2D(){
             m_maxs.x = max(m_maxs.x, corners[i].x);
             m_maxs.y = max(m_maxs.y, corners[i].y);
         }
+
+        for(int i=0; i<4; i++){
+            for(int j=i; j<4; j++){
+                if(onTheSameLine(corners[i], corners[j])){
+                    intersections[m_vertices.size()-4 + i][ m_vertices.size()-4 + j] = true;
+                    intersections[ m_vertices.size()-4 + j][m_vertices.size()-4 + i] = true;
+                    setIntersected(m_vertices.size()-4 + i, m_vertices.size()-4 + j);
+                }
+            }
+        }
+
+
+
+
+
     }
 
 
@@ -191,6 +216,93 @@ void FloorPlanner::normalizeTo2D(){
         m_2Dwindows.push_back(double2(it->x, it->z));
     }
 
+
+
+
+}
+
+void FloorPlanner::printIntersections(){
+    for(unsigned int i=0; i<intersections.size(); i++){
+        for(unsigned int j=0; j<intersections.size(); j++){
+            cout<< intersections[i][j]<<" ";
+        }
+        cout<< endl;
+    }
+}
+
+
+bool FloorPlanner::onTheSameLine(double2 v1, double2 v2){
+    if(EQ(v1.x, v2.x) || EQ(v1.y, v2.y)){
+        return true;
+    }
+    return false;
+}
+
+void FloorPlanner::setIntersected(unsigned int a, unsigned int b){
+    //given that two indices (of vertices in m_vertices) are Intersected (by a wall, probably)
+    double2 l1p1 = m_vertices.at(a);
+    double2 l1p2 = m_vertices.at(b);
+    //for every vertex in m_vertices
+    for(unsigned int i=0; i<m_vertices.size(); i++){
+        double2 l2p1 = m_vertices[i];
+        //for every vertex that it is intersected with
+        vector<double2> inters = getIntersectors(i);
+        for(unsigned int j=0; j<inters.size(); j++){
+
+            double2 l2p2 = inters.at(j);
+
+            int val = doTheyIntersect(l1p1, l1p2, l2p1, l2p2);
+            //if val is 0 then they are parallel (and not the same line)
+            //if val is 1 they intersected at one point
+            //if val is 2 they are the same line
+
+        }
+
+    }
+
+    //TODO: SET INTERSECTION STUFF!!
+}
+
+int FloorPlanner::doTheyIntersect(double2 l1p1, double2 l1p2, double2 l2p1, double2 l2p2){
+
+    double m = (l1p1.y - l1p2.y) / (l1p1.x - l1p2.y);
+
+    if(isOnLine(m, l1p1.y, l1p1.x, l2p1) && isOnLine(m, l1p1.y, l1p1.x, l2p2)){
+        return 2;
+    }
+
+    else{
+        double A1 = l1p2.y - l1p1.y;
+        double B1 = l1p1.x - l1p2.x;
+
+        double A2 = l2p2.y - l2p1.y;
+        double B2 = l2p1.x - l2p2.x;
+
+        double det = A1*B2 - A2*B1;
+        if(EQ(det, 0)){
+            return 0;
+        }
+    }
+    return 1;
+}
+
+bool FloorPlanner::isOnLine(double m, double y, double x, double2 pt){
+    if(EQ(y-pt.y, m*(x-pt.x))){
+        return true;
+    }
+    return false;
+}
+
+vector<double2> FloorPlanner::getIntersectors(unsigned int i){
+    vector<double2> toRet;
+    vector<bool> thisRow = intersections.at(i);
+
+    for(unsigned int j=0; j<thisRow.size(); j++){
+        if(thisRow.at(j)){
+            toRet.push_back(m_vertices.at(j));
+        }
+    }
+    return toRet;
 }
 
 
@@ -207,17 +319,10 @@ double2* FloorPlanner::getScopeCorners(Scope s) {
     D3corners[2] = s.getPoint() + s.getXBasis() * s.getScale().x + s.getZBasis() * s.getScale().z;
     D3corners[3] = s.getPoint() + s.getZBasis() + s.getScale().z;
 
-    s.printSelf();
-    cout << "*" << endl;
-    cout << s.getScale().x << endl;
-    cout << "*" << endl;
 
     for (int i = 0; i < 4; i ++) {
         toReturn[i] = double2(D3corners[i].x, D3corners[i].z);
-        cout << D3corners[i] << endl;
-
     }
-    cout << "***" << endl;
 
     return toReturn;
 
