@@ -1,14 +1,18 @@
 A n
 facades n
+facades2 n
 facade n
+facade2 n
 tile n
+tile2 n
 groundfloor n
 floor n
 wombat n
 roof n
-roof2 n
-wall t plane highrise.jpeg tile
+door t plane entrance.jpg stretch
+wall t plane lobby.jpg tile
 rooftiles t plane off.jpg tile
+lobby t plane lobby.jpg tile
 on1 t plane on1.jpg stretch
 on2 t plane on2.jpg stretch
 on3 t plane on3.jpg stretch

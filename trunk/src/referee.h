@@ -16,6 +16,7 @@ class Referee
 public:
     Referee(string file = "");
     virtual ~Referee();
+    Feature* restart(string file);
     Feature* restart();
     Feature* refresh();
 
