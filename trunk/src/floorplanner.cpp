@@ -70,6 +70,169 @@ void FloorPlanner::plan(Feature* root)
     buildPlanGrid();
 
     putWindowsAndDoorsOnGrid();
+
+    doTheRobot();
+}
+
+
+void FloorPlanner::doTheRobot()
+{
+    m_currRobotID = 0;
+    queue<int2> poseQueue;
+
+    do
+    {
+        vector<int2> poses;
+        findRobotPos(poses, m_currRobotID);
+        for (unsigned int i = 0; i < poses.size(); ++i)
+        {
+            poseQueue.push(poses[i]);
+        }
+
+        int2 startPos = poseQueue.front();
+        poseQueue.pop(); // who knows why this isn't built in
+
+
+        robot(startPos, startPos);
+        m_currRobotID ++;
+    } while (!poseQueue.empty());
+}
+
+void FloorPlanner::robot(int2 start, int2 end)
+{
+    // Base case: if our start position is invalid (someone already built into it, or it's somehow otherwise erroneous)
+    if (m_planGrid[start.x][start.y] >= 0 || m_planGrid[start.x][start.y] == OUTSIDE) return;
+
+    /*
+     * Pick one of several options: for X and Y, max += 1 or min -= 1, or both
+     */
+
+    int xmulti = 1;
+    int ymulti = 1;
+    // Step 1: Figure out which directions you can expand in
+    if (start.x == end.x)
+    {
+        if (m_planGrid[start.x - 1][start.y] < 0 && m_planGrid[start.x - 1][start.y] != OUTSIDE) xmulti = -1;
+    }
+    else
+    {
+        if (start.x > end.x) xmulti = -1;
+    }
+
+    if (start.y == end.y)
+    {
+        if (m_planGrid[start.x][start.y - 1] < 0 && m_planGrid[start.x][start.y - 1] != OUTSIDE) ymulti = -1;
+    }
+    else
+    {
+        if (start.y > end.y) ymulti = -1;
+    }
+
+    // Step 2: Figure out which of those directions you want to expand in
+    int2 dir;
+    dir = int2(xmulti, ymulti);
+    if (canExpand(start, end, dir))
+    {
+        robot(start, end + dir);
+        return;
+    }
+    dir = int2(0, ymulti);
+    if (canExpand(start, end, dir))
+    {
+        robot(start, end + dir);
+        return;
+    }
+    dir = int2(xmulti, 0);
+    if (canExpand(start, end, dir))
+    {
+        robot(start, end + dir);
+        return;
+    }
+
+    // Step 3: Claim your explored area
+    for (int x = min(start.x, end.x); x < max(start.x, end.x); ++ x)
+    {
+        for (int y = min(start.y, end.y); y < max(start.y, end.y); ++ y)
+        {
+            m_planGrid[x][y] = m_currRobotID;
+        }
+    }
+}
+
+bool FloorPlanner::canExpand(int2 start, int2 end, int2 dir)
+{
+    end += dir;
+    for (int x = min(start.x, end.x); x < max(start.x, end.x); ++ x)
+    {
+        for (int y = min(start.y, end.y); y < max(start.y, end.y); ++ y)
+        {
+            if (m_planGrid[x][y] >= 0 || m_planGrid[x][y] == OUTSIDE)
+            {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
+void FloorPlanner::findRobotPos(vector<int2> &validList, int i) {
+
+    if (i == 0)
+    {
+        int inNeighbors, outNeighbors;
+        for (int x = 1; x < m_maxs.x - m_mins.x - 1; ++ x)
+        {
+            for (int y = 1; y < m_maxs.y - m_mins.y - 1; ++ y)
+            {
+                inNeighbors = 0;
+                outNeighbors = 0;
+                if (m_planGrid[x][y] == OUTSIDE) continue;
+
+                if (m_planGrid[x+1][y] != OUTSIDE) inNeighbors ++;
+                else outNeighbors ++;
+
+                if (m_planGrid[x-1][y] != OUTSIDE) inNeighbors ++;
+                else outNeighbors ++;
+
+                if (m_planGrid[x][y+1] != OUTSIDE) inNeighbors ++;
+                else outNeighbors ++;
+
+                if (m_planGrid[x][y-1] != OUTSIDE) inNeighbors ++;
+                else outNeighbors ++;
+
+                if (outNeighbors == 2 && inNeighbors == 2) validList.push_back(int2(x, y));
+            }
+        }
+
+        return;
+    }
+
+    int inNeighbors, iNeighbors;
+    for (int x = 1; x < m_maxs.x - m_mins.x - 1; ++ x)
+    {
+        for (int y = 1; y < m_maxs.y - m_mins.y - 1; ++ y)
+        {
+            if (m_planGrid[x][y] >= 0 || m_planGrid[x][y] == OUTSIDE) continue;
+
+            inNeighbors = 0;
+            iNeighbors = 0;
+
+            if (m_planGrid[x + 1][y] < 0 && m_planGrid[x + 1][y] != OUTSIDE) inNeighbors ++;
+            else if(m_planGrid[x+1][y] == i) iNeighbors ++;
+
+            if     (m_planGrid[x - 1][y] < 0 && m_planGrid[x - 1][y] != OUTSIDE) inNeighbors ++;
+            else if(m_planGrid[x - 1][y] == i) iNeighbors ++;
+
+            if (m_planGrid[x][y + 1] < 0 && m_planGrid[x][y + 1] != OUTSIDE) inNeighbors ++;
+            else if(m_planGrid[x][y + 1] == i) iNeighbors ++;
+
+            if (m_planGrid[x][y - 1] < 0 && m_planGrid[x][y - 1] != OUTSIDE) inNeighbors ++;
+            else if(m_planGrid[x][y - 1] == i) iNeighbors ++;
+
+            if (inNeighbors == 2 && iNeighbors == 1) validList.push_back(int2(x, y));
+        }
+    }
 }
 
 void FloorPlanner::printGrid()
@@ -145,7 +308,6 @@ void FloorPlanner::buildPlanGrid()
     }
 }
 
-
 void FloorPlanner::drawSelf()
 {
     glDisable(GL_LIGHTING);
@@ -157,8 +319,9 @@ void FloorPlanner::drawSelf()
     {
         for (int y = m_mins.y; y < m_maxs.y; ++ y)
         {
+            int data = m_planGrid[x - m_mins.x][y - m_mins.y];
             double3 color;
-            switch (m_planGrid[x - m_mins.x][y - m_mins.y])
+            switch (data)
             {
                 case INSIDE:
                     color = double3(1.0, 0.0, 0.0);
@@ -169,9 +332,12 @@ void FloorPlanner::drawSelf()
                 case DOOR:
                     color = double3(0.0, 1.0, 0.0);
                     break;
-                case OUTSIDE: // fall through
+                case OUTSIDE:
+                    color = double3(1.0, 1.0, 1.0);
+                    break;
                 default:
-                    color = double3(0.0, 0.0, 0.0);
+                    double intensity = (double)data/(double)m_currRobotID;
+                    color = double3(intensity, intensity, intensity);
             }
 
             drawQuad(rectangle(int2(x, y), int2(x+1, y+1)), color);
