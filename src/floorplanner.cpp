@@ -166,12 +166,10 @@ bool FloorPlanner::robot(int2 start, int2 end)
 
 bool FloorPlanner::happy(const int2& start, const int2& end)
 {
-    // TODO: Don't allow stopping on windows and/or doors
-
     int area = abs((start.x - end.x) * (start.y - end.y));
     area /= (RESOLUTION_CONSTANT * RESOLUTION_CONSTANT);
 
-    double pval = ((double)area - 10.0) / 35.0;
+    double pval = ((double)area - 10.0) / 25.0;
     pval = max(min(pval, 1.0), 0.0);
 
     double sample = (double) rand() / (double) RAND_MAX; // random number between 0 and 1 (found this online)
@@ -251,12 +249,35 @@ void FloorPlanner::claim(const int2& start, int2 end)
         }
     } while (prevEnd != end);
 
+    // Now that we're done expanding, if we're still tiny in some dimension (or small in both), just knock it out.
+    int drawId = m_currRobotID;
+    if ((abs(start.x - end.x) < threshold && abs(start.y - end.y) < threshold) || (abs(start.x - end.x) < threshold / 2.0 || abs(start.y - end.y) < threshold) / 2.0)
+    {
+        int2 p;
+        p = int2(start.x - 1, start.y);
+        if (inBounds(p) && m_planGrid[p.x][p.y] >= 0 && m_planGrid[p.x][p.y] > drawId) drawId = m_planGrid[p.x][p.y];
+        p = int2(start.x + 1, start.y);
+        if (inBounds(p) && m_planGrid[p.x][p.y] >= 0 && m_planGrid[p.x][p.y] > drawId) drawId = m_planGrid[p.x][p.y];
+        p = int2(start.x, start.y - 1);
+        if (inBounds(p) && m_planGrid[p.x][p.y] >= 0 && m_planGrid[p.x][p.y] > drawId) drawId = m_planGrid[p.x][p.y];
+        p = int2(start.x, start.y + 1);
+        if (inBounds(p) && m_planGrid[p.x][p.y] >= 0 && m_planGrid[p.x][p.y] > drawId) drawId = m_planGrid[p.x][p.y];
+        p = int2(end.x - 1, end.y);
+        if (inBounds(p) && m_planGrid[p.x][p.y] >= 0 && m_planGrid[p.x][p.y] > drawId) drawId = m_planGrid[p.x][p.y];
+        p = int2(end.x + 1, end.y);
+        if (inBounds(p) && m_planGrid[p.x][p.y] >= 0 && m_planGrid[p.x][p.y] > drawId) drawId = m_planGrid[p.x][p.y];
+        p = int2(end.x, end.y - 1);
+        if (inBounds(p) && m_planGrid[p.x][p.y] >= 0 && m_planGrid[p.x][p.y] > drawId) drawId = m_planGrid[p.x][p.y];
+        p = int2(end.x, end.y + 1);
+        if (inBounds(p) && m_planGrid[p.x][p.y] >= 0 && m_planGrid[p.x][p.y] > drawId) drawId = m_planGrid[p.x][p.y];
+    }
+
     // Claim the new area
     for (int x = min(start.x, end.x); x <= max(start.x, end.x); ++ x)
     {
         for (int y = min(start.y, end.y); y <= max(start.y, end.y); ++ y)
         {
-            if (m_planGrid[x][y] != OUTSIDE) m_planGrid[x][y] = m_currRobotID;
+            if (m_planGrid[x][y] != OUTSIDE) m_planGrid[x][y] = drawId;
         }
     }
 }
@@ -492,6 +513,9 @@ void FloorPlanner::drawSelf()
                     break;
                 case OUTSIDE:
                     color = double3(1.0, 1.0, 1.0);
+                    break;
+                case 100:
+                    color = double3(1.0, 0.0, 1.0);
                     break;
                 default:
                     double intensity = (double)data/(double)m_currRobotID;
