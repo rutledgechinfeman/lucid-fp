@@ -234,7 +234,7 @@ void GLWidget::setDefaultCamera() {
     m_camera.center.x = 0.0,m_camera.center.y = 0.0,m_camera.center.z = 0.0;
     m_camera.eye.x = -14.61,m_camera.eye.y = 12.81,m_camera.eye.z = -10.74;
     m_camera.up.x = 0.0,m_camera.up.y = 1.0,m_camera.up.z = 0.0;
-    m_camera.near = 0.001f,m_camera.far = 200.0;
+    m_camera.near = 0.001f,m_camera.far = 2000.0;
     m_camera.fovy = 60.0;
     this->perspectiveCamera(this->width(), this->height());
 }
