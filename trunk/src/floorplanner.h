@@ -100,6 +100,8 @@ private:
     vector<double2> m_2Dwindows;
     vector<double2> m_2Ddoors;
 
+    vector<int2> m_robotPoses;
+
     /**
       * For scaling
       */
