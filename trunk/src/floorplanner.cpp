@@ -69,6 +69,60 @@ void FloorPlanner::plan(Feature* root)
 
     buildPlanGrid();
 
+    putWindowsAndDoorsOnGrid();
+}
+
+void FloorPlanner::printGrid()
+{
+    for (int x = 0; x < m_maxs.x - m_mins.x; ++ x)
+    {
+        for (int y = 0; y < m_maxs.y - m_mins.y; ++ y)
+        {
+            if (m_planGrid[x][y] == OUTSIDE) cout << "   ";
+            else cout << m_planGrid[x][y] << " ";
+        }
+        cout << endl;
+    }
+}
+
+void FloorPlanner::putWindowsAndDoorsOnGrid()
+{
+    for (unsigned int i = 0; i < m_2Dwindows.size(); ++i)
+    {
+        double2 temp = m_2Dwindows[i] - m_mins + 0.5;
+        int2 loc = int2(temp.x, temp.y);
+        int r = RESOLUTION_CONSTANT * WINDOW_LENGTH / 2.0;
+        for (int x = loc.x - r; x < loc.x + r; ++ x)
+        {
+            for (int y = loc.y - r; y < loc.y + r; ++ y)
+            {
+                if (!inBounds(int2(x, y))) continue;
+                if (m_planGrid[x][y] == OUTSIDE) continue;
+                m_planGrid[x][y] = WINDOW;
+            }
+        }
+    }
+
+    for (unsigned int i = 0; i < m_2Ddoors.size(); ++i)
+    {
+        double2 temp = m_2Ddoors[i] - m_mins + 0.5;
+        int2 loc = int2(temp.x, temp.y);
+        int r = RESOLUTION_CONSTANT * DOOR_LENGTH / 2.0;
+        for (int x = loc.x - r; x < loc.x + r; ++ x)
+        {
+            for (int y = loc.y - r; y < loc.y + r; ++ y)
+            {
+                if (!inBounds(int2(x, y))) continue;
+                if (m_planGrid[x][y] == OUTSIDE) continue;
+                m_planGrid[x][y] = DOOR;
+            }
+        }
+    }
+}
+
+bool FloorPlanner::inBounds(int2 p)
+{
+    return p.x >= 0 && p.x < (m_maxs.x - m_mins.x) && p.y >= 0 && p.y < (m_maxs.y - m_mins.y);
 }
 
 void FloorPlanner::buildPlanGrid()
@@ -99,26 +153,38 @@ void FloorPlanner::drawSelf()
     glClearColor(1.0, 1.0, 1.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    for (unsigned int i = 0; i < m_2DscopeList.size(); i ++) {
+    for (int x = m_mins.x; x < m_maxs.x; ++ x)
+    {
+        for (int y = m_mins.y; y < m_maxs.y; ++ y)
+        {
+            double3 color;
+            switch (m_planGrid[x - m_mins.x][y - m_mins.y])
+            {
+                case INSIDE:
+                    color = double3(1.0, 0.0, 0.0);
+                    break;
+                case WINDOW:
+                    color = double3(0.0, 0.0, 1.0);
+                    break;
+                case DOOR:
+                    color = double3(0.0, 1.0, 0.0);
+                    break;
+                case OUTSIDE: // fall through
+                default:
+                    color = double3(0.0, 0.0, 0.0);
+            }
 
-        drawQuad(m_2DscopeList[i]);
-    }
-
-    for (unsigned int i = 0; i < m_2Dwindows.size(); i ++) {
-        drawDot(m_2Dwindows[i], 0.5, double3(0, 1, 0));
-    }
-
-    for (unsigned int i = 0; i < m_2Ddoors.size(); i ++) {
-        drawDot(m_2Ddoors[i], 1.0, double3(0, 0, 1));
+            drawQuad(rectangle(int2(x, y), int2(x+1, y+1)), color);
+        }
     }
 
     glEnable(GL_LIGHTING);
 }
 
-void FloorPlanner::drawDot(double2 a, double size, double3 color) {
-
+void FloorPlanner::drawDot(double2 a, double size, double3 color)
+{
     size *= (double) RESOLUTION_CONSTANT / 2.0;
-    drawQuad(rectangle(a + double2(size, size), a - double2(size, size)), color);
+    drawQuad(a + double2(size, size), a - double2(size, size), color);
 }
 
 void FloorPlanner::drawLine(double2 a, double2 b, float width, double3 color)
@@ -141,9 +207,8 @@ void FloorPlanner::drawLine(double2 a, double2 b, float width, double3 color)
 
 }
 
-void FloorPlanner::drawQuad(rectangle r, double3 color)
+void FloorPlanner::drawQuad(double2 a, double2 b, double3 color)
 {
-
     double2 l_max(m_maxs);
     double2 l_min(m_mins);
 
@@ -156,10 +221,8 @@ void FloorPlanner::drawQuad(rectangle r, double3 color)
         bigger = 1;
     }
 
-    double2 a, b;
-
-    a = (double2(r.a) - l_min) / big;
-    b = (double2(r.b) - l_min) / big;
+    a = (a - l_min) / big;
+    b = (b - l_min) / big;
 
     a.data[1-bigger] += (1.0 - small/big) * .5;
     b.data[1-bigger] += (1.0 - small/big) * .5;
@@ -178,6 +241,11 @@ void FloorPlanner::drawQuad(rectangle r, double3 color)
 
     glColor3f(1.0, 1.0, 1.0);
     glEnd();
+}
+
+void FloorPlanner::drawQuad(rectangle r, double3 color)
+{
+    drawQuad(double2(r.a), double2(r.b), color);
 }
 
 void FloorPlanner::buildFirstRepresentation(Feature* root)

@@ -7,12 +7,15 @@
 #include "scope.h"
 
 
-#define RESOLUTION_CONSTANT 50
+#define RESOLUTION_CONSTANT 50.0
+#define WINDOW_LENGTH 1.0
+#define DOOR_LENGTH 1.0
 
 
 #define INSIDE      -1
-#define NOINTERSECT -2
-#define OUTSIDE     -3
+#define WINDOW      -2
+#define DOOR        -3
+#define OUTSIDE     -4
 
 struct rectangle
 {
@@ -44,6 +47,7 @@ public:
 
 private:
     void drawLine(double2 a, double2 b, float width = 2.0, double3 color = double3(0.0, 0.0, 1.0));
+    void drawQuad(double2 a, double2 b, double3 color = double3(1.0, 0.0, 0.0));
     void drawQuad(rectangle, double3 color = double3(1.0, 0.0, 0.0));
     void drawDot(double2 a, double size = 1.0, double3 color = double3(0.0, 1.0, 0.0));
 
@@ -53,6 +57,9 @@ private:
     void buildPlanGrid();
     void deleteGrid();
     void newGrid();
+    void putWindowsAndDoorsOnGrid();
+    bool inBounds(int2 p);
+    void printGrid();
 
     /// Input sanitization
     vector<Scope> m_scopeList;
