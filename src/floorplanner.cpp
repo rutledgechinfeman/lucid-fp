@@ -28,6 +28,17 @@ void FloorPlanner::plan(Feature* root)
     buildFirstRepresentation(root);
 
     normalizeTo2D();
+
+    // Make a graph out of the rectangles we have
+
+    // For each edge, check interstections, add intersections to the graph, remove redundant points
+
+    // Create another graph. Walk around the outside of the original, add only good points/edges to the new one.
+
+    // Add windows and doors: for each edge, find all the windows on it. subdivide that edge based on those.
+
+    // Pass this crap to rutledge
+
 }
 
 
@@ -128,17 +139,10 @@ void FloorPlanner::buildFirstRepresentation(Feature* root) {
         curr = q.front();
         q.pop();
 
-//        if (bigScope(curr->getScope()))
-//        {
-//            if (!hasScope(curr->getScope()))
-//            {
-                if (curr->getMassModel() != NULL)
-                {
-                    m_scopeList.push_back(curr->getScope());
-                }
-//            }
-
-//        }
+        if (curr->getMassModel() != NULL)
+        {
+            m_scopeList.push_back(curr->getScope());
+        }
 
         if (curr->getSymbol().find("door") != string::npos) {
             if (curr->getScope().getPoint().y < 1.5)
@@ -158,17 +162,16 @@ void FloorPlanner::buildFirstRepresentation(Feature* root) {
     }
 }
 
-void FloorPlanner::initializeIntersectionsToZero(){
-    for(unsigned int i=0; i<m_scopeList.size() * 4; i++){
-        vector<bool> v = vector<bool>(m_scopeList.size() * 4);
-        intersections.push_back(v);
-    }
-}
-
+//void FloorPlanner::initializeIntersectionsToZero(){
+//    for(unsigned int i=0; i<m_scopeList.size() * 4; i++){
+//        vector<bool> v = vector<bool>(m_scopeList.size() * 4);
+//        intersections.push_back(v);
+//    }
+//}
 
 void FloorPlanner::normalizeTo2D(){
 
-    initializeIntersectionsToZero();
+//    initializeIntersectionsToZero();
 
     for (vector<Scope>::iterator it = m_scopeList.begin(); it != m_scopeList.end(); it ++) {
         double2 corners[4];
