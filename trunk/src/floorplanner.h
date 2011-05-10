@@ -42,6 +42,12 @@ struct rectangle
     double2 b;
 };
 
+struct graph
+{
+    vector<vertex*> vertices;
+    vector<edge*> edges;
+};
+
 class FloorPlanner
 {
 public:
@@ -65,9 +71,9 @@ private:
 //    int doTheyIntersect(double2 l1p1, double2 l1p2, double2 l2p1, double2 l2p2);
 //    void printIntersections();
 
-    bool onTheSameLine(double2 v1, double2 v2);
+//    bool onTheSameLine(double2 v1, double2 v2);
 
-    void initializeIntersectionsToZero();
+//    void initializeIntersectionsToZero();
 
 //    void setIntersected(unsigned int i, unsigned int j);
 
@@ -95,9 +101,8 @@ private:
     double2 m_mins;
     double2 m_maxs;
 
-    /// The graph
-    vector<vertex*> m_vertices;
-    vector<edge*> m_edges;
+    graph m_inputGraph;
+    graph m_finalGraph;
 };
 
 #endif // FLOORPLANNER_H
