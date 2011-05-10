@@ -12,6 +12,7 @@ facades2     n
 groundfloor2 n
 sidehome     n
 garagetiles  n
+garagetile   n
 
 rooftile    t   plane   slats.jpg       tile
 wall        t   plane   brick.jpg      tile
