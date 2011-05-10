@@ -96,8 +96,55 @@ inline std::ostream& operator<<(std::ostream& os, const double3& f) {
         return os;
 }
 
-struct double2 {
+struct int2 {
+    int2(double v0, double v1) { x = (int)(v0+0.5); y = (int)(v1+0.5); }
+    int2(int v0 = 0, int v1 = 0) : x(v0), y(v1) { }
+    int2(int *data) { x = data[0]; y = data[1]; }
 
+    static inline int2 zero() { return int2(0,0); }
+
+    #define VECOP_PCW(op) { x op rhs.x; y op rhs.y; return *this; }
+    #define VECOP_SCA(op) { x op rhs;   y op rhs  ; return *this; }
+
+    inline int2& operator  = (const int2& rhs) VECOP_PCW( =) /// equality assignment
+    inline int2& operator += (const int2& rhs) VECOP_PCW(+=) /// piecewise addition operator
+    inline int2& operator -= (const int2& rhs) VECOP_PCW(-=) /// piecewise subtraction operator
+
+
+    inline int2  operator  + (const int2& rhs) const { return int2(*this) += rhs; } /// piecewise addition
+    inline int2  operator  - (const int2& rhs) const { return int2(*this) -= rhs; } /// piecewise subtraction
+
+    inline int2& operator += (const int  rhs)  VECOP_SCA(+=) /// scalar addition operator
+    inline int2& operator -= (const int  rhs)  VECOP_SCA(-=) /// scalar subtraction operator
+    inline int2& operator *= (const int  rhs)  VECOP_SCA(*=) /// scalar multiplication operator
+    inline int2& operator /= (const int  rhs)  VECOP_SCA(/=) /// scalar division operator
+
+    inline int2  operator  + (const int  rhs) const { return int2(*this) += rhs; } /// piecewise addition
+    inline int2  operator  - (const int  rhs) const { return int2(*this) -= rhs; } /// piecewise subtraction
+    inline int2  operator  * (const int  rhs) const { return int2(*this) *= rhs; } /// piecewise multiplication
+    inline int2  operator  / (const int  rhs) const { return int2(*this) /= rhs; } /// piecewise multiplication
+
+    inline bool operator==(const int2 &rhs) {
+            return (x == rhs.x && y == rhs.y);
+    }
+
+    inline bool operator!=(const int2 &rhs) {
+            return (x != rhs.x || y != rhs.y);
+    }
+
+    union {
+        struct {
+            int x, y;
+        };
+        struct {
+            int s, t;
+        };
+        int data[2];
+    };
+};
+
+struct double2 {
+    double2(int2 in){x = (double)in.x; y = (double)in.y; }
 
     double2(double v0 = 0, double v1 = 0) : x(v0), y(v1) { }
     double2(double *data) { x = data[0]; y = data[1]; }
@@ -150,7 +197,6 @@ struct double2 {
         double data[2];
     };
 };
-
 
 inline double2 operator*(const double scale, const double2 &rhs) {
     return double2(rhs.x * scale, rhs.y * scale);

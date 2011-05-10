@@ -1,7 +1,7 @@
 # TODO: Add balcony
 
-A : NULL ~ S([6,12], [8,15], [6,9]) _ block _ B : 1.0
-B : NULL ~ T(Scope.X, 0, 0) _ S([6,12], [8,15], [6,9]) _ block _ B : 0.2 ~ T(0, 0, Scope.Z) _ S([6,12], [8,15], [6,9]) _ block _ B : 0.2 ~ S([6,12], [8,15], [6,9]) _ T(-Scope.X, 0, 0) _ block _ B : 0.2 ~ S([6,12], [8,15], [6,9]) _ T(0, 0, -Scope.Z) _ block _ B : 0.2 ~ T(0,0,0) : 0.2
+A : NULL ~ S([6,12], [9,17,3], [6,9]) _ block _ B : 1.0
+B : NULL ~ T(Scope.X, 0, 0) _ S([6,12], [9,17,3], [6,9]) _ block _ B : 0.2 ~ T(0, 0, Scope.Z) _ S([6,12], [9,17,3], [6,9]) _ block _ B : 0.2 ~ S([6,12], [9,17,3], [6,9]) _ T(-Scope.X, 0, 0) _ block _ B : 0.2 ~ S([6,12], [9,17,3], [6,9]) _ T(0, 0, -Scope.Z) _ block _ B : 0.2 ~ T(0,0,0) : 0.2
 
 block : NULL ~ T([-5,5], 0, [-5, 5]) _ I(4){ home } _ < T(0, Scope.Y, 0) _ S(Scope.X, 1, Scope.Z) _ I(Roof.gabled){ roof } > : 1.0
 
