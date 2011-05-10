@@ -7,7 +7,7 @@
 #include "scope.h"
 
 
-#define RESOLUTION_CONSTANT 50.0
+#define RESOLUTION_CONSTANT 5.0
 #define WINDOW_LENGTH 1.0
 #define DOOR_LENGTH 1.0
 
@@ -37,37 +37,61 @@ struct rectangle
 class FloorPlanner
 {
 public:
+    /// CTOR
     FloorPlanner();
+
+    /// DTOR
     virtual ~FloorPlanner();
 
+    /// Main contractor style routine
     void plan(Feature* root);
 
+    /// OpenGL draw
     void drawSelf();
 
-
 private:
+    /**
+      * Input sanitization helpers
+      */
+    void buildFirstRepresentation(Feature* root);
+    void getScopeCorners(Scope s, int2* array);
+    void normalizeTo2D();
+
+    /**
+      * Grid generation helpers
+      */
+    void buildPlanGrid();
+    void deleteGrid();
+    void newGrid();
+
+    /**
+      * Grid coordination helpers
+      */
+    void putWindowsAndDoorsOnGrid();
+    bool inBounds(int2 p);
+    void printGrid();
+
+    /**
+      * Robot helpers
+      */
+    void findRobotPos(vector<int2> &validList, int i = 0);
+    void doTheRobot();
+    bool robot(int2 start, int2 end);
+    bool canExpand(const int2& start, int2 end, const int2& dir);
+    bool happy(const int2& start, const int2& end);
+    void claim(const int2& start, const int2& end);
+
+    /**
+      * Graphics helpers
+      */
     void drawLine(double2 a, double2 b, float width = 2.0, double3 color = double3(0.0, 0.0, 1.0));
     void drawQuad(double2 a, double2 b, double3 color = double3(1.0, 0.0, 0.0));
     void drawQuad(rectangle, double3 color = double3(1.0, 0.0, 0.0));
     void drawDot(double2 a, double size = 1.0, double3 color = double3(0.0, 1.0, 0.0));
 
-    void buildFirstRepresentation(Feature* root);
-    void getScopeCorners(Scope s, int2* array);
-    void normalizeTo2D();
-    void buildPlanGrid();
-    void deleteGrid();
-    void newGrid();
-    void putWindowsAndDoorsOnGrid();
-    bool inBounds(int2 p);
-    void printGrid();
-
-
-    void findRobotPos(vector<int2> &validList, int i = 0);
-    void doTheRobot();
-    void robot(int2 start, int2 end);
-    bool canExpand(int2 start, int2 end, int2 dir);
-
-    /// Input sanitization
+    /**
+      * Input sanitization
+      */
     vector<Scope> m_scopeList;
     vector<Vector4> m_windows;
     vector<Vector4> m_doors;
@@ -76,12 +100,16 @@ private:
     vector<double2> m_2Dwindows;
     vector<double2> m_2Ddoors;
 
-    /// For scaling
+    /**
+      * For scaling
+      */
     int2 m_mins;
     int2 m_maxs;
 
+    /**
+      * Robot structures
+      */
     int** m_planGrid;
-
     int m_currRobotID;
 };
 

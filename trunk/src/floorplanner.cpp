@@ -93,15 +93,17 @@ void FloorPlanner::doTheRobot()
         poseQueue.pop(); // who knows why this isn't built in
 
 
-        robot(startPos, startPos);
-        m_currRobotID ++;
+        if (robot(startPos, startPos)) // Don't increment on a bust...
+        {
+            m_currRobotID ++;
+        }
     } while (!poseQueue.empty());
 }
 
-void FloorPlanner::robot(int2 start, int2 end)
+bool FloorPlanner::robot(int2 start, int2 end)
 {
     // Base case: if our start position is invalid (someone already built into it, or it's somehow otherwise erroneous)
-    if (m_planGrid[start.x][start.y] >= 0 || m_planGrid[start.x][start.y] == OUTSIDE) return;
+    if (m_planGrid[start.x][start.y] >= 0 || m_planGrid[start.x][start.y] == OUTSIDE) return false;
 
     /*
      * Pick one of several options: for X and Y, max += 1 or min -= 1, or both
@@ -128,28 +130,62 @@ void FloorPlanner::robot(int2 start, int2 end)
         if (start.y > end.y) ymulti = -1;
     }
 
-    // Step 2: Figure out which of those directions you want to expand in
+    // Step 2: Decide whether to keep expanding based on some randomized factor. If not, claim your explored area and finish.
+    if (happy(start, end))
+    {
+        claim(start, end);
+        return true;
+    }
+
+    // Step 3: Figure out which of those directions you want to expand in
     int2 dir;
     dir = int2(xmulti, ymulti);
     if (canExpand(start, end, dir))
     {
         robot(start, end + dir);
-        return;
+        return true;
     }
     dir = int2(0, ymulti);
     if (canExpand(start, end, dir))
     {
         robot(start, end + dir);
-        return;
+        return true;
     }
     dir = int2(xmulti, 0);
     if (canExpand(start, end, dir))
     {
         robot(start, end + dir);
-        return;
+        return true;
     }
 
-    // Step 3: Claim your explored area
+    // Step 4: You can no longer expand, claim your explored area
+    claim(start, end);
+
+    return true;
+}
+
+bool FloorPlanner::happy(const int2& start, const int2& end)
+{
+    // TODO: Don't allow stopping on windows and/or doors
+
+    // TODO: Area based heuristic
+//    int area = abs((start.x - end.x) * (start.y - end.y));
+//    area /= (RESOLUTION_CONSTANT * RESOLUTION_CONSTANT);
+
+//    double pval = ((double)area - 20.0) / 50.0;
+//    pval = max(min(pval, 1.0), 0.0);
+
+//    double sample = (double) rand() / (double) RAND_MAX; // random number between 0 and 1 (found this online)
+//    if (sample < pval)
+//    {
+//        return true;
+//    }
+
+    return false;
+}
+
+void FloorPlanner::claim(const int2& start, const int2& end)
+{
     for (int x = min(start.x, end.x); x < max(start.x, end.x); ++ x)
     {
         for (int y = min(start.y, end.y); y < max(start.y, end.y); ++ y)
@@ -159,7 +195,7 @@ void FloorPlanner::robot(int2 start, int2 end)
     }
 }
 
-bool FloorPlanner::canExpand(int2 start, int2 end, int2 dir)
+bool FloorPlanner::canExpand(const int2& start, int2 end, const int2& dir)
 {
     end += dir;
     for (int x = min(start.x, end.x); x < max(start.x, end.x); ++ x)
@@ -208,6 +244,8 @@ void FloorPlanner::findRobotPos(vector<int2> &validList, int i) {
         return;
     }
 
+    i -= 1; // We already incremented the robot number, so look for the PREVIOUS one
+
     int inNeighbors, iNeighbors;
     for (int x = 1; x < m_maxs.x - m_mins.x - 1; ++ x)
     {
@@ -215,20 +253,25 @@ void FloorPlanner::findRobotPos(vector<int2> &validList, int i) {
         {
             if (m_planGrid[x][y] >= 0 || m_planGrid[x][y] == OUTSIDE) continue;
 
+            int2 p;
             inNeighbors = 0;
             iNeighbors = 0;
 
-            if (m_planGrid[x + 1][y] < 0 && m_planGrid[x + 1][y] != OUTSIDE) inNeighbors ++;
-            else if(m_planGrid[x+1][y] == i) iNeighbors ++;
+            p = int2(x + 1, y);
+            if (m_planGrid[p.x][p.y] < 0 && m_planGrid[p.x][p.y] != OUTSIDE) inNeighbors ++;
+            else if(m_planGrid[p.x][p.y] == i) iNeighbors ++;
 
-            if     (m_planGrid[x - 1][y] < 0 && m_planGrid[x - 1][y] != OUTSIDE) inNeighbors ++;
-            else if(m_planGrid[x - 1][y] == i) iNeighbors ++;
+            p = int2(x - 1, y);
+            if (m_planGrid[p.x][p.y] < 0 && m_planGrid[p.x][p.y] != OUTSIDE) inNeighbors ++;
+            else if(m_planGrid[p.x][p.y] == i) iNeighbors ++;
 
-            if (m_planGrid[x][y + 1] < 0 && m_planGrid[x][y + 1] != OUTSIDE) inNeighbors ++;
-            else if(m_planGrid[x][y + 1] == i) iNeighbors ++;
+            p = int2(x, y + 1);
+            if (m_planGrid[p.x][p.y] < 0 && m_planGrid[p.x][p.y] != OUTSIDE) inNeighbors ++;
+            else if(m_planGrid[p.x][p.y] == i) iNeighbors ++;
 
-            if (m_planGrid[x][y - 1] < 0 && m_planGrid[x][y - 1] != OUTSIDE) inNeighbors ++;
-            else if(m_planGrid[x][y - 1] == i) iNeighbors ++;
+            p = int2(x, y - 1);
+            if (m_planGrid[p.x][p.y] < 0 && m_planGrid[p.x][p.y] != OUTSIDE) inNeighbors ++;
+            else if(m_planGrid[p.x][p.y] == i) iNeighbors ++;
 
             if (inNeighbors == 2 && iNeighbors == 1) validList.push_back(int2(x, y));
         }
