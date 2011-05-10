@@ -79,7 +79,7 @@ private:
     bool robot(int2 start, int2 end);
     bool canExpand(const int2& start, int2 end, const int2& dir);
     bool happy(const int2& start, const int2& end);
-    void claim(const int2& start, const int2& end);
+    void claim(const int2& start, int2 end);
 
     /**
       * Graphics helpers

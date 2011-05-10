@@ -169,7 +169,6 @@ bool FloorPlanner::happy(const int2& start, const int2& end)
 {
     // TODO: Don't allow stopping on windows and/or doors
 
-    // TODO: Area based heuristic
     int area = abs((start.x - end.x) * (start.y - end.y));
     area /= (RESOLUTION_CONSTANT * RESOLUTION_CONSTANT);
 
@@ -185,34 +184,72 @@ bool FloorPlanner::happy(const int2& start, const int2& end)
     return false;
 }
 
-void FloorPlanner::claim(const int2& start, const int2& end)
+void FloorPlanner::claim(const int2& start, int2 end)
 {
+    double threshold = 3 * RESOLUTION_CONSTANT;
+
+    int xmulti = 1;
+    int ymulti = 1;
+    if (start.x > end.x) xmulti = -1;
+    if (start.y > end.y) ymulti = -1;
+
+    // Expand Y to cover full windows, and fill tiny spaces
+    int d = 0;
+    int distToWall[2] = {0};
+    while (inBounds(int2(start.x, end.y + distToWall[0] * ymulti)) && m_planGrid[start.x][end.y + distToWall[0] * ymulti] < 0 && m_planGrid[start.x][end.y + distToWall[0] * ymulti] != OUTSIDE)
+    {
+        distToWall[0] ++;
+    }
+    if (distToWall[0] > threshold) distToWall[0] = 0;
+    while (inBounds(int2(end.x, end.y + distToWall[1] * ymulti)) && m_planGrid[end.x][end.y + distToWall[1] * ymulti] < 0 && m_planGrid[end.x][end.y + distToWall[1] * ymulti] != OUTSIDE)
+    {
+        distToWall[1] ++;
+    }
+    if (distToWall[1] > threshold) distToWall[1] = 0;
+
+
+    d = max(distToWall[0], distToWall[1]);
+    int i = 0;
+    while (inBounds(int2(start.x, end.y + ymulti)) && (m_planGrid[start.x][end.y + ymulti] == WINDOW || m_planGrid[start.x][end.y + ymulti] == DOOR || i++ < d))
+    {
+        end.y += ymulti;
+    }
+
+    // Expand X to cover full windows, and fill tiny spaces
+    distToWall[0] = 0;
+    distToWall[1] = 0;
+    while (inBounds(int2(end.x + distToWall[0] * xmulti, start.y)) && m_planGrid[end.x + distToWall[0] * xmulti][start.y] < 0 && m_planGrid[end.x + distToWall[0] * xmulti][start.y] != OUTSIDE)
+    {
+        distToWall[0] ++;
+    }
+    if (distToWall[0] > threshold) distToWall[0] = 0;
+    while (inBounds(int2(end.x + distToWall[1] * xmulti, end.y)) && m_planGrid[end.x + distToWall[1] * xmulti][end.y] < 0 && m_planGrid[end.x + distToWall[1] * xmulti][end.y] != OUTSIDE)
+    {
+        distToWall[1] ++;
+    }
+    if (distToWall[1] > threshold) distToWall[1] = 0;
+
+    i = 0;
+    d = max(distToWall[0], distToWall[1]);
+    while (inBounds(int2(end.x + xmulti, start.y)) && (m_planGrid[end.x + xmulti][start.y] == WINDOW || m_planGrid[end.x + xmulti][start.y] == DOOR || i++ < d))
+    {
+        end.x += xmulti;
+    }
+
+    // Claim the new area
     for (int x = min(start.x, end.x); x <= max(start.x, end.x); ++ x)
     {
         for (int y = min(start.y, end.y); y <= max(start.y, end.y); ++ y)
         {
-            m_planGrid[x][y] = m_currRobotID;
+            if (m_planGrid[x][y] != OUTSIDE) m_planGrid[x][y] = m_currRobotID;
         }
     }
 }
 
 bool FloorPlanner::canExpand(const int2& start, int2 end, const int2& dir)
 {
-//    end += dir;
-//    for (int x = min(start.x, end.x); x <= max(start.x, end.x); ++ x)
-//    {
-//        for (int y = min(start.y, end.y); y <= max(start.y, end.y); ++ y)
-//        {
-//            if (m_planGrid[x][y] >= 0 || m_planGrid[x][y] == OUTSIDE)
-//            {
-//                return false;
-//            }
-//        }
-//    }
-
-
-    if (dir.x != 0) {
-
+    if (dir.x != 0)
+    {
         for (int y = min(start.y, end.y); y <= max(start.y, end.y); y ++ )
         {
             if (m_planGrid[end.x + dir.x][y] >= 0 || m_planGrid[end.x + dir.x][y] == OUTSIDE)
@@ -222,8 +259,8 @@ bool FloorPlanner::canExpand(const int2& start, int2 end, const int2& dir)
         }
     }
 
-    if (dir.y != 0) {
-
+    if (dir.y != 0)
+    {
         for (int x = min(start.x, end.x); x <= max(start.x, end.x); x ++ )
         {
             if (m_planGrid[x][end.y + dir.y] >= 0 || m_planGrid[x][end.y + dir.y] == OUTSIDE)
@@ -233,7 +270,8 @@ bool FloorPlanner::canExpand(const int2& start, int2 end, const int2& dir)
         }
     }
 
-    if (dir.x != 0 && dir.y != 0) {
+    if (dir.x != 0 && dir.y != 0)
+    {
         if (m_planGrid[end.x + dir.x][end.y + dir.y] >= 0 || m_planGrid[end.x + dir.x][end.y + dir.y] == OUTSIDE)
         {
             return false;
@@ -390,8 +428,6 @@ void FloorPlanner::drawSelf()
     glClearColor(1.0, 1.0, 1.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
 
-
-
     for (int x = m_mins.x; x < m_maxs.x; ++ x)
     {
         for (int y = m_mins.y; y < m_maxs.y; ++ y)
@@ -420,12 +456,6 @@ void FloorPlanner::drawSelf()
             drawQuad(rectangle(int2(x, y), int2(x+1, y+1)), color);
         }
     }
-
-//    for (int i = 0; i < m_robotPoses.size(); i ++) {
-
-//        drawDot(double2(m_robotPoses[i] + m_mins), .5, double3(1, 1, 0));
-
-//    }
 
     glEnable(GL_LIGHTING);
 }
@@ -548,7 +578,6 @@ void FloorPlanner::normalizeTo2D()
 
         m_2DscopeList.push_back(rectangle(corners[0], corners[2]));
 
-
         for (int i = 0; i < 4; i ++)
         {
             m_mins.x = min(m_mins.x, corners[i].x);
@@ -558,13 +587,8 @@ void FloorPlanner::normalizeTo2D()
             m_maxs.y = max(m_maxs.y, corners[i].y);
         }
 
-
         m_mins = m_mins - int2((double)RESOLUTION_CONSTANT / 5.0, (double)RESOLUTION_CONSTANT / 5.0);
         m_maxs = m_maxs + int2((double)RESOLUTION_CONSTANT / 5.0, (double)RESOLUTION_CONSTANT / 5.0);
-
-
-
-
     }
 
     for (vector<Vector4>::iterator it = m_doors.begin(); it != m_doors.end(); it ++)
