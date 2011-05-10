@@ -59,6 +59,10 @@ void MainWindow::keyPressEvent(QKeyEvent* event){
         ui->glWidget->setPlanner(NULL);
     }
 
+    if (event->key() == Qt::Key_F8){
+        this->setRoot(m_ref->restart("../data/grammar/demo.gmr"));
+    }
+
     if (event->key() == Qt::Key_F12){
         this->setRoot(m_ref->restart("../data/grammar/nd.gmr"));
     }
