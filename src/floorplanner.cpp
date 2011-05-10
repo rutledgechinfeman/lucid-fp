@@ -87,7 +87,6 @@ void FloorPlanner::doTheRobot()
         for (unsigned int i = 0; i < poses.size(); ++i)
         {
             poseQueue.push(poses[i]);
-            m_robotPoses.push_back(poses[i]);
         }
 
         int2 startPos = poseQueue.front();
@@ -186,7 +185,7 @@ bool FloorPlanner::happy(const int2& start, const int2& end)
 
 void FloorPlanner::claim(const int2& start, int2 end)
 {
-    double threshold = 3 * RESOLUTION_CONSTANT;
+    double threshold = 3.0 * RESOLUTION_CONSTANT;
 
     int xmulti = 1;
     int ymulti = 1;
@@ -368,13 +367,28 @@ void FloorPlanner::putWindowsAndDoorsOnGrid()
         double2 temp = m_2Dwindows[i] - m_mins + 0.5;
         int2 loc = int2(temp.x, temp.y);
         int r = RESOLUTION_CONSTANT * WINDOW_LENGTH / 1.5;
+
+        bool valid = false;
         for (int x = loc.x - r; x < loc.x + r; ++ x)
         {
             for (int y = loc.y - r; y < loc.y + r; ++ y)
             {
                 if (!inBounds(int2(x, y))) continue;
-                if (m_planGrid[x][y] == OUTSIDE) continue;
-                m_planGrid[x][y] = WINDOW;
+                if (m_planGrid[x][y] == OUTSIDE) valid = true;
+            }
+        }
+
+        if (valid)
+        {
+            for (int x = loc.x - r; x < loc.x + r; ++ x)
+            {
+                for (int y = loc.y - r; y < loc.y + r; ++ y)
+                {
+                    if (!inBounds(int2(x, y))) continue;
+                    if (m_planGrid[x][y] == OUTSIDE) continue;
+                    m_windowCells.push_back(int2(x, y));
+                    m_planGrid[x][y] = WINDOW;
+                }
             }
         }
     }
@@ -384,13 +398,28 @@ void FloorPlanner::putWindowsAndDoorsOnGrid()
         double2 temp = m_2Ddoors[i] - m_mins + 0.5;
         int2 loc = int2(temp.x, temp.y);
         int r = RESOLUTION_CONSTANT * DOOR_LENGTH / 2.0;
+
+        bool valid = false;
         for (int x = loc.x - r; x < loc.x + r; ++ x)
         {
             for (int y = loc.y - r; y < loc.y + r; ++ y)
             {
                 if (!inBounds(int2(x, y))) continue;
-                if (m_planGrid[x][y] == OUTSIDE) continue;
-                m_planGrid[x][y] = DOOR;
+                if (m_planGrid[x][y] == OUTSIDE) valid = true;
+            }
+        }
+
+        if (valid)
+        {
+            for (int x = loc.x - r; x < loc.x + r; ++ x)
+            {
+                for (int y = loc.y - r; y < loc.y + r; ++ y)
+                {
+                    if (!inBounds(int2(x, y))) continue;
+                    if (m_planGrid[x][y] == OUTSIDE) continue;
+                    m_doorowCells.push_back(int2(x, y));
+                    m_planGrid[x][y] = DOOR;
+                }
             }
         }
     }
@@ -455,6 +484,15 @@ void FloorPlanner::drawSelf()
 
             drawQuad(rectangle(int2(x, y), int2(x+1, y+1)), color);
         }
+    }
+
+    for (int i = 0 ; i < m_windowCells.size(); ++ i)
+    {
+        drawDot(double2(m_windowCells[i] + m_mins), 1.0 / RESOLUTION_CONSTANT);
+    }
+    for (int i = 0 ; i < m_doorowCells.size(); ++ i)
+    {
+        drawDot(double2(m_doorowCells[i] + m_mins), 1.0 / RESOLUTION_CONSTANT, double3(1,1,0));
     }
 
     glEnable(GL_LIGHTING);

@@ -7,7 +7,7 @@
 #include "scope.h"
 
 
-#define RESOLUTION_CONSTANT 5.0
+#define RESOLUTION_CONSTANT 15.0
 #define WINDOW_LENGTH 1.0
 #define DOOR_LENGTH 1.0
 
@@ -100,7 +100,8 @@ private:
     vector<double2> m_2Dwindows;
     vector<double2> m_2Ddoors;
 
-    vector<int2> m_robotPoses;
+    vector<int2> m_windowCells;
+    vector<int2> m_doorowCells;
 
     /**
       * For scaling
