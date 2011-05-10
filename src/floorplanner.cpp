@@ -128,13 +128,17 @@ void FloorPlanner::buildFirstRepresentation(Feature* root) {
         curr = q.front();
         q.pop();
 
-        if (bigScope(curr->getScope())) {
+//        if (bigScope(curr->getScope()))
+//        {
+//            if (!hasScope(curr->getScope()))
+//            {
+                if (curr->getMassModel() != NULL)
+                {
+                    m_scopeList.push_back(curr->getScope());
+                }
+//            }
 
-            if (!hasScope(curr->getScope())) {
-                m_scopeList.push_back(curr->getScope());
-            }
-
-        }
+//        }
 
         if (curr->getSymbol().find("door") != string::npos) {
             if (curr->getScope().getPoint().y < 1.5)

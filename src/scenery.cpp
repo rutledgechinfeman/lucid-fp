@@ -27,7 +27,7 @@ Scenery::Scenery(string type)
 {
     m_type = type;
 
-    fExtent = 50.f;
+    fExtent = 500.f;
     glEnable(GL_TEXTURE_2D);
     glFrontFace(GL_CW);
     loadtextures();
@@ -127,8 +127,9 @@ void Scenery::draw(){
 }
 
 void Scenery::buildSkybox(){
+    double offset = 480;
     glPushMatrix();
-    glTranslatef(0, fExtent-42, 0);
+    glTranslatef(0, fExtent-offset, 0);
 
     glEnable(GL_TEXTURE_CUBE_MAP);
     glBindTexture(GL_TEXTURE_CUBE_MAP,textures_["cube_map_1"]);
@@ -160,10 +161,10 @@ void Scenery::buildSkybox(){
     glTexCoord3f(1.0f,1.0f,1.0f);glVertex3f(fExtent,fExtent,fExtent);
     glTexCoord3f(1.0f,1.0f,-1.0f);glVertex3f(fExtent,fExtent,-fExtent);
 
-    glTexCoord3f(-1.0f,-1.0f,-1.0f);glVertex3f(-fExtent, -fExtent + 42, -fExtent);
-    glTexCoord3f(1.0f,-1.0f,-1.0f);glVertex3f(fExtent, -fExtent + 42, -fExtent);
-    glTexCoord3f(1.0f,-1.0f,1.0f); glVertex3f(fExtent, -fExtent + 42, fExtent);
-    glTexCoord3f(-1.0f,-1.0f,1.0f);glVertex3f(-fExtent, -fExtent + 42, fExtent);
+    glTexCoord3f(-1.0f,-1.0f,-1.0f);glVertex3f(-fExtent, -fExtent + offset, -fExtent);
+    glTexCoord3f(1.0f,-1.0f,-1.0f);glVertex3f(fExtent, -fExtent + offset, -fExtent);
+    glTexCoord3f(1.0f,-1.0f,1.0f); glVertex3f(fExtent, -fExtent + offset, fExtent);
+    glTexCoord3f(-1.0f,-1.0f,1.0f);glVertex3f(-fExtent, -fExtent + offset, fExtent);
 
     glEnd();
 
@@ -173,24 +174,27 @@ void Scenery::buildSkybox(){
 }
 
 void Scenery::buildStreet(){
+    double offset = 480;
     glEnable(GL_TEXTURE_2D);
 
     glBindTexture(GL_TEXTURE_2D,textures_["street_texture"]);
-
+    glDisable(GL_DEPTH_TEST);
     glBegin(GL_QUADS);
+
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexCoord2f(0, 0);
-    glVertex3f(-fExtent, -fExtent + 42.2, -15);
-    glTexCoord2f(0, fExtent - 42.2);
-    glVertex3f(fExtent, -fExtent + 42.2, -15);
-    glTexCoord2f(1, fExtent - 42.2);
-    glVertex3f(fExtent, -fExtent + 42.2, -2);
+    glVertex3f(-fExtent, -fExtent + offset, -15);
+    glTexCoord2f(0, fExtent - 421);
+    glVertex3f(fExtent, -fExtent + offset, -15);
+    glTexCoord2f(1, fExtent - 421);
+    glVertex3f(fExtent, -fExtent + offset, -2);
     glTexCoord2f(1, 0);
-    glVertex3f(-fExtent, -fExtent + 42.2, -2);
+    glVertex3f(-fExtent, -fExtent + offset, -2);
 
     glEnd();
+    glEnable(GL_DEPTH_TEST);
 
 
     glPopMatrix();
