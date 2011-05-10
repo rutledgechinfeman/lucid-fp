@@ -251,26 +251,26 @@ void FloorPlanner::claim(const int2& start, int2 end)
 
     // Now that we're done expanding, if we're still tiny in some dimension (or small in both), just knock it out.
     int drawId = m_currRobotID;
-    if ((abs(start.x - end.x) < threshold && abs(start.y - end.y) < threshold) || (abs(start.x - end.x) < threshold / 2.0 || abs(start.y - end.y) < threshold) / 2.0)
-    {
-        int2 p;
-        p = int2(start.x - 1, start.y);
-        if (inBounds(p) && m_planGrid[p.x][p.y] >= 0 && m_planGrid[p.x][p.y] > drawId) drawId = m_planGrid[p.x][p.y];
-        p = int2(start.x + 1, start.y);
-        if (inBounds(p) && m_planGrid[p.x][p.y] >= 0 && m_planGrid[p.x][p.y] > drawId) drawId = m_planGrid[p.x][p.y];
-        p = int2(start.x, start.y - 1);
-        if (inBounds(p) && m_planGrid[p.x][p.y] >= 0 && m_planGrid[p.x][p.y] > drawId) drawId = m_planGrid[p.x][p.y];
-        p = int2(start.x, start.y + 1);
-        if (inBounds(p) && m_planGrid[p.x][p.y] >= 0 && m_planGrid[p.x][p.y] > drawId) drawId = m_planGrid[p.x][p.y];
-        p = int2(end.x - 1, end.y);
-        if (inBounds(p) && m_planGrid[p.x][p.y] >= 0 && m_planGrid[p.x][p.y] > drawId) drawId = m_planGrid[p.x][p.y];
-        p = int2(end.x + 1, end.y);
-        if (inBounds(p) && m_planGrid[p.x][p.y] >= 0 && m_planGrid[p.x][p.y] > drawId) drawId = m_planGrid[p.x][p.y];
-        p = int2(end.x, end.y - 1);
-        if (inBounds(p) && m_planGrid[p.x][p.y] >= 0 && m_planGrid[p.x][p.y] > drawId) drawId = m_planGrid[p.x][p.y];
-        p = int2(end.x, end.y + 1);
-        if (inBounds(p) && m_planGrid[p.x][p.y] >= 0 && m_planGrid[p.x][p.y] > drawId) drawId = m_planGrid[p.x][p.y];
-    }
+//    if ((abs(start.x - end.x) < threshold && abs(start.y - end.y) < threshold) || (abs(start.x - end.x) < threshold / 2.0 || abs(start.y - end.y) < threshold) / 2.0)
+//    {
+//        int2 p;
+//        p = int2(start.x - 1, start.y);
+//        if (inBounds(p) && m_planGrid[p.x][p.y] >= 0 && m_planGrid[p.x][p.y] > drawId) drawId = m_planGrid[p.x][p.y];
+//        p = int2(start.x + 1, start.y);
+//        if (inBounds(p) && m_planGrid[p.x][p.y] >= 0 && m_planGrid[p.x][p.y] > drawId) drawId = m_planGrid[p.x][p.y];
+//        p = int2(start.x, start.y - 1);
+//        if (inBounds(p) && m_planGrid[p.x][p.y] >= 0 && m_planGrid[p.x][p.y] > drawId) drawId = m_planGrid[p.x][p.y];
+//        p = int2(start.x, start.y + 1);
+//        if (inBounds(p) && m_planGrid[p.x][p.y] >= 0 && m_planGrid[p.x][p.y] > drawId) drawId = m_planGrid[p.x][p.y];
+//        p = int2(end.x - 1, end.y);
+//        if (inBounds(p) && m_planGrid[p.x][p.y] >= 0 && m_planGrid[p.x][p.y] > drawId) drawId = m_planGrid[p.x][p.y];
+//        p = int2(end.x + 1, end.y);
+//        if (inBounds(p) && m_planGrid[p.x][p.y] >= 0 && m_planGrid[p.x][p.y] > drawId) drawId = m_planGrid[p.x][p.y];
+//        p = int2(end.x, end.y - 1);
+//        if (inBounds(p) && m_planGrid[p.x][p.y] >= 0 && m_planGrid[p.x][p.y] > drawId) drawId = m_planGrid[p.x][p.y];
+//        p = int2(end.x, end.y + 1);
+//        if (inBounds(p) && m_planGrid[p.x][p.y] >= 0 && m_planGrid[p.x][p.y] > drawId) drawId = m_planGrid[p.x][p.y];
+//    }
 
     // Claim the new area
     for (int x = min(start.x, end.x); x <= max(start.x, end.x); ++ x)
