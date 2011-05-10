@@ -11,15 +11,17 @@ tile n
 tile2 n
 groundfloor n
 floor n
-wombat n
 entrance n
 entrances n
 dtile   n
 roof n
+highrise t plane highrise.jpeg tile
+off t plane offpic.jpg stretch
+on t plane onpic.jpg stretch
 door t mesh entrance.obj stretch
+doorpic t plane entrance.jpg stretch
 wall t plane lobby.jpg tile
 rooftiles t plane off.jpg tile
-lobby t plane lobby.jpg tile
 on1 t plane on1.jpg stretch
 on2 t plane on2.jpg stretch
 on3 t plane on3.jpg stretch

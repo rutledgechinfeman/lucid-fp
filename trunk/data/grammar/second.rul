@@ -1,7 +1,7 @@
-A : NULL ~ S([10,39,10], 6, 16) _ I(4){facades2} _ T(0, Scope.Y, 0) _ I(Roof.flat){ roof } _ T(0, 0, Scope.Z) _ scrapers : 1.0
+A : NULL ~ S([20,59,10], 6, 16) _ I(4){facades2} _ T(0, Scope.Y, 0) _ I(Roof.flat){ roof } _ T(0, 0, Scope.Z) _ scrapers : 1.0
 scrapers : NULL ~ Repeat(X, 10){ scraper } : 1.0
-scraper : NULL ~ S(Scope.X, [10,70], [4,8]) _ T(0, 0, -Scope.Z) _ I(4){ facades } _ < T(0, Scope.Y, 0) _ I(Roof.flat){roof} > _ bulk : 1.0
-bulk : NULL ~ S(Scope.X, [10,70], [4,8]) _ T(0, 0, -Scope.Z) _ I(4){ facades} _ T(0, Scope.Y, 0) _ I(Roof.flat){ roof } : 0.5 ~ T(0, 0, 0) : 0.5
+scraper : NULL ~ S(Scope.X, [40,70], [4,8]) _ T(0, 0, -Scope.Z) _ I(4){ facades } _ < T(0, Scope.Y, 0) _ I(Roof.flat){roof} > _ bulk : 1.0
+bulk : NULL ~ S(Scope.X, [40,70], [4,8]) _ T(0, 0, -Scope.Z) _ I(4){ facades} _ T(0, Scope.Y, 0) _ I(Roof.flat){ roof } : 0.5 ~ T(0, 0, 0) : 0.5
 
 facades : NULL ~ Comp(sidefaces){facade} : 1.0
 facade : NULL ~ Repeat(Y, 3){floor} : 1.0
@@ -14,7 +14,6 @@ flank : NULL ~ T(0, 0, -1.5) _ on5 : 1.0
 groundfloor : NULL ~ Repeat(X, 2){on5} : 1.0
 floor : NULL ~ Repeat(X, 2){tile} : 1.0
 floor2 : NULL ~ Repeat(X, 1){tile2} : 1.0
-tile : NULL ~ on1 : 0.11 ~ on2 : 0.11 ~ on3 : 0.11 ~ on4 : .11 ~ on5 : .11  ~ on6 : .11  ~ on7 : .11  ~ on8 : .11  ~ on9 : .12
+tile : NULL ~ on1 : 0.1 ~ on2 : 0.1 ~ on3 : 0.1 ~ on4 : .1 ~ on5 : .1  ~ on6 : .1  ~ on7 : .1 ~ on8 : .1  ~ on9 : .1 ~ on10 : .1
 tile2 : NULL ~ lobby : 1.0
 roof : NULL ~ Comp(topfaces){rooftiles} : 1.0
-
