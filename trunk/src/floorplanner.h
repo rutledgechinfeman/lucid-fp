@@ -7,7 +7,7 @@
 #include "scope.h"
 
 
-#define RESOLUTION_CONSTANT 15.0
+#define RESOLUTION_CONSTANT 5.0
 #define WINDOW_LENGTH 1.0
 #define DOOR_LENGTH 1.0
 
