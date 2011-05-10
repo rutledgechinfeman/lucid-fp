@@ -171,7 +171,7 @@ bool FloorPlanner::happy(const int2& start, const int2& end)
     int area = abs((start.x - end.x) * (start.y - end.y));
     area /= (RESOLUTION_CONSTANT * RESOLUTION_CONSTANT);
 
-    double pval = ((double)area - 20.0) / 50.0;
+    double pval = ((double)area - 10.0) / 35.0;
     pval = max(min(pval, 1.0), 0.0);
 
     double sample = (double) rand() / (double) RAND_MAX; // random number between 0 and 1 (found this online)
@@ -192,48 +192,64 @@ void FloorPlanner::claim(const int2& start, int2 end)
     if (start.x > end.x) xmulti = -1;
     if (start.y > end.y) ymulti = -1;
 
-    // Expand Y to cover full windows, and fill tiny spaces
-    int d = 0;
-    int distToWall[2] = {0};
-    while (inBounds(int2(start.x, end.y + distToWall[0] * ymulti)) && m_planGrid[start.x][end.y + distToWall[0] * ymulti] < 0 && m_planGrid[start.x][end.y + distToWall[0] * ymulti] != OUTSIDE)
+    int2 prevEnd;
+    do
     {
-        distToWall[0] ++;
-    }
-    if (distToWall[0] > threshold) distToWall[0] = 0;
-    while (inBounds(int2(end.x, end.y + distToWall[1] * ymulti)) && m_planGrid[end.x][end.y + distToWall[1] * ymulti] < 0 && m_planGrid[end.x][end.y + distToWall[1] * ymulti] != OUTSIDE)
-    {
-        distToWall[1] ++;
-    }
-    if (distToWall[1] > threshold) distToWall[1] = 0;
+        prevEnd = end;
 
+        // Expand Y to cover full windows, and fill tiny spaces
+        int d = 0;
+        int distToWall[2] = {0};
+        // March (start.x, end.y) along y until we reach emptiness or claimed territory
+        while (inBounds(int2(start.x, end.y + distToWall[0] * ymulti)) && m_planGrid[start.x][end.y + distToWall[0] * ymulti] < 0 && m_planGrid[start.x][end.y + distToWall[0] * ymulti] != OUTSIDE)
+        {
+            distToWall[0] ++;
+        }
+        if (distToWall[0] > threshold) distToWall[0] = 0; // If the remaining space is big enough to be a room, reset
+        // March (end.x, end.y) along y until we reach emptiness or claimed territory
+        while (inBounds(int2(end.x, end.y + distToWall[1] * ymulti)) && m_planGrid[end.x][end.y + distToWall[1] * ymulti] < 0 && m_planGrid[end.x][end.y + distToWall[1] * ymulti] != OUTSIDE)
+        {
+            distToWall[1] ++;
+        }
+        if (distToWall[1] > threshold) distToWall[1] = 0; // If the remaining space is big enough to be a room, reset
 
-    d = max(distToWall[0], distToWall[1]);
-    int i = 0;
-    while (inBounds(int2(start.x, end.y + ymulti)) && (m_planGrid[start.x][end.y + ymulti] == WINDOW || m_planGrid[start.x][end.y + ymulti] == DOOR || i++ < d))
-    {
-        end.y += ymulti;
-    }
+        // Actually expand the bounding box while we're on hazards (door/window) or still taking over a tiny room
+        d = max(distToWall[0], distToWall[1]);
+        int i = 0;
+        while (inBounds(int2(start.x, end.y + ymulti)) && (m_planGrid[start.x][end.y + ymulti] == WINDOW || m_planGrid[start.x][end.y + ymulti] == DOOR || i++ < d))
+        {
+            end.y += ymulti;
+        }
+        while (inBounds(int2(end.x, end.y + ymulti)) && (m_planGrid[end.x][end.y + ymulti] == WINDOW || m_planGrid[end.x][end.y + ymulti] == DOOR || i++ < d))
+        {
+            end.y += ymulti;
+        }
 
-    // Expand X to cover full windows, and fill tiny spaces
-    distToWall[0] = 0;
-    distToWall[1] = 0;
-    while (inBounds(int2(end.x + distToWall[0] * xmulti, start.y)) && m_planGrid[end.x + distToWall[0] * xmulti][start.y] < 0 && m_planGrid[end.x + distToWall[0] * xmulti][start.y] != OUTSIDE)
-    {
-        distToWall[0] ++;
-    }
-    if (distToWall[0] > threshold) distToWall[0] = 0;
-    while (inBounds(int2(end.x + distToWall[1] * xmulti, end.y)) && m_planGrid[end.x + distToWall[1] * xmulti][end.y] < 0 && m_planGrid[end.x + distToWall[1] * xmulti][end.y] != OUTSIDE)
-    {
-        distToWall[1] ++;
-    }
-    if (distToWall[1] > threshold) distToWall[1] = 0;
+        // Expand X to cover full windows, and fill tiny spaces
+        distToWall[0] = 0;
+        distToWall[1] = 0;
+        while (inBounds(int2(end.x + distToWall[0] * xmulti, start.y)) && m_planGrid[end.x + distToWall[0] * xmulti][start.y] < 0 && m_planGrid[end.x + distToWall[0] * xmulti][start.y] != OUTSIDE)
+        {
+            distToWall[0] ++;
+        }
+        if (distToWall[0] > threshold) distToWall[0] = 0;
+        while (inBounds(int2(end.x + distToWall[1] * xmulti, end.y)) && m_planGrid[end.x + distToWall[1] * xmulti][end.y] < 0 && m_planGrid[end.x + distToWall[1] * xmulti][end.y] != OUTSIDE)
+        {
+            distToWall[1] ++;
+        }
+        if (distToWall[1] > threshold) distToWall[1] = 0;
 
-    i = 0;
-    d = max(distToWall[0], distToWall[1]);
-    while (inBounds(int2(end.x + xmulti, start.y)) && (m_planGrid[end.x + xmulti][start.y] == WINDOW || m_planGrid[end.x + xmulti][start.y] == DOOR || i++ < d))
-    {
-        end.x += xmulti;
-    }
+        i = 0;
+        d = max(distToWall[0], distToWall[1]);
+        while (inBounds(int2(end.x + xmulti, start.y)) && (m_planGrid[end.x + xmulti][start.y] == WINDOW || m_planGrid[end.x + xmulti][start.y] == DOOR || i++ < d))
+        {
+            end.x += xmulti;
+        }
+        while (inBounds(int2(end.x + xmulti, end.y)) && (m_planGrid[end.x + xmulti][end.y] == WINDOW || m_planGrid[end.x + xmulti][end.y] == DOOR || i++ < d))
+        {
+            end.x += xmulti;
+        }
+    } while (prevEnd != end);
 
     // Claim the new area
     for (int x = min(start.x, end.x); x <= max(start.x, end.x); ++ x)
@@ -484,15 +500,6 @@ void FloorPlanner::drawSelf()
 
             drawQuad(rectangle(int2(x, y), int2(x+1, y+1)), color);
         }
-    }
-
-    for (int i = 0 ; i < m_windowCells.size(); ++ i)
-    {
-        drawDot(double2(m_windowCells[i] + m_mins), 1.0 / RESOLUTION_CONSTANT);
-    }
-    for (int i = 0 ; i < m_doorowCells.size(); ++ i)
-    {
-        drawDot(double2(m_doorowCells[i] + m_mins), 1.0 / RESOLUTION_CONSTANT, double3(1,1,0));
     }
 
     glEnable(GL_LIGHTING);
