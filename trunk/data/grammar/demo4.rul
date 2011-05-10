@@ -1,0 +1,20 @@
+# #################################################################################
+# STEP 4: Entrance
+# Subdiv command
+# Condition 
+# Ways to improve: more window tiles
+#		   more buildings of varying height
+#		   highrise awning 
+#		   non-texture meshes
+# ##################################################################################
+
+A : NULL ~ S([10,20], [50, 70], [10,20]) _ I(4){facades} _ T(0, Scope.Y, 0) _ I(Roof.flat){roof}: 1.0
+
+facades : NULL ~ Comp(sidefaces){facade} : 1.0
+facade : NULL ~ Subdiv(Y, 4, 1r){ groundfloor | Repeat(Y, 3){floor} }: 1.0
+groundfloor : Shape.visible(street)=full ~ entrance: 1.0
+groundfloor : NULL ~ Repeat(X, 2){off} : 1.0
+entrance : NULL ~ doorpic : 1.0
+floor : NULL ~ Repeat(X, 2){tile} : 1.0
+tile : NULL ~ on : .1 ~ off : .9
+roof : NULL ~ Comp(topfaces){rooftiles} : 1.0

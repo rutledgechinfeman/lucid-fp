@@ -1,0 +1,16 @@
+###################################################################################
+# STEP 2: Introducing randomness
+# Randomly generated size of building (for generating cities, perhaps)
+# Randomly generate on and off tiles of the texture map
+# Pros: Random window looks much better (stretched images)
+#	Random sizes makes it more interesting
+# 	Still simple (still 5 lines)
+# Cons: No roof
+# #################################################################################
+
+A : NULL ~ S([10,20], [50, 70], [10,20]) _ I(4){facades}: 1.0
+
+facades : NULL ~ Comp(sidefaces){facade} : 1.0
+facade : NULL ~ Repeat(Y, 3){floor} : 1.0
+floor : NULL ~ Repeat(X, 2){tile} : 1.0
+tile : NULL ~ on : .1 ~ off : .9

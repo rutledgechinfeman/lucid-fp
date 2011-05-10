@@ -1,0 +1,15 @@
+# #################################################################################
+# STEP 3: Roofs
+# New terminal and nonterminal
+# Translation call (0, Scope.Y, 0)
+# Pros: Roof
+# Cons: No door
+###################################################################################
+
+A : NULL ~ S([10,20], [50, 70], [10,20]) _ I(4){facades} _ T(0, Scope.Y, 0) _ I(Roof.flat){roof}: 1.0
+
+facades : NULL ~ Comp(sidefaces){facade} : 1.0
+facade : NULL ~ Repeat(Y, 3){floor} : 1.0
+floor : NULL ~ Repeat(X, 2){tile} : 1.0
+tile : NULL ~ on : .1 ~ off : .9
+roof : NULL ~ Comp(topfaces){rooftiles} : 1.0
