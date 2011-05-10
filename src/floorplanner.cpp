@@ -87,6 +87,7 @@ void FloorPlanner::doTheRobot()
         for (unsigned int i = 0; i < poses.size(); ++i)
         {
             poseQueue.push(poses[i]);
+            m_robotPoses.push_back(poses[i]);
         }
 
         int2 startPos = poseQueue.front();
@@ -169,26 +170,26 @@ bool FloorPlanner::happy(const int2& start, const int2& end)
     // TODO: Don't allow stopping on windows and/or doors
 
     // TODO: Area based heuristic
-//    int area = abs((start.x - end.x) * (start.y - end.y));
-//    area /= (RESOLUTION_CONSTANT * RESOLUTION_CONSTANT);
+    int area = abs((start.x - end.x) * (start.y - end.y));
+    area /= (RESOLUTION_CONSTANT * RESOLUTION_CONSTANT);
 
-//    double pval = ((double)area - 20.0) / 50.0;
-//    pval = max(min(pval, 1.0), 0.0);
+    double pval = ((double)area - 20.0) / 50.0;
+    pval = max(min(pval, 1.0), 0.0);
 
-//    double sample = (double) rand() / (double) RAND_MAX; // random number between 0 and 1 (found this online)
-//    if (sample < pval)
-//    {
-//        return true;
-//    }
+    double sample = (double) rand() / (double) RAND_MAX; // random number between 0 and 1 (found this online)
+    if (sample < pval)
+    {
+        return true;
+    }
 
     return false;
 }
 
 void FloorPlanner::claim(const int2& start, const int2& end)
 {
-    for (int x = min(start.x, end.x); x < max(start.x, end.x); ++ x)
+    for (int x = min(start.x, end.x); x <= max(start.x, end.x); ++ x)
     {
-        for (int y = min(start.y, end.y); y < max(start.y, end.y); ++ y)
+        for (int y = min(start.y, end.y); y <= max(start.y, end.y); ++ y)
         {
             m_planGrid[x][y] = m_currRobotID;
         }
@@ -197,15 +198,45 @@ void FloorPlanner::claim(const int2& start, const int2& end)
 
 bool FloorPlanner::canExpand(const int2& start, int2 end, const int2& dir)
 {
-    end += dir;
-    for (int x = min(start.x, end.x); x < max(start.x, end.x); ++ x)
-    {
-        for (int y = min(start.y, end.y); y < max(start.y, end.y); ++ y)
+//    end += dir;
+//    for (int x = min(start.x, end.x); x <= max(start.x, end.x); ++ x)
+//    {
+//        for (int y = min(start.y, end.y); y <= max(start.y, end.y); ++ y)
+//        {
+//            if (m_planGrid[x][y] >= 0 || m_planGrid[x][y] == OUTSIDE)
+//            {
+//                return false;
+//            }
+//        }
+//    }
+
+
+    if (dir.x != 0) {
+
+        for (int y = min(start.y, end.y); y <= max(start.y, end.y); y ++ )
         {
-            if (m_planGrid[x][y] >= 0 || m_planGrid[x][y] == OUTSIDE)
+            if (m_planGrid[end.x + dir.x][y] >= 0 || m_planGrid[end.x + dir.x][y] == OUTSIDE)
             {
                 return false;
             }
+        }
+    }
+
+    if (dir.y != 0) {
+
+        for (int x = min(start.x, end.x); x <= max(start.x, end.x); x ++ )
+        {
+            if (m_planGrid[x][end.y + dir.y] >= 0 || m_planGrid[x][end.y + dir.y] == OUTSIDE)
+            {
+                return false;
+            }
+        }
+    }
+
+    if (dir.x != 0 && dir.y != 0) {
+        if (m_planGrid[end.x + dir.x][end.y + dir.y] >= 0 || m_planGrid[end.x + dir.x][end.y + dir.y] == OUTSIDE)
+        {
+            return false;
         }
     }
 
@@ -274,6 +305,7 @@ void FloorPlanner::findRobotPos(vector<int2> &validList, int i) {
             else if(m_planGrid[p.x][p.y] == i) iNeighbors ++;
 
             if (inNeighbors == 2 && iNeighbors == 1) validList.push_back(int2(x, y));
+
         }
     }
 }
@@ -297,7 +329,7 @@ void FloorPlanner::putWindowsAndDoorsOnGrid()
     {
         double2 temp = m_2Dwindows[i] - m_mins + 0.5;
         int2 loc = int2(temp.x, temp.y);
-        int r = RESOLUTION_CONSTANT * WINDOW_LENGTH / 2.0;
+        int r = RESOLUTION_CONSTANT * WINDOW_LENGTH / 1.5;
         for (int x = loc.x - r; x < loc.x + r; ++ x)
         {
             for (int y = loc.y - r; y < loc.y + r; ++ y)
@@ -341,9 +373,9 @@ void FloorPlanner::buildPlanGrid()
         min = m_2DscopeList[i].topLeft() - m_mins;
         max = m_2DscopeList[i].bottomRight() - m_mins;
 
-        for (int x = min.x; x < max.x; ++ x)
+        for (int x = min.x; x <= max.x; ++ x)
         {
-            for (int y = min.y; y < max.y; ++y)
+            for (int y = min.y; y <= max.y; ++y)
             {
                 m_planGrid[x][y] = INSIDE;
             }
@@ -357,6 +389,8 @@ void FloorPlanner::drawSelf()
     //draw background
     glClearColor(1.0, 1.0, 1.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
+
+
 
     for (int x = m_mins.x; x < m_maxs.x; ++ x)
     {
@@ -386,6 +420,12 @@ void FloorPlanner::drawSelf()
             drawQuad(rectangle(int2(x, y), int2(x+1, y+1)), color);
         }
     }
+
+//    for (int i = 0; i < m_robotPoses.size(); i ++) {
+
+//        drawDot(double2(m_robotPoses[i] + m_mins), .5, double3(1, 1, 0));
+
+//    }
 
     glEnable(GL_LIGHTING);
 }
