@@ -14,8 +14,6 @@ FloorPlanner::FloorPlanner()
 
 void FloorPlanner::plan(Feature* root)
 {
-
-
     m_scopeList.clear();
     m_windows.clear();
     m_doors.clear();
@@ -29,9 +27,7 @@ void FloorPlanner::plan(Feature* root)
 
     buildFirstRepresentation(root);
 
-
     normalizeTo2D();
-
 }
 
 
@@ -171,14 +167,8 @@ void FloorPlanner::normalizeTo2D(){
     initializeIntersectionsToZero();
 
     for (vector<Scope>::iterator it = m_scopeList.begin(); it != m_scopeList.end(); it ++) {
-        double2* corners = getScopeCorners(*it);
-
-
-        m_vertices.push_back(corners[0]);
-        m_vertices.push_back(corners[1]);
-        m_vertices.push_back(corners[2]);
-        m_vertices.push_back(corners[3]);
-
+        double2 corners[4];
+        getScopeCorners(*it, corners);
 
         m_2DscopeList.push_back(rectangle(corners[0], corners[2]));
 
@@ -191,15 +181,15 @@ void FloorPlanner::normalizeTo2D(){
             m_maxs.y = max(m_maxs.y, corners[i].y);
         }
 
-        for(int i=0; i<4; i++){
-            for(int j=i; j<4; j++){
-                if(onTheSameLine(corners[i], corners[j])){
-                    intersections[m_vertices.size()-4 + i][ m_vertices.size()-4 + j] = true;
-                    intersections[ m_vertices.size()-4 + j][m_vertices.size()-4 + i] = true;
-                    setIntersected(m_vertices.size()-4 + i, m_vertices.size()-4 + j);
-                }
-            }
-        }
+//        for(int i=0; i<4; i++){
+//            for(int j=i; j<4; j++){
+//                if(onTheSameLine(corners[i], corners[j])){
+//                    intersections[m_vertices.size()-4 + i][ m_vertices.size()-4 + j] = true;
+//                    intersections[ m_vertices.size()-4 + j][m_vertices.size()-4 + i] = true;
+//                    setIntersected(m_vertices.size()-4 + i, m_vertices.size()-4 + j);
+//                }
+//            }
+//        }
 
 
 
@@ -221,111 +211,103 @@ void FloorPlanner::normalizeTo2D(){
 
 }
 
-void FloorPlanner::printIntersections(){
-    for(unsigned int i=0; i<intersections.size(); i++){
-        for(unsigned int j=0; j<intersections.size(); j++){
-            cout<< intersections[i][j]<<" ";
-        }
-        cout<< endl;
-    }
-}
+//void FloorPlanner::printIntersections(){
+//    for(unsigned int i=0; i<intersections.size(); i++){
+//        for(unsigned int j=0; j<intersections.size(); j++){
+//            cout<< intersections[i][j]<<" ";
+//        }
+//        cout<< endl;
+//    }
+//}
 
 
-bool FloorPlanner::onTheSameLine(double2 v1, double2 v2){
-    if(EQ(v1.x, v2.x) || EQ(v1.y, v2.y)){
-        return true;
-    }
-    return false;
-}
+//bool FloorPlanner::onTheSameLine(double2 v1, double2 v2){
+//    if(EQ(v1.x, v2.x) || EQ(v1.y, v2.y)){
+//        return true;
+//    }
+//    return false;
+//}
 
-void FloorPlanner::setIntersected(unsigned int a, unsigned int b){
-    //given that two indices (of vertices in m_vertices) are Intersected (by a wall, probably)
-    double2 l1p1 = m_vertices.at(a);
-    double2 l1p2 = m_vertices.at(b);
-    //for every vertex in m_vertices
-    for(unsigned int i=0; i<m_vertices.size(); i++){
-        double2 l2p1 = m_vertices[i];
-        //for every vertex that it is intersected with
-        vector<double2> inters = getIntersectors(i);
-        for(unsigned int j=0; j<inters.size(); j++){
+//void FloorPlanner::setIntersected(unsigned int a, unsigned int b){
+//    //given that two indices (of vertices in m_vertices) are Intersected (by a wall, probably)
+//    double2 l1p1 = m_vertices.at(a);
+//    double2 l1p2 = m_vertices.at(b);
+//    //for every vertex in m_vertices
+//    for(unsigned int i=0; i<m_vertices.size(); i++){
+//        double2 l2p1 = m_vertices[i];
+//        //for every vertex that it is intersected with
+//        vector<double2> inters = getIntersectors(i);
+//        for(unsigned int j=0; j<inters.size(); j++){
 
-            double2 l2p2 = inters.at(j);
+//            double2 l2p2 = inters.at(j);
 
-            int val = doTheyIntersect(l1p1, l1p2, l2p1, l2p2);
-            //if val is 0 then they are parallel (and not the same line)
-            //if val is 1 they intersected at one point
-            //if val is 2 they are the same line
+//            int val = doTheyIntersect(l1p1, l1p2, l2p1, l2p2);
+//            //if val is 0 then they are parallel (and not the same line)
+//            //if val is 1 they intersected at one point
+//            //if val is 2 they are the same line
 
-        }
+//        }
 
-    }
+//    }
 
-    //TODO: SET INTERSECTION STUFF!!
-}
+//    //TODO: SET INTERSECTION STUFF!!
+//}
 
-int FloorPlanner::doTheyIntersect(double2 l1p1, double2 l1p2, double2 l2p1, double2 l2p2){
+//int FloorPlanner::doTheyIntersect(double2 l1p1, double2 l1p2, double2 l2p1, double2 l2p2){
 
-    double m = (l1p1.y - l1p2.y) / (l1p1.x - l1p2.y);
+//    double m = (l1p1.y - l1p2.y) / (l1p1.x - l1p2.y);
 
-    if(isOnLine(m, l1p1.y, l1p1.x, l2p1) && isOnLine(m, l1p1.y, l1p1.x, l2p2)){
-        return 2;
-    }
+//    if(isOnLine(m, l1p1.y, l1p1.x, l2p1) && isOnLine(m, l1p1.y, l1p1.x, l2p2)){
+//        return 2;
+//    }
 
-    else{
-        double A1 = l1p2.y - l1p1.y;
-        double B1 = l1p1.x - l1p2.x;
+//    else{
+//        double A1 = l1p2.y - l1p1.y;
+//        double B1 = l1p1.x - l1p2.x;
 
-        double A2 = l2p2.y - l2p1.y;
-        double B2 = l2p1.x - l2p2.x;
+//        double A2 = l2p2.y - l2p1.y;
+//        double B2 = l2p1.x - l2p2.x;
 
-        double det = A1*B2 - A2*B1;
-        if(EQ(det, 0)){
-            return 0;
-        }
-    }
-    return 1;
-}
+//        double det = A1*B2 - A2*B1;
+//        if(EQ(det, 0)){
+//            return 0;
+//        }
+//    }
+//    return 1;
+//}
 
-bool FloorPlanner::isOnLine(double m, double y, double x, double2 pt){
-    if(EQ(y-pt.y, m*(x-pt.x))){
-        return true;
-    }
-    return false;
-}
+//bool FloorPlanner::isOnLine(double m, double y, double x, double2 pt){
+//    if(EQ(y-pt.y, m*(x-pt.x))){
+//        return true;
+//    }
+//    return false;
+//}
 
-vector<double2> FloorPlanner::getIntersectors(unsigned int i){
-    vector<double2> toRet;
-    vector<bool> thisRow = intersections.at(i);
+//vector<double2> FloorPlanner::getIntersectors(unsigned int i){
+//    vector<double2> toRet;
+//    vector<bool> thisRow = intersections.at(i);
 
-    for(unsigned int j=0; j<thisRow.size(); j++){
-        if(thisRow.at(j)){
-            toRet.push_back(m_vertices.at(j));
-        }
-    }
-    return toRet;
-}
+//    for(unsigned int j=0; j<thisRow.size(); j++){
+//        if(thisRow.at(j)){
+//            toRet.push_back(m_vertices.at(j));
+//        }
+//    }
+//    return toRet;
+//}
 
 
-double2* FloorPlanner::getScopeCorners(Scope s) {
-
-    double2 toReturn[4];
-
+void FloorPlanner::getScopeCorners(Scope s, double2* array)
+{
     Vector4 D3corners[4];
-
-
-
     D3corners[0] = s.getPoint();
     D3corners[1] = s.getPoint() + s.getXBasis() * s.getScale().x;
     D3corners[2] = s.getPoint() + s.getXBasis() * s.getScale().x + s.getZBasis() * s.getScale().z;
     D3corners[3] = s.getPoint() + s.getZBasis() + s.getScale().z;
 
-
-    for (int i = 0; i < 4; i ++) {
-        toReturn[i] = double2(D3corners[i].x, D3corners[i].z);
+    for (int i = 0; i < 4; i ++)
+    {
+        array[i] = double2(D3corners[i].x, D3corners[i].z);
     }
-
-    return toReturn;
-
 }
 
 
@@ -337,7 +319,7 @@ bool FloorPlanner::bigScope(Scope scope) {
 bool FloorPlanner::hasScope(Scope scope) {
 
     Scope comp;
-    for (int i = 0; i < m_scopeList.size(); i ++) {
+    for (unsigned int i = 0; i < m_scopeList.size(); i ++) {
         comp = m_scopeList[i];
 
         if (comp.getScale() == scope.getScale() && comp.getPoint() == scope.getPoint()) return true;

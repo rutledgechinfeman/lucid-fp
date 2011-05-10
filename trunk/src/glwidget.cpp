@@ -35,7 +35,7 @@ GLWidget::~GLWidget()
 void GLWidget::setRoot(Feature* root, string s)
 {
     m_root = root; // TODO, delete the old one?
-    int f = s.find("second");
+    unsigned int f = s.find("second");
     if(f < s.length()){
         scenery = new Scenery("night");
     }
