@@ -15,7 +15,7 @@ entrance n
 entrances n
 dtile   n
 roof n
-highrise t plane highrise.jpeg tile
+highrise t plane highrise.jpeg stretch
 off t plane offpic.jpg stretch
 on t plane onpic.jpg stretch
 door t mesh entrance.obj stretch
