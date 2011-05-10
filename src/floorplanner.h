@@ -61,6 +61,12 @@ private:
     bool inBounds(int2 p);
     void printGrid();
 
+
+    void findRobotPos(vector<int2> &validList, int i = 0);
+    void doTheRobot();
+    void robot(int2 start, int2 end);
+    bool canExpand(int2 start, int2 end, int2 dir);
+
     /// Input sanitization
     vector<Scope> m_scopeList;
     vector<Vector4> m_windows;
@@ -75,6 +81,8 @@ private:
     int2 m_maxs;
 
     int** m_planGrid;
+
+    int m_currRobotID;
 };
 
 #endif // FLOORPLANNER_H
